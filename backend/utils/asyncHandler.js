@@ -1,13 +1,13 @@
 const asyncHandler = (fn) => async (req, res, next) => {
     try {
-        await fn(req, res, next);
+        return await fn(req, res, next);
     }
     catch (err) {
-        res.status(err.code || 500).json({
+        return res.status(err.code || 500).json({
             success: false,
-            message: err.message
+            message: err.message || "Something went wrong"
         })
     }
 }
 
-export default asyncHandler();
+export default asyncHandler;

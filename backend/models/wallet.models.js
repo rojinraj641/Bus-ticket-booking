@@ -1,13 +1,18 @@
 import mongoose from 'mongoose';
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const walletSchema = new mongoose.Schema(
     {
-        availableBalance: {type: Number, required: true},
-        transactionId: 
-        {
+        availableBalance: {
+            type: Number,
+            required: true,
+        },
+        transactionDetails: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Transaction"
         }
-    },{timestamps: true});
+    }, { timestamps: true });
 
-export const Wallet = mongoose.model("Wallet",walletSchema);
+walletSchema.plugin(mongooseAggregatePaginate);
+
+export const Wallet = mongoose.model("Wallet", walletSchema);

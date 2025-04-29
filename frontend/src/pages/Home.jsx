@@ -1,86 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from '../Components/Header'
+import Navbar from '../Components/Navbar'
 import Footer from '../Components/Footer'
-import '../styles/Home.css';
-
+import Card from '../Components/Card'
 const Home = () => {
-  
+
   return (
-    <div className="app-container">
+    <>
+      <Navbar />
       <Header />
-
-      <section className="routes-section">
-        <h2>Top Travelled Bus Routes</h2>
-
-        <div className="routes-grid">
-          <div className="route-card">
-            <div className="route-img"></div>
-            <div className="route-info">
-              <span className="route-label">Buses From</span>
-              <span className="route-name">Kochi to Bangalore</span>
-            </div>
-          </div>
-
-          <div className="route-card">
-            <div className="route-img"></div>
-            <div className="route-info">
-              <span className="route-label">Buses From</span>
-              <span className="route-name">Kochi to Coimbatore</span>
-            </div>
-          </div>
-
-          <div className="route-card">
-            <div className="route-img"></div>
-            <div className="route-info">
-              <span className="route-label">Buses From</span>
-              <span className="route-name">Trivandrum to Kochi</span>
-            </div>
-          </div>
-
-          <div className="route-card">
-            <div className="route-img"></div>
-            <div className="route-info">
-              <span className="route-label">Buses From</span>
-              <span className="route-name">Kollam to Kannur</span>
-            </div>
-          </div>
-        </div>
-        <div className='routes-grid'>
-          <div className="route-card">
-            <div className="route-img"></div>
-            <div className="route-info">
-              <span className="route-label">Buses From</span>
-              <span className="route-name">Kochi to Palakkad</span>
-            </div>
-          </div>
-
-          <div className="route-card">
-            <div className="route-img"></div>
-            <div className="route-info">
-              <span className="route-label">Buses From</span>
-              <span className="route-name">Chennai to Hyderabad</span>
-            </div>
-          </div>
-
-          <div className="route-card">
-            <div className="route-img"></div>
-            <div className="route-info">
-              <span className="route-label">Buses From</span>
-              <span className="route-name">Chennai to Hyderabad</span>
-            </div>
-          </div>
-
-          <div className="route-card">
-            <div className="route-img"></div>
-            <div className="route-info">
-              <span className="route-label">Buses From</span>
-              <span className="route-name">Chennai to Hyderabad</span>
-            </div>
-          </div>
+      <section>
+        <h3 className='flex justify-center font-semibold text-xl mt-5 mb-9'>Top Travelled Bus Routes</h3>
+        <div className="flex flex-wrap justify-center gap-10 mb-12 mt-8 px-4">
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
         </div>
       </section>
       <Footer />
-    </div>
+    </>
   );
 }
 

@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+
+.react-date-picker__wrapper {
+    border: none !important;
+    box-shadow: none !important;
+}

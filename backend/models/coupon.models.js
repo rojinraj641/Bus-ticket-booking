@@ -1,14 +1,36 @@
 import mongoose from 'mongoose';
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const couponSchema = new mongoose.Schema(
     {
-        couponId: { type: String, required: true, unique: true },
-        couponDescription: { type: String, required: true },
-        offerStarting: { type: Date, required: true },
-        offerEnding: { type: Date, required: true },
-        isActive: { type: Boolean, required: true },
-        discountAmount: { type: Number, required: true },
+        couponId: {
+            type: String,
+            unique: true,
+            required: true,
+        },
+        description: {
+            type: String,
+            required: true,
+        },
+        offerStarts: {
+            type: Date,
+            required: true
+        },
+        offerEnds: {
+            type: Date,
+            required: true
+        },
+        discountAmount: {
+            type: Number,
+            required: true,
+        },
+        discountType: {
+            type: String,
+            required: true
+        }
 
     }, { timestamps: true });
+
+couponSchema.plugin(mongooseAggregatePaginate);
 
 export const Coupon = mongoose.model("Coupon", couponSchema);

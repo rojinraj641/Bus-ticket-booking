@@ -1,25 +1,36 @@
-import React from 'react';
-import '../styles/Home.css';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBusSimple} from '@fortawesome/free-solid-svg-icons';
+import { faBusSimple, faBars } from '@fortawesome/free-solid-svg-icons';
 
-const Navbar = (() => {
+const Navbar = () => {
+    const [menu, setMenu] = useState(false);
+
     return (
-        <header className="header">
-            <div className="logo-container">
-                <FontAwesomeIcon icon={faBusSimple} style={{ color: "#e01c20", fontSize: "20px" }}/>
-                <span className="logo"> bookMyTrip</span>
+        <nav className="flex items-center justify-between h-16 px-8 py-4 relative">
+            {/*Logo*/}
+            <div className="flex items-center space-x-3">
+                <FontAwesomeIcon icon={faBusSimple} style={{ color: '#de1b0d' }} size="xl" />
+                <h2 className="text-2xl font-bold" style={{ color: '#de1b0d' }}>bookMyTrip</h2>
             </div>
-            <nav className="nav-menu">
-                <ul>
-                    <li><a href="#my-booking">My Booking</a></li>
-                    <li><a href="#offers">Offers</a></li>
-                    <li><a href="#wallet">Wallet</a></li>
-                    <li><a href="#login">Login/SignUp</a></li>
-                </ul>
-            </nav>
-        </header>
-    )
-})
 
-export default Navbar
+            {/* Hamburger */}
+            <div className="sm:hidden">
+                <button onClick={() => setMenu(prev => !prev)}>
+                    <FontAwesomeIcon icon={faBars} className="text-[#de1b0d]" size="lg" />
+                </button>
+            </div>
+
+            {/* Nav Links */}
+            <div className={`absolute top-16 left-0 w-full bg-white sm:static sm:w-auto sm:flex sm:items-center sm:space-x-8 text-black text-sm ${menu ? 'block' : 'hidden'}`}>
+                <div className="flex flex-col sm:flex-row items-center sm:space-x-8">
+                    <a href="#my-booking" className="hover:text-[#de1b0d] py-2 sm:py-0">My Booking</a>
+                    <a href="#offers" className="hover:text-[#de1b0d] py-2 sm:py-0">Offers</a>
+                    <a href="#wallet" className="hover:text-[#de1b0d] py-2 sm:py-0">Wallet</a>
+                    <a href="signup" className="hover:text-[#de1b0d] py-2 sm:py-0">Login/Signup</a>
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default Navbar;
