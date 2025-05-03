@@ -1,9 +1,8 @@
 import React from "react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage } from '@cloudinary/react';
-import { fill } from "@cloudinary/url-gen/actions/resize";
 
-const Card = () => {
+const HomeCard = () => {
     // Create a Cloudinary instance 
     const cld = new Cloudinary({
         cloud: {
@@ -24,4 +23,4 @@ const Card = () => {
     )
 }
 
-export default Card
+export default HomeCard

@@ -23,10 +23,11 @@ const Navbar = () => {
             {/* Nav Links */}
             <div className={`absolute top-16 left-0 w-full bg-white sm:static sm:w-auto sm:flex sm:items-center sm:space-x-8 text-black text-sm ${menu ? 'block' : 'hidden'}`}>
                 <div className="flex flex-col sm:flex-row items-center sm:space-x-8">
-                    <a href="#my-booking" className="hover:text-[#de1b0d] py-2 sm:py-0">My Booking</a>
-                    <a href="#offers" className="hover:text-[#de1b0d] py-2 sm:py-0">Offers</a>
-                    <a href="#wallet" className="hover:text-[#de1b0d] py-2 sm:py-0">Wallet</a>
-                    <a href="signup" className="hover:text-[#de1b0d] py-2 sm:py-0">Login/Signup</a>
+                    <a href="my-booking" className="hover:text-[#de1b0d] py-2 sm:py-0">My Booking</a>
+                    <a href="track-ticket" className="hover:text-[#de1b0d] py-2 sm:py-0">Track Ticket</a>
+                    <a href="offers" className="hover:text-[#de1b0d] py-2 sm:py-0">Offers</a>
+                    <a href="wallet" className="hover:text-[#de1b0d] py-2 sm:py-0">Wallet</a>
+                    <a href="signup" className="hover:text-[#de1b0d] py-2 sm:py-0">Login/Signup</a> 
                 </div>
             </div>
         </nav>
