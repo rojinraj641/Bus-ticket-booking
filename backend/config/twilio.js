@@ -1,5 +1,0 @@
-export const twilioData = {
-    TWILIO_ACCOUNT_SID: "AC3fe3135a2d57b91afb15fa95ca299bf1",
-    TWILIO_AUTH_TOKEN: "85444a1bd318472862e6cad45cebecbe",
-    TWILIO_VERIFY_SERVICE_SID: "VA9daf4f3e6a85b0198ab48f86aca1ad02"
-} 
