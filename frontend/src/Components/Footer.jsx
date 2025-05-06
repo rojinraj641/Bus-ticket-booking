@@ -3,7 +3,7 @@ import React from 'react';
 const Footer = () => {
     return (
         <>
-            <footer className="bg-sky-900 text-white flex flex-wrap justify-center gap-10 p-3">
+            <footer className="bg-sky-800 text-white flex flex-wrap justify-center gap-10 p-3">
                 <div className="w-full sm:w-auto text-center sm:text-left">
                     <h3 className="text-sm font-semibold mb-2">About bookMyTrip</h3>
                     <ul className="text-xs space-y-1">
@@ -30,7 +30,7 @@ const Footer = () => {
                 </div>
             </footer>
 
-            <div className="bg-sky-900 text-white text-xs text-center py-3 border-t border-sky-700">
+            <div className="bg-sky-800 text-white text-xs text-center py-3 border-t border-sky-700">
                 © 2023 bookMyTrip. All rights reserved
             </div>
         </>

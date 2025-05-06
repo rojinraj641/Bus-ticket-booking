@@ -32,7 +32,7 @@ const MyBooking = () => {
         <>
             <Navbar />
 
-            <div className="bg-sky-900 p-6 sm:p-8">
+            <div className="bg-sky-800 p-6 sm:p-8">
                 <h1 className="text-xl sm:text-2xl font-bold text-white">My Bookings</h1>
                 <p className="text-sm text-white mt-1">View and manage your bookings here</p>
             </div>

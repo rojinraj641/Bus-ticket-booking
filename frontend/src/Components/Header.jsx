@@ -11,7 +11,7 @@ const Header = () => {
     const [dateType, setDateType] = useState(new Date());
 
     return (
-        <header className="flex flex-wrap justify-center gap-9 bg-sky-900 p-6">
+        <header className="flex flex-wrap justify-center gap-9 bg-sky-800 p-6">
             {/* Boarding Point */}
             <div className="flex items-center bg-white text-black rounded-2xl pl-4 pr-2 h-12 shadow-md w-full sm:w-auto">
                 <FontAwesomeIcon icon={faBusSimple} className="text-gray-500 mr-2" />
