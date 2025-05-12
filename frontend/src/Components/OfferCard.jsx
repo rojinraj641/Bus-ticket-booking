@@ -22,10 +22,10 @@ const OfferCard = () => {
 
             {/* Content Box */}
             <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-2 sm:gap-0 border border-gray-200 shadow-md rounded-b-lg p-4 bg-white">
-                <p className="text-sm text-gray-700 text-center sm:text-left leading-snug">
+                <p className="text-md pt-1 font-semibold text-gray-700 text-center sm:text-left leading-snug">
                     Get 20% discount on first booking
                 </p>
-                <button className="text-xs border border-red-500 px-3 py-1 rounded-md text-red-500 hover:bg-red-500 hover:text-white transition">
+                <button className="text-sm font-semibold border-2 border-red-500 px-3 py-1 rounded-md text-red-500 hover:bg-red-500 hover:text-white transition">
                     Copy Code
                 </button>
             </div>

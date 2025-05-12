@@ -5,7 +5,9 @@ import Signup from "./pages/Signup"
 import OtpVerify from "./pages/OtpVerify"
 import MyBooking from './pages/MyBooking'
 import Wallet from './pages/Wallet'
-import Offers from './pages/Offers'
+import FilteredResult from "./pages/FilteredResult";
+import Payment from "./pages/Payment";
+import PassengerDetails from "./pages/PassengerDetails";
 import './App.css';
 
 function App() {
@@ -17,7 +19,9 @@ function App() {
         <Route path='/otp-verify' element={<OtpVerify/>}/>
         <Route path='/my-booking' element={<MyBooking/>}/>
         <Route path='/wallet' element={<Wallet/>}/>
-        <Route path='/offers' element={<Offers/>}/>
+        <Route path='/filtered' element={<FilteredResult/>}/>
+        <Route path='/passengerInfo' element={<PassengerDetails/>}/>
+        <Route path="/payment" element={<Payment/>}/>
       </Routes>
     </Router>
   )

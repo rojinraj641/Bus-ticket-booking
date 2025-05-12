@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBusSimple, faBars, faTicket } from '@fortawesome/free-solid-svg-icons';
+import { faBusSimple, faBars } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
     const [menu, setMenu] = useState(false);
@@ -25,7 +25,6 @@ const Navbar = () => {
                 <div className="flex flex-col sm:flex-row items-center sm:space-x-8">
                     <a href="my-booking" className="hover:text-[#de1b0d] py-2 sm:py-0">My Booking</a>
                     <a href="track-ticket" className="hover:text-[#de1b0d] py-2 sm:py-0">Track Ticket</a>
-                    <a href="offers" className="hover:text-[#de1b0d] py-2 sm:py-0">Offers</a>
                     <a href="wallet" className="hover:text-[#de1b0d] py-2 sm:py-0">Wallet</a>
                     <a href="signup" className="hover:text-[#de1b0d] py-2 sm:py-0">Login/Signup</a> 
                 </div>

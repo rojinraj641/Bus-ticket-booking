@@ -2,25 +2,30 @@ import React from "react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage } from '@cloudinary/react';
 
-const HomeCard = () => {
-    // Create a Cloudinary instance 
+const HomeCard = ({ routeFrom = "Kochi", routeTo = "Coimbatore", imgId = 'mahadev-ittina-0FXjIXhHSkA-unsplash_ifhrvt' }) => {
+    // Cloudinary instance
     const cld = new Cloudinary({
         cloud: {
             cloudName: 'dkvrddf9n'
         }
     });
-    // Instantiate a CloudinaryImage object for the image with the public ID, 'docs/models'.
-    const myImage = cld.image('mahadev-ittina-0FXjIXhHSkA-unsplash_ifhrvt');
+
+    // Image object
+    const myImage = cld.image(imgId);
 
     return (
-        <div className='transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110'>
-            <AdvancedImage className="h-48 w-64 rounded-t-lg object-cover object-center" cldImg={myImage} />
-            <div className='bg-red-500 rounded-b-lg p-2 text-white' >
-                <p className='font-bold'>Buses From</p>
-                <p>Kochi To Coimbatore</p>
+        <div className="w-64 sm:w-72 md:w-80 transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 shadow-lg rounded-lg overflow-hidden">
+            <AdvancedImage
+                className="h-48 sm:h-56 w-full object-cover object-center"
+                cldImg={myImage}
+                alt="Bus Route Image"
+            />
+            <div className="bg-sky-800 p-3 text-white">
+                <p className="font-bold text-sm sm:text-base">Buses From</p>
+                <p className="text-sm sm:text-base">{routeFrom} To {routeTo}</p>
             </div>
         </div>
-    )
+    );
 }
 
-export default HomeCard
+export default HomeCard;
