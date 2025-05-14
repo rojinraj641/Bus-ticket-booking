@@ -24,11 +24,6 @@ const couponSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        discountType: {
-            type: String,
-            required: true
-        }
-
     }, { timestamps: true });
 
 couponSchema.plugin(mongooseAggregatePaginate);

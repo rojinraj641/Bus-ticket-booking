@@ -1,11 +1,10 @@
-import React from 'react';
 import SeatSelection from './SeatSelection';
 
 const BusInfo = () => {
     return (
         <>
             <div className="bg-gray-100 border shadow-md p-6 w-full text-center rounded-t-lg overflow-y-auto">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-col md:flex-row md:items-center">
                     {/* Operator Info */}
                     <div className="flex-1">
                         <h3 className="font-bold text-xl">JSR Roadlinks</h3>

@@ -20,17 +20,13 @@ const transactionSchema = new mongoose.Schema(
         paymentMethod: {
             type: String,
             required: true,
-            enum: ["UPI","NetBanking"]
+            enum: ["UPI","Credit Card","Debit Card","Wallet"]
         },
         paymentStatus: {
             type: String,
             required: true,
             enum: ["Successful","Pending","Failed"]
         },
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        }
     },{timestamps: true}
 )
 transactionSchema.plugin(mongooseAggregatePaginate);

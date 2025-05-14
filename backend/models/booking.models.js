@@ -8,14 +8,14 @@ const bookingSchema = new mongoose.Schema(
             required: true,
             unique: true
         },
-        transactionId:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Transaction",
-            required: true
-        },
-        busId:{
+        busId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Bus",
+            required: true
+        },
+        transactionId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Transaction",
             required: true
         },
         passengerId: {
@@ -23,33 +23,31 @@ const bookingSchema = new mongoose.Schema(
             ref: "Passenger",
             required: true
         },
-        seatNumber: {
-            type: [Number],
-            required: true,
+        bookedSeats:{
+            type: [String],
         },
         bookingDate: {
             type: Date,
             required: true,
             default: Date.now,
         },
-        journeyDate: {
-            type: Date,
-            required: true
+        departure:{
+            boardingPoint:{type: String, required: true},
+            time: {type: Date, required: true}
+        },
+        arrival: {
+            destination: {type: String,required: true},
+            time: {type: Date}
         },
         bookingStatus: {
             type: String,
             required: true,
-            enum: ["Successful","Pending","Failed","Cancelled"]
+            enum: ["Confirmed", "In Progress", "Cancelled"]
         },
         totalAmount: {
             type: Number,
             required: true,
         },
-        paymentStatus: {
-            type: String,
-            required: true,
-            enum: ["Successful","Pending","Failed"]
-        }
     }, { timestamps: true });
 
 bookingSchema.plugin(mongooseAggregatePaginate)

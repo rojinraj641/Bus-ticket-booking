@@ -3,6 +3,11 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const userSchema = new mongoose.Schema(
     {
+        userId:{
+            type: String,
+            required: true,
+            unique: true
+        },
         phone: {
             type: String,
             required: true,
@@ -10,13 +15,11 @@ const userSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            unique: true,
-            match: /\S+@\S+\.\S+/,
-            trim: true
+            unique: true
         },
-        bus: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Bus"
+        referral:{
+            type: String,
+            unique: true
         },
         passengers: {
             type: mongoose.Schema.Types.ObjectId,
@@ -29,10 +32,6 @@ const userSchema = new mongoose.Schema(
         transactions: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Transaction"
-        },
-        coupons: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Coupon"
         },
         booking: {
             type: mongoose.Schema.Types.ObjectId,

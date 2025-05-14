@@ -18,11 +18,10 @@ const passengerSchema = new mongoose.Schema(
             required: true,
             enum: ["Male","Female","Other"]
         },
-        bus: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Bus",
-            required: true
-        }
+        state:{
+            type: String,
+            require: true
+        },
     },{timestamps: true}
 )
 
