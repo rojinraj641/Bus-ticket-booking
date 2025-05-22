@@ -1,9 +1,11 @@
 import SeatSelection from './SeatSelection';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 const BusInfo = () => {
     return (
         <>
-            <div className="bg-gray-100 border shadow-md p-6 w-full text-center rounded-t-lg overflow-y-auto">
+            <div className="bg-gray-100 border border-gray-300 shadow-md p-6 w-full text-center rounded-t-lg overflow-y-auto">
                 <div className="flex flex-col md:flex-row md:items-center">
                     {/* Operator Info */}
                     <div className="flex-1">
@@ -29,10 +31,11 @@ const BusInfo = () => {
                     </div>
 
                     {/* Rating */}
-                    <div className="flex-1">
-                        <p className="font-bold">Rating</p>
+                    <div className="flex flex-wrap py-1 px-2 rounded-md bg-green-500">
+                        <FontAwesomeIcon icon={faStar} style={{color: "#ffffff",}} className="pt-1 size-xs"/>
+                        <p className="text-white pl-1">4.5</p>
                     </div>
-
+                        
                     {/* Price */}
                     <div className="flex-1">
                         <p className="font-bold text-xl">$200</p>
@@ -48,7 +51,7 @@ const BusInfo = () => {
                     </div>
                 </div>
             </div>
-            <div className="w-full border border-black shadow-md">
+            <div className="w-full border border-gray-300 shadow-md">
                 <SeatSelection />
             </div>
 

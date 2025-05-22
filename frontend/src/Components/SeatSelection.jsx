@@ -17,7 +17,7 @@ const SeatSelection = ()=> {
     
     return (
       <div 
-        className={`w-24 h-8 border ${bgColor} mx-1 my-1`}
+        className={`w-24 h-8 border border-gray-400 rounded-sm ${bgColor} mx-1 my-1`}
         onClick={() => status === "available" && setSelectedSeat(id)}
       />
     );
@@ -30,9 +30,9 @@ const SeatSelection = ()=> {
         {/* Lower Deck */}
         <div className="mb-6">
           <h2 className="text-sm font-medium mb-2">Lower Deck</h2>
-          <div className="border border p-2">
+          <div className="border border-gray-400 p-2">
             <div className="flex items-center">
-              <div className="w-12 h-8 flex items-center ml-16 justify-center">
+              <div className="w-12 h-8 flex items-center justify-center">
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" />
                   <circle cx="12" cy="12" r="4" />
@@ -42,11 +42,13 @@ const SeatSelection = ()=> {
                   <line x1="9.17" y1="14.83" x2="4.93" y2="19.07" />
                 </svg>
               </div>
-              {renderSeat("female")}
+              <div className="flex flex-row pl-16">
+                {renderSeat("female")}
               {renderSeat("available")}
               {renderSeat("available")}
               {renderSeat("available")}
               {renderSeat("available")}
+              </div>
             </div>
             <div className="flex mb-5 pl-28">
               {renderSeat("available")}
@@ -68,7 +70,7 @@ const SeatSelection = ()=> {
         {/* Upper Deck */}
         <div>
           <h2 className="text-sm font-medium mb-2">Upper Deck</h2>
-          <div className="border p-2">
+          <div className="border border-gray-400 p-2">
             <div className="flex ml-27">
               {renderSeat("available")}
               {renderSeat("available")}
@@ -96,7 +98,7 @@ const SeatSelection = ()=> {
       
       {/* Right side - Booking Details */}
       <div className="flex-1">
-        <div className="border rounded-lg p-4">
+        <div className="border border-gray-400 rounded-lg p-4">
           {/* Legend */}
           <div className="mb-6 grid grid-cols-2 gap-4">
             <div className="flex items-center">
@@ -122,7 +124,7 @@ const SeatSelection = ()=> {
             <div className="flex justify-between items-center mb-4">
               <div>
                 <label className="text-sm">Boarding Point:</label>
-                <div className="flex items-center border rounded px-3 py-2 w-48">
+                <div className="flex items-center border border-gray-400 rounded px-3 py-2 w-48">
                   <span className="flex-1"></span>
                   <ChevronDown size={16} />
                 </div>
@@ -136,7 +138,7 @@ const SeatSelection = ()=> {
             <div className="flex justify-between items-center mb-4">
               <div>
                 <label className="text-sm">Dropping Point:</label>
-                <div className="flex items-center border rounded px-3 py-2 w-48">
+                <div className="flex items-center border border-gray-400 rounded px-3 py-2 w-48">
                   <span className="flex-1"></span>
                   <ChevronDown size={16} />
                 </div>

@@ -29,18 +29,18 @@ function BookingDetails({ busDetails, journey, passenger, fare }) {
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2 text-sm">
           <span className="font-medium">Boarding Point</span>
-          <span>{journey.departure.location}</span>
+          <span className="font-medium">Dropping Point</span>
         </div>
 
         {/* Journey Progress Line */}
         <div className="flex items-center my-4">
           <div className="w-3 h-3 rounded-full bg-blue-600"></div>
-          <div className="flex-1 h-0.5 bg-blue-600 mx-2"></div>
+          <div className="flex-1 h-0.5 bg-blue-600"></div>
           <div className="w-3 h-3 rounded-full bg-blue-600"></div>
         </div>
 
         <div className="flex justify-between items-center text-sm">
-          <span className="font-medium">Dropping Point</span>
+          <span>{journey.departure.location}</span>
           <span>{journey.arrival.location}</span>
         </div>
       </div>

@@ -18,14 +18,11 @@ const bookingSchema = new mongoose.Schema(
             ref: "Transaction",
             required: true
         },
-        passengerId: {
+        passengerId: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Passenger",
             required: true
-        },
-        bookedSeats:{
-            type: [String],
-        },
+        }],
         bookingDate: {
             type: Date,
             required: true,

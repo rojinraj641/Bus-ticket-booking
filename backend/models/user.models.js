@@ -3,7 +3,7 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const userSchema = new mongoose.Schema(
     {
-        userId:{
+        userId: {
             type: String,
             required: true,
             unique: true
@@ -17,22 +17,22 @@ const userSchema = new mongoose.Schema(
             type: String,
             unique: true
         },
-        referral:{
+        referral: {
             type: String,
             unique: true
         },
-        passengers: {
+        passengers: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Passenger"
-        },
+        }],
         wallet: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Wallet"
         },
-        transactions: {
+        transactions: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Transaction"
-        },
+        }],
         booking: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Booking"
@@ -41,9 +41,8 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             required: true
         }
-    },{timestamps: true},
+    }, { timestamps: true },
 );
 
 userSchema.plugin(mongooseAggregatePaginate);
-
 export const User = mongoose.model("User", userSchema);

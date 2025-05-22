@@ -6,6 +6,7 @@ const walletSchema = new mongoose.Schema(
         availableBalance: {
             type: Number,
             required: true,
+            default: 0
         },
         transactionDetails: {
             type: mongoose.Schema.Types.ObjectId,

@@ -8,6 +8,14 @@ const couponSchema = new mongoose.Schema(
             unique: true,
             required: true,
         },
+        couponCode: {
+            type: String,
+            unique: true,
+            required: true,
+        },
+        couponImage: {
+            type: String
+        },
         description: {
             type: String,
             required: true,

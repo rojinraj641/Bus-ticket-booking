@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
 import CouponSection from '../Components/CouponSection';
 import PaymentMethods from '../Components/PaymentMethods';
 import BookingDetails from '../Components/BookingDetails';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faClock } from '@fortawesome/free-solid-svg-icons';
 
 function Payment() {
     const [timeLeft, setTimeLeft] = useState(600);
@@ -87,51 +89,51 @@ function Payment() {
 
     return (
         <>
-        <Navbar/>
-        <div className="min-h-screen flex flex-col bg-gray-50">
-            {/* Header */}
-            <header className="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-5">
-                <div className="max-w-7xl w-full mx-auto px-4 flex justify-between items-center">
-                    <div className="text-base md:text-lg font-semibold flex items-center gap-2">
-                        {bookingData.route.from} <i className="fas fa-arrow-right"></i> {bookingData.route.to}
+            <Navbar />
+            <div className="min-h-screen w-full bg-gray-50">
+                {/* Header */}
+                <header className="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-5">
+                    <div className="max-w-7xl w-full mx-auto px-4 flex justify-between items-center">
+                        <div className="text-base md:text-lg font-semibold flex items-center gap-2">
+                            {bookingData.route.from} <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffffff", }} className="px-5" /> {bookingData.route.to}
+                        </div>
+                        <div className=" bg-opacity-20 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            <FontAwesomeIcon icon={faClock} style={{ color: "#ffffff", }} className="pt-1" />
+                            {timeLeft > 0 ? `Pay within ${formatTime(timeLeft)}` : 'Time expired'}
+                        </div>
                     </div>
-                    <div className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm flex items-center gap-2">
-                        <i className="far fa-clock"></i>
-                        {timeLeft > 0 ? `Pay within ${formatTime(timeLeft)}` : 'Time expired'}
-                    </div>
-                </div>
-            </header>
+                </header>
 
-            {/* Main Content */}
-            <main className="max-w-7xl w-full mx-auto px-4 py-6 flex-1">
-                <div className="flex flex-col-reverse md:grid md:grid-cols-2 gap-6">
-                    {/* Left side: Coupons + Payment */}
-                    <div className="space-y-6">
-                        <CouponSection
-                            coupons={availableCoupons}
-                            onApplyCoupon={handleApplyCoupon}
-                            appliedCoupon={appliedCoupon}
-                        />
-                        <PaymentMethods
-                            selectedMethod={selectedPaymentMethod}
-                            onMethodChange={handlePaymentMethodChange}
-                            onProceedToPay={handleProceedToPay}
-                        />
-                    </div>
+                {/* Main Content */}
+                <main>
+                    <div  className="flex flex-row">
+                        {/* Left side: Coupons + Payment */}
+                        <div className="flex flex-col gap-10 py-5 pl-10">
+                            <CouponSection
+                                coupons={availableCoupons}
+                                onApplyCoupon={handleApplyCoupon}
+                                appliedCoupon={appliedCoupon}
+                            />
+                            <PaymentMethods
+                                selectedMethod={selectedPaymentMethod}
+                                onMethodChange={handlePaymentMethodChange}
+                                onProceedToPay={handleProceedToPay}
+                            />
+                        </div>
 
-                    {/* Right side: Booking Details */}
-                    <div>
-                        <BookingDetails
-                            busDetails={bookingData.bus}
-                            journey={bookingData.journey}
-                            passenger={bookingData.passenger}
-                            fare={bookingData.fare}
-                        />
+                        {/* Right side: Booking Details */}
+                        <div className="w-full py-5 px-10">
+                            <BookingDetails
+                                busDetails={bookingData.bus}
+                                journey={bookingData.journey}
+                                passenger={bookingData.passenger}
+                                fare={bookingData.fare}
+                            />
+                        </div>
                     </div>
-                </div>
-            </main>
-        </div>
-        <Footer/>
+                </main>
+            </div>
+            <Footer />
         </>
     );
 }

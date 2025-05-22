@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-const stoppingPointsSchema = new mongoose.Schema(
+const pointsSchema = new mongoose.Schema(
     {
         busId:{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Bus"
         },
-        stops: [
+        stoppingPoints: [
             {
                 name: {type: String,required: true},
                 arrival: {type: Date, required: true},
@@ -17,6 +17,6 @@ const stoppingPointsSchema = new mongoose.Schema(
     },{timestamps: true}
 )
 
-stoppingPointsSchema.plugin(mongooseAggregatePaginate);
+pointsSchema.plugin(mongooseAggregatePaginate);
 
-export const StoppingPoint = mongoose.model("StoppingPoint", stoppingPointsSchema)
+export const points = mongoose.model("points", pointsSchema)

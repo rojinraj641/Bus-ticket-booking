@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Navbar from '../Components/Navbar'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
@@ -53,7 +53,7 @@ const FilteredResult = () => {
 
                 {/* Main Content */}
                 <main className="flex-1 px-4 py-6 overflow-y-auto no-scrollbar">
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col">
                         <BusInfo />
                     </div>
                 </main>

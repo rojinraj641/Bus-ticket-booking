@@ -8,6 +8,9 @@ const busSchema = new mongoose.Schema(
             unique: true,
             required: true
         },
+        busImage: {
+            type: String
+        },
         busName: {
             type: String,
             required: true

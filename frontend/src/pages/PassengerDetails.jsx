@@ -9,8 +9,9 @@ const PassengerDetails = () => {
     const [cancellation, setCancellation] = useState("");
 
     return (
-        <>
+        <div>
             <Navbar />
+            <div className="w-full flex flex-nowrap">
             <div className="px-4 md:px-8 py-6 md:py-10">
                 <h1 className="text-xl font-bold mb-4">Passenger Information</h1>
                 <PassengerInfo />
@@ -21,8 +22,8 @@ const PassengerDetails = () => {
                 <h1 className="text-xl font-bold mb-4">Contact Details</h1>
                 <div className="border w-full rounded-md p-5">
                     <h3 className="font-semibold">Ticket will be sent to these details</h3>
-                    <div className="flex flex-col md:flex-row flex-wrap gap-6 pt-4">
-                        <div className="flex flex-col w-full md:w-1/2">
+                    <div className="flex flex-col md:flex-row flex-nowrap gap-5 pt-4">
+                        <div className="flex flex-col md:w-1/2">
                             <label htmlFor="email" className="mb-1">Email</label>
                             <input
                                 id="email"
@@ -30,10 +31,10 @@ const PassengerDetails = () => {
                                 placeholder="Enter email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="border rounded-md p-2 w-full"
+                                className="border rounded-md p-2"
                             />
                         </div>
-                        <div className="flex flex-col w-full md:w-1/2">
+                        <div className="flex flex-col md:w-1/2">
                             <label htmlFor="phone" className="mb-1">Phone Number</label>
                             <input
                                 id="phone"
@@ -41,13 +42,13 @@ const PassengerDetails = () => {
                                 placeholder="Enter phone number"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
-                                className="border rounded-md p-2 w-full"
+                                className="border rounded-md p-2"
                             />
                         </div>
                     </div>
                 </div>
             </div>
-
+            </div>
             {/* Cancellation */}
             <div className="px-4 md:px-8 pt-6 pb-20">
                 <h1 className="text-xl font-bold mb-4">Cancellation</h1>
@@ -86,9 +87,9 @@ const PassengerDetails = () => {
                     Proceed to Payment
                 </button>
             </div>
-
+            
             <Footer />
-        </>
+        </div>
     );
 };
 
