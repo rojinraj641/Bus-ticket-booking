@@ -6,11 +6,13 @@ import PaymentMethods from '../Components/PaymentMethods';
 import BookingDetails from '../Components/BookingDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faClock } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
-function Payment() {
+const Payment = ()=> {
     const [timeLeft, setTimeLeft] = useState(600);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
     const [appliedCoupon, setAppliedCoupon] = useState(null);
+    const [coupons, setCoupons] = useState([]);
 
     const formatTime = (seconds) => {
         if (seconds <= 0) return "Time expired";
@@ -18,6 +20,20 @@ function Payment() {
         const remainingSeconds = seconds % 60;
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')} min`;
     };
+
+    useEffect(()=>{
+        const fetchCoupons = async()=>{
+            try{
+                const response = await axios.get('api/v1/payment');
+                const activeCoupons = response.data.data;
+                setCoupons(activeCoupons);
+            }
+            catch(error){
+                console.log('An error occured while fetching coupons')
+            }
+        }
+        fetchCoupons()
+    },[])
 
     const bookingData = {
         route: {
@@ -72,7 +88,6 @@ function Payment() {
 
     const handleApplyCoupon = (coupon) => {
         setAppliedCoupon(coupon);
-        alert(`Coupon ${coupon.code} applied!`);
     };
 
     const handlePaymentMethodChange = (method) => {
@@ -93,12 +108,14 @@ function Payment() {
             <div className="min-h-screen w-full bg-gray-50">
                 {/* Header */}
                 <header className="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-5">
-                    <div className="max-w-7xl w-full mx-auto px-4 flex justify-between items-center">
+                    <div className="max-w-7xl w-full mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-0">
                         <div className="text-base md:text-lg font-semibold flex items-center gap-2">
-                            {bookingData.route.from} <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffffff", }} className="px-5" /> {bookingData.route.to}
+                            {bookingData.route.from}
+                            <FontAwesomeIcon icon={faArrowRight} className="px-5" />
+                            {bookingData.route.to}
                         </div>
-                        <div className=" bg-opacity-20 px-3 py-1 rounded-full text-sm flex items-center gap-2">
-                            <FontAwesomeIcon icon={faClock} style={{ color: "#ffffff", }} className="pt-1" />
+                        <div className="bg-opacity-20 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            <FontAwesomeIcon icon={faClock} className="pt-1" />
                             {timeLeft > 0 ? `Pay within ${formatTime(timeLeft)}` : 'Time expired'}
                         </div>
                     </div>
@@ -106,11 +123,11 @@ function Payment() {
 
                 {/* Main Content */}
                 <main>
-                    <div  className="flex flex-row">
-                        {/* Left side: Coupons + Payment */}
-                        <div className="flex flex-col gap-10 py-5 pl-10">
+                    <div className="flex flex-col md:flex-row w-full max-w-7xl mx-auto px-4 md:px-10 py-6 gap-6">
+                        {/* Left: Coupons + Payment Methods */}
+                        <div className="w-full md:w-1/2 flex flex-col gap-10">
                             <CouponSection
-                                coupons={availableCoupons}
+                                coupons={coupons}
                                 onApplyCoupon={handleApplyCoupon}
                                 appliedCoupon={appliedCoupon}
                             />
@@ -121,8 +138,8 @@ function Payment() {
                             />
                         </div>
 
-                        {/* Right side: Booking Details */}
-                        <div className="w-full py-5 px-10">
+                        {/* Right: Booking Details */}
+                        <div className="w-full md:w-1/2">
                             <BookingDetails
                                 busDetails={bookingData.bus}
                                 journey={bookingData.journey}

@@ -1,22 +1,26 @@
 import { User } from "../models/user.models.js";
+import { faker } from '@faker-js/faker';
 
+function generateUsers() {
+    return {
+        phone: faker.phone.number({style: 'national'}),
+        email: faker.internet.email(),
+        referral: faker.string.alphanumeric({ length: 6 }),
+        isActive: true
+    }
+}
 //Adding dummy User
-async function addUser() {
+async function addUser(count = 100) {
     try {
-        const newUser = new User({
-            userId: 'user001',
-            phone: '8943939053',
-            email: 'rojinraj69@gmail.com',
-            referral: 'ROJ123',
-            isActive: true
-        })
-        const existingUser = User.findOne({newUser});
-        if (existingUser) {
-            console.log('User already exists')  
+        let users = [];
+        for (let i = 0; i < count; i++) {
+            const fakeUser = generateUsers();
+            users.push(fakeUser);
         }
-        else{
-            await newUser.save();
-            console.log('User added successfully');
+        const totalUsers = await User.countDocuments();
+        if (totalUsers < count) {
+            await User.insertMany(users);
+            console.log(`${count} User added successfully`);
         }
     }
     catch (error) {

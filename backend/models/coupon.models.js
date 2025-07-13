@@ -3,11 +3,6 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const couponSchema = new mongoose.Schema(
     {
-        couponId: {
-            type: String,
-            unique: true,
-            required: true,
-        },
         couponCode: {
             type: String,
             unique: true,
@@ -32,6 +27,10 @@ const couponSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+        isActive: {
+            type: Boolean,
+            required: true
+        }
     }, { timestamps: true });
 
 couponSchema.plugin(mongooseAggregatePaginate);

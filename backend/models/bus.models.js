@@ -3,26 +3,19 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const busSchema = new mongoose.Schema(
     {
-        busId: {
-            type: String,
-            unique: true,
-            required: true
-        },
-        busImage: {
-            type: String
-        },
         busName: {
             type: String,
             required: true
         },
-        stoppingPoints: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "StoppingPoint"
-        }],
-        seats: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Seats"
-        }],
+        day:{
+            type: [String],
+            enum: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+            required: true
+        },
+        boardingTime: {
+            type: String,
+            required: true
+        },
         ratings: {
             type: Number,
             min: 0,
@@ -34,10 +27,40 @@ const busSchema = new mongoose.Schema(
             type: String,
             enum: ['AC','Non AC']
         },
-        amentities: {
+        stoppingPoints: {
             type: [String],
             required: true
-        }
+        },
+        totalSeats: {
+            type: Number,
+            required: true
+        },
+        totalDeck: {
+            type: Number,
+            default: 1,
+            required: true
+        },
+        totalTravelTime: {
+            type: Number,
+            required: true
+        },
+        totalDistance: {
+            type: Number,
+            required: true
+        },
+        rowsPerDeck: {
+            type: Number,
+            default: 3,
+            required: true
+        },
+        seatsPerRow: {
+            type: Number,
+            required: true
+        },
+        amenities: {
+            type: [String],
+            required: true
+        },
     }, { timestamps: true });
 
 busSchema.plugin(mongooseAggregatePaginate);

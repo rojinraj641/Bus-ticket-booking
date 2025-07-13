@@ -1,13 +1,12 @@
-import React from "react";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import Home from "./pages/Home";
-import Signup from "./pages/Signup"
-import OtpVerify from "./pages/OtpVerify"
-import MyBooking from './pages/MyBooking'
-import Wallet from './pages/Wallet'
+import Home from "./Pages/Home";
+import Signup from "./Pages/Signup"
+import OtpVerify from "./Pages/OtpVerify"
+import MyBooking from './Pages/MyBooking'
+import Wallet from './Pages/Wallet'
 import FilteredResult from "./pages/FilteredResult";
-import Payment from "./pages/Payment";
-import PassengerDetails from "./pages/PassengerDetails";
+import Payment from "./Pages/Payment";
+import PassengerDetails from "./Pages/PassengerDetails";
 import './App.css';
 
 function App() {

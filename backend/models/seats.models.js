@@ -17,9 +17,9 @@ const seatSchema = new mongoose.Schema(
         },
         seatPosition: {
             type: String,
-            enum: ['Upper','Lower','Middle','Side']
+            enum: ['Upper','Lower']
         },
-        price: {
+        basePrice: {
             type: Number,
             required: true
         },
@@ -30,7 +30,7 @@ const seatSchema = new mongoose.Schema(
         },
         bookedBy: {
             type: String,
-            enum: ['Male','Female'],
+            enum: ['Male','Female',null],
         }
     },{timestamps: true}
 )

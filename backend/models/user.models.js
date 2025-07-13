@@ -3,11 +3,6 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const userSchema = new mongoose.Schema(
     {
-        userId: {
-            type: String,
-            required: true,
-            unique: true
-        },
         phone: {
             type: String,
             required: true,

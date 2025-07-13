@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from "axios";
+import { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
@@ -6,6 +7,21 @@ import HomeCard from '../Components/HomeCard';
 import OfferCard from '../Components/OfferCard';
 
 const Home = () => {
+  const [route, setRoute] = useState([]);
+  const [coupon, setCoupon] = useState([]);
+
+  useEffect(() => {
+    axios.get("/api/v1/")
+      .then((res) => {
+        setRoute(res.data.message.topRoute);
+        setCoupon(res.data.message.coupons)
+        console.log(res.data.message.coupons);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+  }, [])
+
   return (
     <>
       <Navbar />
@@ -18,9 +34,9 @@ const Home = () => {
             Top Travelled Bus Routes
           </h3>
           <div className="flex flex-wrap justify-center gap-6 sm:gap-10 mb-12">
-            {[...Array(4)].map((_, index) => (
-              <HomeCard key={index} title={`Route ${index + 1}`} />
-            ))}
+            {route.map((element, index) => {
+              return <HomeCard key={index} title={`From ${element.from} to ${element.to}`} />
+            })}
           </div>
         </section>
 
@@ -33,9 +49,9 @@ const Home = () => {
             Bus Ticket Offers and Deals
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 place-items-center">
-            {[...Array(9)].map((_, index) => (
-              <OfferCard key={index} offer={`Deal ${index + 1}`} />
-            ))}
+            {coupon.map((element, index) => {
+              return <OfferCard key={index} offer={element.couponCode} text={element.description}/>
+            })}
           </div>
         </section>
       </div>

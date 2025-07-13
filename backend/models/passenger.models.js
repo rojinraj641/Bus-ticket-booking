@@ -3,12 +3,11 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const passengerSchema = new mongoose.Schema(
     {
-        passengerId: {
-            type: String,
-            required: true,
-            unique: true
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
         },
-        fullName: {
+        name: {
             type: String,
             required: true,
             trim: true
@@ -23,15 +22,10 @@ const passengerSchema = new mongoose.Schema(
             required: true,
             enum: ["Male","Female","Other"]
         },
-        state:{
+        place:{
             type: String,
             required: true
         },
-        bookedSeat:{
-            type: String,
-            unique: true,
-            required: true
-        }
     },{timestamps: true}
 )
 
