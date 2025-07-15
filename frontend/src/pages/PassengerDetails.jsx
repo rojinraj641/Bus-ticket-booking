@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Toaster, toast } from 'sonner';
 import { addPrice, subtractPrice } from "../Features/Seats/totalPriceSlice";
+import { updateCancellation } from "../Features/Bus/cancellationSlice";
 
 const PassengerDetails = () => {
   const [email, setEmail] = useState("");
@@ -25,8 +26,10 @@ const PassengerDetails = () => {
     if (prevCancellation.current !== null) {
       if (cancellation && !prevCancellation.current) {
         dispatch(addPrice(100));
+        dispatch(updateCancellation(true));
       } else if (!cancellation && prevCancellation.current) {
         dispatch(subtractPrice(100));
+        dispatch(updateCancellation(false))
       }
     }
     prevCancellation.current = cancellation;
@@ -53,11 +56,7 @@ const PassengerDetails = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post('/api/v1/passengerInfo', {
-        passengers,
-        email,
-        phone,
-      });
+      
       navigate('/payment');
     } catch (error) {
       toast.error('Something went wrong. Please try again.');

@@ -42,9 +42,9 @@ const SeatSelection = ({ seats }) => {
 
   const renderDeck = (deck) => (
     <div className="flex flex-row gap-5 mb-5">
-      {deck.map((seat) => (
+      {deck.map((seat,index) => (
         <Seat
-          key={seat._id}
+          key={index}
           type={seat.seatType}
           status={seat.isBooked}
           bookedBy={seat.bookedBy}

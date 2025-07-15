@@ -4,7 +4,10 @@ import busReducer from '../Features/Search/busSlice.js';
 import seatReducer from '../Features/Seats/seatSlice.js';
 import filterReducer from '../Features/Search/filterSlice.js';
 import passengerReducer from '../Features/Passengers/passengerSlice.js';
-import priceReducer from '../Features/Seats/totalPriceSlice.js'
+import priceReducer from '../Features/Seats/totalPriceSlice.js';
+import selectedBusReducer from '../Features/Bus/selectedBusSlice.js';
+import cancellationReducer from '../Features/Bus/cancellationSlice.js';
+import selectedCouponsReducer from '../Features/Coupons/couponSlice.js';
 
 const store = configureStore({
     reducer:{
@@ -13,7 +16,10 @@ const store = configureStore({
         seat: seatReducer,
         filters: filterReducer,
         passengers: passengerReducer,
-        totalPrice: priceReducer
+        totalPrice: priceReducer,
+        selectedBus: selectedBusReducer,
+        cancellation: cancellationReducer,
+        selectedCoupons: selectedCouponsReducer
     }
 })
 

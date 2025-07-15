@@ -5,7 +5,8 @@ const newCoupon = {
   description: 'Rs 100 off on first booking',
   offerStarts: new Date(),
   offerEnds: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  discountAmount: 100 
+  discountAmount: 100,
+  isActive: true
 };
 
 async function addCoupon() {

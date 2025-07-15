@@ -13,12 +13,7 @@ const PassengerInfo = ({ index, seat }) => {
   
   const handleSave = () => {
     try{
-      dispatch(addPassenger({
-        name: name,
-        place: place?place.place: '',
-        age: age,
-        gender: gender
-      }))
+      dispatch(addPassenger({name, age, gender, place}))
       toast.success('Passenger added successfully')
     }
     catch(error){

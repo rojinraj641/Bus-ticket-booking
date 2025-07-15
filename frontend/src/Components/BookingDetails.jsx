@@ -1,84 +1,127 @@
-import React from 'react';
+import { useSelector } from "react-redux";
+import { FaBusAlt, FaRupeeSign, FaUserAlt, FaClock } from "react-icons/fa";
+import { useEffect, useState} from 'react';
 
-function BookingDetails({ busDetails, journey, passenger, fare }) {
+const BookingDetails = () => {
+  const selectedBus = useSelector((state) => state.selectedBus);
+  const boarding = useSelector((state) => state.search.boarding);
+  const destination = useSelector((state) => state.search.destination);
+  const passengers = useSelector((state) => state.passengers);
+  const cancellation = useSelector((state) => state.cancellation);
+  const totalFare = useSelector((state)=> state.totalPrice);
+  const [cancellationPrice, setCancellationPrice] = useState(null);
+  const [basePrice, setBasePrice] = useState(totalFare);
+  const [isCouponAvailable, setIsCouponAvailable] = useState(false);
+  const coupons = useSelector((state)=>state.selectedCoupons);
+
+  useEffect(()=>{
+    if(coupons){
+      console.log(coupons)
+      setIsCouponAvailable(true);
+    }
+  },[coupons])
+
+  useEffect(()=>{
+    if(cancellation==true){
+      setBasePrice(totalFare);
+      setCancellationPrice(100);
+    }
+
+  },[cancellation])
+
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 w-full">
-      {/* Bus Details */}
-      <div className="flex flex-col sm:flex-row justify-between mb-4">
+    <div className="bg-white rounded-2xl shadow-lg p-8 w-full space-y-8">
+      {/* Bus Info */}
+      <div className="flex flex-col sm:flex-row justify-between items-start border-b pb-6 gap-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-800">{busDetails.name}</h3>
-          <div className="text-sm text-gray-500">{busDetails.type}</div>
+          <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <FaBusAlt className="text-blue-600" />
+            {selectedBus.busName}
+          </h3>
+          <p className="text-sm text-gray-500">{selectedBus.busType}</p>
+        </div>
+        <div className="text-sm text-gray-600 text-right space-y-1">
+          <div><span className="font-medium">From:</span> {boarding}</div>
+          <div><span className="font-medium">To:</span> {destination}</div>
         </div>
       </div>
 
-      {/* Journey Times */}
-      <div className="flex flex-col sm:flex-row justify-between text-center mb-6 pb-6 border-b border-gray-200">
-        <div className="mb-4 sm:mb-0">
-          <div className="text-sm text-gray-600">Departure</div>
-          <div className="text-xl font-semibold">{journey.departure.time}</div>
-          <div className="text-sm text-gray-500">{journey.departure.date}</div>
+      {/* Boarding and Dropping Points */}
+      <div className="border-b pb-6">
+        <div className="flex justify-between text-sm font-medium text-gray-600 mb-3">
+          <span>Boarding Point</span>
+          <span>Dropping Point</span>
         </div>
-        <div>
-          <div className="text-sm text-gray-600">Arrival</div>
-          <div className="text-xl font-semibold">{journey.arrival.time}</div>
-          <div className="text-sm text-gray-500">{journey.arrival.date}</div>
-        </div>
-      </div>
-
-      {/* Boarding & Dropping */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-2 text-sm">
-          <span className="font-medium">Boarding Point</span>
-          <span className="font-medium">Dropping Point</span>
-        </div>
-
-        {/* Journey Progress Line */}
-        <div className="flex items-center my-4">
-          <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+        <div className="flex items-center">
+          <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
           <div className="flex-1 h-0.5 bg-blue-600"></div>
-          <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+          <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
         </div>
-
-        <div className="flex justify-between items-center text-sm">
-          <span>{journey.departure.location}</span>
-          <span>{journey.arrival.location}</span>
+        <div className="flex justify-between text-sm text-gray-500 mt-2">
+          <div className='flex flex-col'>
+            <span>{boarding}</span>
+            <span>{selectedBus.boardingTime}</span>
+          </div>
+          <div className="flex flex-col">
+            <span>{destination}</span>
+            <span>{selectedBus.droppingTime}</span>
+          </div>
         </div>
       </div>
 
       {/* Passenger Info */}
-      <div className="mb-6 pb-6 border-b border-gray-200">
-        <h4 className="text-base font-semibold mb-2">Passenger</h4>
-        <div className="text-sm">{passenger.name} {passenger.details}</div>
+      <div className="border-b pb-6">
+        <h4 className="text-lg font-semibold flex items-center gap-2 text-gray-800 mb-2">
+          <FaUserAlt className="text-blue-500" />
+          Passenger
+        </h4>
+        {
+          passengers.map((p, index) => {
+            return <div key={index} className="flex flex-row text-sm text-gray-600">
+              <div className='flex flex-col'>
+                <p>{p.name}</p>
+                <p>{p.gender}</p>
+              </div>
+            </div>
+          })
+        }
       </div>
 
-      {/* Fare Details */}
+      {/* Fare Info */}
       <div>
-        <h4 className="text-base font-semibold mb-3">Fare Details</h4>
-        <div className="space-y-2 text-sm">
+        <h4 className="text-lg font-semibold flex items-center gap-2 text-gray-800 mb-3">
+          <FaRupeeSign className="text-green-600" />
+          Fare Details
+        </h4>
+        <div className="space-y-2 text-sm text-gray-700">
           <div className="flex justify-between">
             <span>Base Fare</span>
-            <span>₹{fare.baseFare}</span>
+            <span>₹{basePrice}</span>
           </div>
+          {cancellation && 
           <div className="flex justify-between">
             <span>Cancellation Fee</span>
-            <span>₹{fare.cancellationFee}</span>
-          </div>
-          <div className="flex justify-between">
+            <span>₹{cancellationPrice}</span>
+          </div>}
+          {isCouponAvailable &&
+          <div className="flex justify-between text-green-600">
             <span>Coupon Applied</span>
-            <span>-₹{fare.couponDiscount}</span>
+            <span>-₹ {coupons[0]?.discountAmount}</span>
           </div>
-          <div className="flex justify-between font-semibold pt-2 mt-2 border-t border-gray-200">
+          }
+          <div className="flex justify-between font-bold border-t pt-3 mt-2 text-gray-800">
             <span>Total</span>
-            <span>₹{fare.total}</span>
+            <span>₹{(totalFare) + (cancellationPrice || 0) - (coupons[0]?.discountAmount || 0)}</span>
           </div>
         </div>
 
-        <div className="bg-green-50 text-green-600 font-medium rounded-lg p-3 text-center mt-4 text-sm">
-          You have saved ₹{fare.couponDiscount} on this booking
-        </div>
+        {isCouponAvailable &&
+        <div className="bg-green-100 text-green-700 font-medium rounded-md p-3 text-center mt-5 text-sm shadow-inner">
+          You have saved ₹{coupons[0]?.discountAmount} on this booking 🎉
+        </div>}
       </div>
     </div>
   );
-}
+};
 
 export default BookingDetails;
