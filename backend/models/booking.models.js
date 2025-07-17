@@ -3,10 +3,10 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const bookingSchema = new mongoose.Schema(
     {
-        bookingId: {
-            type: String,
-            required: true,
-            unique: true
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
         },
         busId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -28,13 +28,21 @@ const bookingSchema = new mongoose.Schema(
             required: true,
             default: Date.now,
         },
-        departure:{
-            boardingPoint:{type: String, required: true},
-            time: {type: Date, required: true}
+        departurePoint: {
+            type: String,
+            required: true
         },
-        arrival: {
-            destination: {type: String,required: true},
-            time: {type: Date}
+        departureTime: {
+            type: String,
+            required: true
+        },
+        destinationPoint: {
+            type: String,
+            required: true
+        },
+        arrivingTime: {
+            type: String,
+            required: true
         },
         bookingStatus: {
             type: String,

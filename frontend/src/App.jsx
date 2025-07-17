@@ -14,8 +14,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home/>} />
-        <Route path='/signup' element={<Signup/>}/>
-        <Route path='/otp-verify' element={<OtpVerify/>}/>
+        <Route path='/register' element={<Signup/>}/>
+        <Route path='/verifyOTP' element={<OtpVerify/>}/>
         <Route path='/my-booking' element={<MyBooking/>}/>
         <Route path='/wallet' element={<Wallet/>}/>
         <Route path='/filtered' element={<FilteredResult/>}/>

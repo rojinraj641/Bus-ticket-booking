@@ -8,6 +8,7 @@ import priceReducer from '../Features/Seats/totalPriceSlice.js';
 import selectedBusReducer from '../Features/Bus/selectedBusSlice.js';
 import cancellationReducer from '../Features/Bus/cancellationSlice.js';
 import selectedCouponsReducer from '../Features/Coupons/couponSlice.js';
+import userReducer from '../Features/User/userSlice.js'
 
 const store = configureStore({
     reducer:{
@@ -19,7 +20,8 @@ const store = configureStore({
         totalPrice: priceReducer,
         selectedBus: selectedBusReducer,
         cancellation: cancellationReducer,
-        selectedCoupons: selectedCouponsReducer
+        selectedCoupons: selectedCouponsReducer,
+        user: userReducer
     }
 })
 

@@ -8,18 +8,14 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true
         },
+        name: {
+            type: String, 
+            required: true
+        },
         email: {
             type: String,
             unique: true
         },
-        referral: {
-            type: String,
-            unique: true
-        },
-        passengers: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Passenger"
-        }],
         wallet: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Wallet"
@@ -33,8 +29,7 @@ const userSchema = new mongoose.Schema(
             ref: "Booking"
         },
         isActive: {
-            type: Boolean,
-            required: true
+            type: Boolean
         }
     }, { timestamps: true },
 );
