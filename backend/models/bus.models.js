@@ -24,8 +24,8 @@ const busSchema = new mongoose.Schema(
             required: true
         },
         busType:{
-            type: String,
-            enum: ['AC','Non AC']
+            type: [String],
+            required: true
         },
         stoppingPoints: {
             type: [String],

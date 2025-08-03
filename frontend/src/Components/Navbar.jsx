@@ -30,7 +30,7 @@ const Navbar = () => {
           <Link to="/track-ticket" className="hover:text-[#de1b0d] transition">Track Ticket</Link>
           <Link to="/wallet" className="hover:text-[#de1b0d] transition">Wallet</Link>
           <Link
-            to={name ? '/dashboard' : '/register'}
+            to={name ? '/' : '/register'}
             className="hover:text-[#de1b0d] transition"
           >
             {name ? `Hello, ${name.split(' ')[0]}` : 'Login / Signup'}

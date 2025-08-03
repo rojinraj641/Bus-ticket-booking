@@ -8,7 +8,7 @@ async function addBus() {
         // day: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         // boardingTime: '11:00',
         // ratings: 4.5,
-        // busType: 'AC',
+        // busType: ['AC','Sleeper'],
         // stoppingPoints: ['Kottarakkara','Kizhakketheruvu','Chengamanadu','Kunnicode','Punalur'],
         // amenities: ['WiFi', 'Charging Point', 'Reading Light', 'Blanket', 'Water Bottle'],
         // totalSeats: 24,
@@ -21,7 +21,7 @@ async function addBus() {
         // console.log('New Bus Saved');
     }
     catch (error) {
-        console.log(error.message);
+        console.log('Failed to add bus');
     }
 }
 

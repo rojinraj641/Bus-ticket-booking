@@ -5,11 +5,25 @@ import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
 import HomeCard from '../Components/HomeCard';
 import OfferCard from '../Components/OfferCard';
+import { useDispatch } from "react-redux";
+import { login } from "../Features/User/authSlice.js";
+import { setUserDetails } from "../Features/User/userSlice.js";
 
 const Home = () => {
   const [route, setRoute] = useState([]);
   const [coupon, setCoupon] = useState([]);
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+      const token = localStorage.getItem("token");
+      const phone = localStorage.getItem('phone');
+      const name = localStorage.getItem('name');
+      const email = localStorage.getItem('email');
+      if (token) {
+        dispatch(login(token));
+        dispatch(setUserDetails({phone,name,email}))
+      }
+    }, [dispatch]);
+    
   useEffect(() => {
     const fetchData = async () => {
       try {

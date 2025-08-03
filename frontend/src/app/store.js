@@ -9,6 +9,7 @@ import selectedBusReducer from '../Features/Bus/selectedBusSlice.js';
 import cancellationReducer from '../Features/Bus/cancellationSlice.js';
 import selectedCouponsReducer from '../Features/Coupons/couponSlice.js';
 import userReducer from '../Features/User/userSlice.js'
+import authSliceReducer from '../Features/User/authSlice.js'
 
 const store = configureStore({
     reducer:{
@@ -21,7 +22,8 @@ const store = configureStore({
         selectedBus: selectedBusReducer,
         cancellation: cancellationReducer,
         selectedCoupons: selectedCouponsReducer,
-        user: userReducer
+        user: userReducer,
+        authSlice: authSliceReducer
     }
 })
 

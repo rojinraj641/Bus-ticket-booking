@@ -11,12 +11,12 @@ const BusInfo = () => {
     const { boarding, destination } = useSelector((state) => state.search)
     const { busList } = useSelector((state) => state.bus);
     const dispatch = useDispatch();
-    const handleSeatSelection = (busId, busName, boardingTime, droppingTime, busType)=>{
+    const handleSeatSelection = (busId, busName, boardingTime, droppingTime, busType) => {
         dispatch(resetBusDetails())
         if (openBusId === busId) {
             setOpenBusId(null);
         } else {
-            dispatch(setBusDetails({busName, boardingTime, droppingTime, busType}))
+            dispatch(setBusDetails({ busName, boardingTime, droppingTime, busType }))
             setOpenBusId(busId);
             const selectedBus = busList.find(bus => bus._id === busId);
             setSeats(selectedBus?.seats || []);
@@ -69,10 +69,24 @@ const BusInfo = () => {
                             {/* Seat Selection */}
                             <div className="flex-1">
                                 <button
-                                    className="bg-red-500 shadow-md text-white px-4 py-2 rounded-md text-md"
-                                    onClick={() => handleSeatSelection(bus._id,bus.busName,bus.boardingTime,bus.tripEndingTime,bus.busType)}>
-                                    Select Seat
+                                    className={
+                                        openBusId
+                                            ? "bg-gray-500 text-white px-4 py-2 rounded-md text-md"
+                                            : "bg-red-500 shadow-md text-white px-4 py-2 rounded-md text-md"
+                                    }
+                                    onClick={() =>
+                                        handleSeatSelection(
+                                            bus._id,
+                                            bus.busName,
+                                            bus.boardingTime,
+                                            bus.tripEndingTime,
+                                            bus.busType
+                                        )
+                                    }
+                                >
+                                    {openBusId ? "Hide Seat" : "Select Seat"}
                                 </button>
+
                                 <p className="text-sm text-gray-600">{bus.seats.filter((seat) => !seat.isBooked).length} seats left</p>
                             </div>
                         </div>
