@@ -1,9 +1,9 @@
-import { addSelectedSeats, removeSelectedSeats } from '../Features/Seats/seatSlice';
+import { addSelectedSeats, removeSelectedSeats} from '../Features/Seats/seatSlice';
 import Seat from './Seats';
 import PriceBreakout from './PriceBreakout';
 import { useDispatch, useSelector } from 'react-redux';
 
-const SeatSelection = ({ seats }) => {
+const SeatSelection = ({ seats, selectedBusId }) => {
   const dispatch = useDispatch();
   const selectedSeats = useSelector((state) => state.seat.selectedSeats);
 
@@ -46,7 +46,7 @@ const SeatSelection = ({ seats }) => {
         <Seat
           key={index}
           type={seat.seatType}
-          status={seat.isBooked}
+          status={seat.status}
           bookedBy={seat.bookedBy}
           seatNumber={seat.seatNumber}
           selected={selectedSeats.includes(seat.seatNumber)}
@@ -77,7 +77,7 @@ const SeatSelection = ({ seats }) => {
                 {renderDriverSeat()}
               </div>
              <div className='pl-20'>
-               {renderDeck(lowerDeck.W)}
+              {renderDeck(lowerDeck.W)}
               {renderDeck(lowerDeck.M)}
               {renderDeck(lowerDeck.A)}
               {renderDeck(lowerDeck.SW)}
@@ -98,7 +98,7 @@ const SeatSelection = ({ seats }) => {
 
         {selectedSeats.length > 0 && (
           <div className="w-full lg:w-80 sticky top-20">
-            <PriceBreakout seats={seats} />
+            <PriceBreakout seats={seats} selectedBusId={selectedBusId} />
           </div>
         )}
       </div>

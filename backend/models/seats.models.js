@@ -23,14 +23,18 @@ const seatSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        isBooked: {
-            type: Boolean,
-            default: false,
+        status: {
+            type: String,
+            enum: ['Available','Locked','Booked'],
             required: true
         },
         bookedBy: {
             type: String,
             enum: ['Male','Female',null],
+        },
+        timeToLock: {
+            type: Date,
+            default: null
         }
     },{timestamps: true}
 )

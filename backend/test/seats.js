@@ -15,8 +15,9 @@ async function addSeats() {
                 seatType: 'Seater',
                 seatPosition: 'Lower',
                 basePrice: 800,
-                isBooked: false,
-                bookedBy: null
+                status: 'Available',
+                bookedBy: null,
+                timeToLock: null
             });
             }
         }
@@ -30,13 +31,13 @@ async function addSeats() {
                 seatType: 'Sleeper',
                 seatPosition: 'Upper',
                 basePrice: 1000,
-                isBooked: false,
-                bookedBy: null
+                status: 'Booked',
+                bookedBy: 'Male',
+                timeToLock: null
             });
             }
         }
         
-        //Saving all seats to DB
         // await Seats.insertMany(seatData);
         // console.log(`${seatData.length} seats added successfully for bus`);
 

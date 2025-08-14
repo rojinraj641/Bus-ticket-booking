@@ -2,8 +2,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addPrice } from "../Features/Seats/totalPriceSlice.js";
 import { useDispatch } from "react-redux";
+import axios from 'axios';
 
-const PriceBreakout = ({ seats }) => {
+const PriceBreakout = ({ seats,selectedBusId }) => {
     const selectedSeat = useSelector((state) => state.seat.selectedSeats);
     console.log(selectedSeat);
 
@@ -14,15 +15,15 @@ const PriceBreakout = ({ seats }) => {
         return total;
     }, 0);
 
-    console.log("💰 Total Fare:", baseFare);
-
     const convenienceFee = 25;
     const serviceTax = 45;
     const totalFare = baseFare + convenienceFee + serviceTax;
     const navigate = useNavigate()
     const dispatch = useDispatch();
+    
     const handleProceedToPayment = ()=>{
         dispatch(addPrice(totalFare))
+        axios.post(`/api/v1/filtered/lockSeats?selected=${encodeURIComponent(selectedSeat.join(','))}&busId=${selectedBusId}`)
         navigate('/passengerInfo')
     }
 
@@ -75,20 +76,20 @@ const PriceBreakout = ({ seats }) => {
                                 <div className="space-y-1">
                                     <div className="flex justify-between text-sm">
                                         <span>Base Price</span>
-                                        <span>{baseFare}</span>
+                                        <span>₹{baseFare}</span>
                                     </div>
                                     <div className="flex justify-between text-sm">
                                         <span>Service Tax</span>
-                                        <span>{serviceTax}</span>
+                                        <span>₹{serviceTax}</span>
                                     </div>
                                     <div className="flex justify-between text-sm">
                                         <span>Convenience Fee</span>
-                                        <span>{convenienceFee}</span>
+                                        <span>₹{convenienceFee}</span>
                                     </div>
                                     <hr className="my-2" />
                                     <div className="flex justify-between font-semibold">
                                         <span>Total Amount</span>
-                                        <span>{totalFare}</span>
+                                        <span>₹{totalFare}</span>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +100,7 @@ const PriceBreakout = ({ seats }) => {
                     <button
                     onClick={handleProceedToPayment}
                     className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-semibold transition-colors duration-200 shadow-sm hover:shadow-md">
-                        Proceed to Payment - {totalFare}
+                        Proceed to Payment - ₹{totalFare}
                     </button>
 
                     {/* Terms */}

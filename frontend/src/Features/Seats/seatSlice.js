@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const seatSlice = createSlice({
     name: 'seat',
-    initialState: { selectedSeats: [] },
+    initialState: { selectedSeats: []},
     reducers: {
         addSelectedSeats: (state,action) => {
             state.selectedSeats.push(action.payload);
@@ -12,9 +12,9 @@ const seatSlice = createSlice({
         },
         clearSelection: (state,action) => {
             state.selectedSeats = [];
-        }
+        },
     }
 })
 
-export const { addSelectedSeats, removeSelectedSeats, clearSelection} = seatSlice.actions;
+export const { addSelectedSeats, removeSelectedSeats, clearSelection } = seatSlice.actions;
 export default seatSlice.reducer
