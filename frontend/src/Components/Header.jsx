@@ -9,6 +9,7 @@ import { removeBusList, setBusList } from '../Features/Search/busSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,11 +18,13 @@ const Header = () => {
   const [swapAnimate, setSwapAnimate] = useState(false);
 
   const handleBoardingPoint = (value) => {
-    dispatch(boardingPoint(value));
+    const formatted = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    dispatch(boardingPoint(formatted));
   };
 
   const handleDestinationPoint = (value) => {
-    dispatch(destinationPoint(value));
+    const formatted = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    dispatch(destinationPoint(formatted));
   };
 
   const handleDate = (value) => {
@@ -37,6 +40,9 @@ const Header = () => {
 
   const handleSearchClick = async () => {
     try {
+      if(boarding==''|| destination==''){
+        toast.error('Please fill boarding and destination')
+      }
       dispatch(removeBusList());
       const res = await axios.get(`api/v1/filtered?boarding=${boarding}&destination=${destination}&date=${date}`);
       const { busList } = res.data.data;
@@ -50,6 +56,7 @@ const Header = () => {
 
   return (
     <header className="flex flex-wrap justify-center gap-4 bg-sky-800 p-4 sm:p-6">
+      <ToastContainer/>
       {/* Mobile Layout */}
       <div className="flex flex-col gap-3 w-full sm:hidden relative bg-white rounded-2xl p-4 shadow-md">
         <div className="flex items-center">

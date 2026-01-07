@@ -11,14 +11,14 @@ const homeData = asyncHandler(async (req, res) => {
                 {
                     $group: {
                         _id: {
-                            from: "$departure.boardingPoint",
-                            to: "$arrival.destination"
+                            from: "$departurePoint",
+                            to: "$destinationPoint"
                         },
                         totalBookings: { $sum: 1 }
                     }
                 },
                 { $sort: { totalBookings: -1 } },
-                { $limit: 1 },
+                { $limit: 4 },
                 {
                     $project: {
                         _id: 0,
@@ -29,6 +29,9 @@ const homeData = asyncHandler(async (req, res) => {
                 }
             ]),
             Coupon.aggregate([
+                {$match:
+                    {isActive: true}
+                },
                 {
                     $project: {
                         _id: 0,

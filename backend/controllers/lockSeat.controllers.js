@@ -21,7 +21,7 @@ const locked = asyncHandler( async (req,res)=>{
             })
         ).filter(Boolean)
         console.log(updated);
-        return res.status(200).json(new ApiResponse(200, 'Seats locked successfully', updated));
+        return res.status(200).json(new ApiResponse(200, updated, "Seats fetched successfully"));
     }
     catch(error){
         throw new ApiError(500, 'Internal Sever error');

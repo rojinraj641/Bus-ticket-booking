@@ -30,7 +30,7 @@ const BusInfo = () => {
             fetchApi(openBusId);
         }, 5000)
         return ()=>clearInterval(interval);
-    }, [openBusId]);
+    },[openBusId, ]);
 
     const handleSeatSelection = (busId, busName, boardingTime, droppingTime, busType) => {
         dispatch(resetBusDetails());
