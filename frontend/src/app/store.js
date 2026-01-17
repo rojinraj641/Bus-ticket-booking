@@ -7,6 +7,7 @@ import passengerReducer from '../Features/Passengers/passengerSlice.js';
 import priceReducer from '../Features/Seats/totalPriceSlice.js';
 import selectedBusReducer from '../Features/Bus/selectedBusSlice.js';
 import cancellationReducer from '../Features/Bus/cancellationSlice.js';
+import travelTimeReducer from '../Features/Bus/travelTimeSlice.js';
 import selectedCouponsReducer from '../Features/Coupons/couponSlice.js';
 import userReducer from '../Features/User/userSlice.js'
 import authSliceReducer from '../Features/User/authSlice.js'
@@ -21,6 +22,7 @@ const store = configureStore({
         totalPrice: priceReducer,
         selectedBus: selectedBusReducer,
         cancellation: cancellationReducer,
+        travelTime: travelTimeReducer,
         selectedCoupons: selectedCouponsReducer,
         user: userReducer,
         authSlice: authSliceReducer

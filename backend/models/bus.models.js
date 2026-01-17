@@ -23,9 +23,19 @@ const busSchema = new mongoose.Schema(
             default: 0,
             required: true
         },
+        averageSpeed: {
+            type: Number,
+            required: true,
+            default: 40
+        },
         busType:{
-            type: [String],
+            type: String,
             required: true
+        },
+        isACAvailable:{
+            type: Boolean,
+            required: true,
+            default: false
         },
         stoppingPoints: {
             type: [String],
@@ -41,19 +51,6 @@ const busSchema = new mongoose.Schema(
             required: true
         },
         totalTravelTime: {
-            type: Number,
-            required: true
-        },
-        totalDistance: {
-            type: Number,
-            required: true
-        },
-        rowsPerDeck: {
-            type: Number,
-            default: 3,
-            required: true
-        },
-        seatsPerRow: {
             type: Number,
             required: true
         },

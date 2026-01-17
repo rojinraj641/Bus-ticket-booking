@@ -7,11 +7,15 @@ import Wallet from './Pages/Wallet'
 import FilteredResult from "./pages/FilteredResult";
 import Payment from "./Pages/Payment";
 import PassengerDetails from "./Pages/PassengerDetails";
+import Loader from "./Components/Loader";
 import './App.css';
+import { useSelector } from "react-redux";
 
 function App() {
+  const { loading } = useSelector((state)=>state.bus.loading)
   return (
     <Router>
+      {loading && <Loader/>}
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path='/register' element={<Signup/>}/>

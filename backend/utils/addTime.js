@@ -1,4 +1,4 @@
-export function addTime(startTime, duration) {
+export default function addTime(startTime, duration) {
   // Parse start time (HH:MM)
   const [startHour, startMin] = startTime.split(':').map(Number);
 

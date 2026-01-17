@@ -5,7 +5,8 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { boardingPoint, destinationPoint, setDate } from '../Features/Search/searchSlice.js';
-import { removeBusList, setBusList } from '../Features/Search/busSlice.js';
+import { removeBusList, setBusList,setLoading } from '../Features/Search/busSlice.js';
+import { setTravelTime } from '../Features/Bus/travelTimeSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
@@ -16,6 +17,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const { boarding, destination, date } = useSelector((state) => state.search);
   const [swapAnimate, setSwapAnimate] = useState(false);
+
 
   const handleBoardingPoint = (value) => {
     const formatted = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
@@ -39,24 +41,21 @@ const Header = () => {
   };
 
   const handleSearchClick = async () => {
+    dispatch(setLoading(true));
     try {
-      if(boarding==''|| destination==''){
-        toast.error('Please fill boarding and destination')
-      }
-      dispatch(removeBusList());
       const res = await axios.get(`api/v1/filtered?boarding=${boarding}&destination=${destination}&date=${date}`);
-      const { busList } = res.data.data;
-      console.log(busList);
-      dispatch(setBusList(busList));
+      dispatch(setBusList(res.data.data.busList));
       navigate('/filtered');
-    } catch (error) {
-      console.error('Search Error:', error.message);
+    } catch (err) {
+      toast.error('Something went wrong');
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   return (
     <header className="flex flex-wrap justify-center gap-4 bg-sky-800 p-4 sm:p-6">
-      <ToastContainer/>
+      <ToastContainer />
       {/* Mobile Layout */}
       <div className="flex flex-col gap-3 w-full sm:hidden relative bg-white rounded-2xl p-4 shadow-md">
         <div className="flex items-center">

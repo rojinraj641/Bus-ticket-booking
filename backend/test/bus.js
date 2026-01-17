@@ -8,15 +8,14 @@ async function addBus() {
         // day: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
         // boardingTime: '11:00',
         // ratings: 4.5,
-        // busType: ['AC','Sleeper'],
+        // averageSpeed: 40,
+        // busType: 'Seater',
+        // isACAvailable: true,
         // stoppingPoints: ['Kottarakkara','Kizhakketheruvu','Chengamanadu','Kunnicode','Punalur'],
         // amenities: ['WiFi', 'Charging Point', 'Reading Light', 'Blanket', 'Water Bottle'],
-        // totalSeats: 24,
-        // totalDeck: 2,
-        // totalTravelTime: 1,
-        // totalDistance: 18,
-        // rowsPerDeck: 3,
-        // seatsPerRow: 4,
+        // totalSeats: 50,
+        // totalDeck: 1,
+        // totalTravelTime: 60,
         // })
         // console.log('New Bus Saved');
     }

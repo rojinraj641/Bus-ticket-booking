@@ -1,9 +1,4 @@
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import {setDepartureTime,setArrivalTime,setBusType,setAmenities} from '../Features/Search/filterSlice.js';
-import { setBusList, removeBusList } from '../Features/Search/busSlice.js';
-import buildQueryParams from '../utils/buildQueryParams.js';
 import clsx from 'clsx';
 
 const FILTER_GROUPS = [
@@ -32,50 +27,6 @@ const SortAndFilter = () => {
   const filters = useSelector((state) => state.filters);
   const boarding = useSelector((state) => state.search.boarding);
   const destination = useSelector((state) => state.search.destination);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        dispatch(removeBusList());
-        const query = buildQueryParams(filters);
-        console.log(query);
-        const date = new Date().toISOString().split('T')[0];
-        const res = await axios.get(
-          `/api/v1/filtered?boarding=${boarding}&destination=${destination}&date=${date}&${query}`
-        );
-        const { busList } = res.data.data;
-        dispatch(setBusList(busList));
-      } catch (error) {
-        console.error('Fetch Error:', error.message);
-      }
-    };
-
-    if (boarding && destination) fetchData();
-  }, [filters, boarding, destination, dispatch]);
-
-  const handleCheckboxChange = (type, value) => {
-    const current = filters[type];
-    const updated = current.includes(value)
-      ? current.filter((item) => item !== value)
-      : [...current, value];
-
-    switch (type) {
-      case 'departureTime':
-        dispatch(setDepartureTime(updated));
-        break;
-      case 'arrivalTime':
-        dispatch(setArrivalTime(updated));
-        break;
-      case 'busType':
-        dispatch(setBusType(updated));
-        break;
-      case 'amenities':
-        dispatch(setAmenities(updated));
-        break;
-      default:
-        break;
-    }
-  };
 
   const FilterCheckbox = ({ id, label, checked, onChange, color = 'blue' }) => (
     <label htmlFor={id} className="inline-flex items-center gap-2">

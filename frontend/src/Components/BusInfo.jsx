@@ -1,47 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { setBusDetails, resetBusDetails } from '../Features/Bus/selectedBusSlice';
 import SeatSelection from './SeatSelection';
-import axios from 'axios';
 
 const BusInfo = () => {
-    const [openBusId, setOpenBusId] = useState(null);
-    const [seats, setSeats] = useState([]);
     const { boarding, destination } = useSelector((state) => state.search);
     const { busList } = useSelector((state) => state.bus);
-    const dispatch = useDispatch();
-
-    const fetchApi = async (openBusId) => {
-        try {
-            const res = await axios.get(`/api/v1/filtered/fetchSeats?busId=${openBusId}`);
-            setSeats(res.data.data);
-        }
-        catch (error) {
-            console.log(error.message);
-        }
-    }
-
-    useEffect(() => {
-        if (!openBusId) return;
-        fetchApi(openBusId);
-        const interval = setInterval(() => {
-            fetchApi(openBusId);
-        }, 5000)
-        return ()=>clearInterval(interval);
-    },[openBusId, ]);
-
-    const handleSeatSelection = (busId, busName, boardingTime, droppingTime, busType) => {
-        dispatch(resetBusDetails());
-
-        if (openBusId === busId) {
-            setOpenBusId(null);
-        } else {
-            dispatch(setBusDetails({ busName, boardingTime, droppingTime, busType }));
-            setOpenBusId(busId);
-        }
-    };
+    const { loading } = useSelector((state) => state.bus.loading)
+    const [open, setOpen] = useState(false);
 
     return (
         <>
@@ -49,80 +16,92 @@ const BusInfo = () => {
                 <p className="text-center text-gray-500 mt-4">No buses found for this route.</p>
             ) : (
                 busList.map((bus) => {
-                    const availableSeats = seats.filter(seat => seat.status === 'Available').length || 0;
-                    const isOpen = openBusId === bus._id;
-
                     return (
                         <div
                             key={bus._id}
-                            className="bg-gray-100 border border-gray-300 shadow-md p-6 w-full text-center rounded-t-lg overflow-y-auto mb-4"
+                            className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all mb-5"
                         >
-                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                                {/* Operator Info */}
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-xl">{bus.busName}</h3>
-                                    <p className="text-sm text-gray-600">{bus.busType}</p>
+                            {/* Top Section */}
+                            <div className="p-5 grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+
+                                {/* Operator */}
+                                <div className="md:col-span-2 text-center md:text-left">
+                                    <h3 className="font-semibold text-lg text-gray-800">
+                                        {bus.busName}
+                                    </h3>
+
+                                    <div className="flex justify-center md:justify-start gap-2 mt-1">
+                                        <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
+                                            {bus.isACAvailable ? 'AC' : 'Non-AC'}
+                                        </span>
+                                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                                            {bus.busType}
+                                        </span>
+                                    </div>
                                 </div>
 
                                 {/* Departure */}
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-xl">{bus.boardingTime}</h3>
-                                    <p className="text-sm text-gray-600">{boarding}</p>
+                                <div className="text-center">
+                                    <p className="text-lg font-semibold text-gray-800">
+                                        {bus.boardingTime}
+                                    </p>
+                                    <p className="text-xs text-gray-500">{boarding}</p>
                                 </div>
 
                                 {/* Duration */}
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-xl">{bus.travellingTime}</h3>
+                                <div className="text-center text-gray-600 font-medium">
+                                    {bus.duration}
                                 </div>
 
                                 {/* Arrival */}
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-xl">{bus.tripEndingTime}</h3>
-                                    <p className="text-sm text-gray-600">{destination}</p>
+                                <div className="text-center">
+                                    <p className="text-lg font-semibold text-gray-800">{bus.tripEndingTime}</p>
+                                    <p className="text-xs text-gray-500">{destination}</p>
                                 </div>
 
                                 {/* Rating */}
-                                <div className="flex items-center gap-1 bg-green-500 text-white py-1 px-2 rounded-md">
-                                    <FontAwesomeIcon icon={faStar} />
-                                    <p>{bus.ratings}</p>
+                                <div className="flex justify-center">
+                                    <div className="flex items-center gap-1 bg-green-500 text-white text-sm px-3 py-1 rounded-full">
+                                        <FontAwesomeIcon icon={faStar} />
+                                        <span>{bus.ratings}</span>
+                                    </div>
                                 </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="border-t border-gray-200" />
+
+                            {/* Bottom Section */}
+                            <div className="p-5 flex flex-col md:flex-row items-center justify-between gap-4">
 
                                 {/* Price */}
-                                <div className="flex-1">
-                                    <p className="font-bold text-xl">₹{bus.seaterPrice}</p>
-                                    <p className="text-sm text-gray-600">Onwards</p>
+                                <div className="text-center md:text-left">
+                                    <p className="text-xl font-bold text-gray-800">₹100</p>
+                                    <p className="text-xs text-gray-500">Onwards</p>
                                 </div>
 
-                                {/* Seat Selection */}
-                                <div className="flex-1">
+                                {/* Seats + CTA */}
+                                <div className="flex flex-col items-center md:items-end gap-1">
                                     <button
-                                        className={`px-4 py-2 rounded-md text-md text-white shadow-md ${isOpen ? "bg-gray-500" : "bg-red-500"}`}
-                                        onClick={() =>
-                                            handleSeatSelection(
-                                                bus._id,
-                                                bus.busName,
-                                                bus.boardingTime,
-                                                bus.tripEndingTime,
-                                                bus.busType
-                                            )
-                                        }
+                                        onClick={() => setOpen(!open)}
+                                        className={`px-6 py-2 rounded-lg text-white font-medium transition-all
+        ${open ? 'bg-gray-500' : 'bg-red-500 hover:bg-red-600'}`}
                                     >
-                                        {isOpen ? "Hide Seat" : "Select Seat"}
+                                        {open ? 'Hide Seats' : 'Select Seats'}
                                     </button>
 
-                                    <p className="text-sm text-gray-600 mt-1">
-                                        {availableSeats} seats left
-                                    </p>
+                                    <p className="text-xs text-gray-500">Seats left</p>
                                 </div>
                             </div>
 
                             {/* Seat Layout */}
-                            {isOpen && (
-                                <div className="mt-4 border-t border-gray-300 pt-4">
-                                    <SeatSelection key={bus._id} seats={seats} selectedBusId={bus._id} />
+                            {open && (
+                                <div className="border-t border-gray-200 p-5 bg-gray-50 rounded-b-xl">
+                                    <SeatSelection selectedBusId={bus._id} />
                                 </div>
                             )}
                         </div>
+
                     );
                 })
             )}
