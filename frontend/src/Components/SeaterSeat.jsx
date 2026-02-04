@@ -1,42 +1,74 @@
 import { MdEventSeat } from "react-icons/md";
 import { GiSteeringWheel } from "react-icons/gi";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSeatSelection } from "../Features/Seats/selectedSeatsSlice";
 
-const SeaterSeat = (seats, totalSeats, deck) => {
-  const [seatColor, setSeatColor] = useState('gray')
+const SeaterSeat = () => {
+  const { seats } = useSelector((state) => state.seats);
+  const { busId } = useSelector((state) => state.busId);
+  const { seatIds } = useSelector((state) => state.selectedSeats);
+  const dispatch = useDispatch();
 
-  const renderSeats = (item) => {
+  const availableSeats = seats.filter((s) => s.busId === busId);
+
+  const toggleSeat = (seatId) => {
+    dispatch(toggleSeatSelection({ busId, seatId }));
+  };
+
+  const renderSeat = (seat) => {
+    const isSelected = seatIds.includes(seat._id);
+
     return (
-      <div className="flex px-3">
+      <button
+        key={seat._id}
+        onClick={() => toggleSeat(seat._id)}
+        className="flex justify-center items-center"
+      >
         <MdEventSeat
-          onClick={() => setSeatColor('green')}
-          size={30}
-          style={{ color: seatColor }}
+          size={22}
+          className="md:w-[30px] md:h-[30px]"
+          style={{ color: isSelected ? "#16A34A" : "#9CA3AF" }}
         />
-      </div>
-    )
-  }
+      </button>
+    );
+  };
+
   return (
-    <div className='flex flex-row gap-5 lg-flex-col'>
-      {/*Lower Deck*/}
-      <div>
-        <p>Lower Deck</p>
-        <div className="flex flex-col bg-white border border-gray-200 rounded-lg p-2">
-          <div className="flex justify-end pr-10 py-10">
-            <GiSteeringWheel size={24} />
+    <div className="flex flex-col md:flex-row gap-4">
+      {/* Lower Deck */}
+      <div className="w-full md:w-auto">
+        <p className="font-semibold mb-2 text-sm md:text-base">
+          Lower Deck
+        </p>
+
+        {/* Seat Container */}
+        <div className="bg-white border border-gray-200 rounded-lg p-2 md:p-3 overflow-x-auto">
+          {/* Driver */}
+          <div className="flex justify-end pr-2 md:pr-6 py-2 md:py-6">
+            <GiSteeringWheel size={20} />
           </div>
-          <div className="grid grid-cols-[auto_auto_40px_auto_auto] gap-3">
-            {seats.seats.map((seat, index) => (
-              <>
+
+          {/* Seats Grid */}
+          <div
+            className="
+              grid
+              grid-cols-[repeat(2,1fr)_32px_repeat(2,1fr)]
+              md:grid-cols-[auto_auto_40px_auto_auto]
+              gap-2 md:gap-3
+            "
+          >
+            {availableSeats.map((seat, index) => (
+              <div key={seat._id}>
                 {index % 4 === 2 && <div />}
-                {renderSeats(seat)}
-              </>
+                {renderSeat(seat)}
+              </div>
             ))}
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SeaterSeat
+export default SeaterSeat;
+

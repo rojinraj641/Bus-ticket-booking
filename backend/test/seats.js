@@ -14,6 +14,7 @@ async function addSeats() {
         //         seatPosition: 'Lower',
         //         basePrice: 800,
         //         status: 'Available',
+        //         isSelected: false,
         //         bookedBy: null,
         //         timeToLock: null
         //     })

@@ -1,23 +1,36 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const filterSlice = createSlice({
-    name: 'filters',
-    initialState: { departureTime: [], arrivalTime: [], busType: [], amenities: [] },
-    reducers: {
-        setDepartureTime: (state, action) => {
-            state.departureTime = action.payload;
-        },
-        setArrivalTime: (state, action) => {
-            state.arrivalTime = action.payload;
-        },
-        setBusType: (state, action) => {
-            state.busType = action.payload;
-        },
-        setAmenities: (state, action) => {
-            state.amenities = action.payload;
-        }
-    }
-})
+const filtersSlice = createSlice({
+  name: "filters",
+  initialState: {
+    arrivalTime: [],
+    departureTime: [],
+    busType: [],
+    amenities: []
+  },
+  reducers: {
+    toggleFilter: (state, action) => {
+      const { filterKey, value } = action.payload;
 
-export const { setDepartureTime, setArrivalTime, setBusType, setAmenities } = filterSlice.actions;
-export default filterSlice.reducer
+      if (!state[filterKey]) return;
+
+      if (state[filterKey].includes(value)) {
+        state[filterKey] = state[filterKey].filter(
+          (item) => item !== value
+        );
+      } else {
+        state[filterKey].push(value);
+      }
+    },
+
+    clearFilters: () => ({
+      arrivalTime: [],
+      departureTime: [],
+      busType: [],
+      amenities: []
+    })
+  }
+});
+
+export const { toggleFilter, clearFilters } = filtersSlice.actions;
+export default filtersSlice.reducer;

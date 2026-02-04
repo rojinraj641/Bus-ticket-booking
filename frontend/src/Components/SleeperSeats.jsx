@@ -1,13 +1,26 @@
-import { MdEventSeat } from "react-icons/md";
 import { GiSteeringWheel } from "react-icons/gi";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSeatSelection } from "../Features/Seats/selectedSeatsSlice";
 
-const SleeperSeat = (seats, totalSeats, deck) => {
-    const [seatColor, setSeatColor] = useState('gray')
-
-    const renderSeats = (item) => {
+const SleeperSeat = () => {
+    const { seats } = useSelector((state) => state.seats);
+    const { busId } = useSelector((state) => state.busId);
+    const { seatIds } = useSelector((state) => state.selectedSeats);
+    const availabeSeats = seats.filter((s) => s.busId === busId);
+    const dispatch = useDispatch();
+    const toggleSeat = (seatId)=>{
+        dispatch(toggleSeatSelection({busId, seatId}))
+    }
+    const renderSeats = (seat) => {
+        const isSelected = seatIds.includes(seat._id)
         return (
-            <div className="border border-gray-200 w-3 h-5 rounded-md " />
+            <div key={seat._id} className="flex px-3 cursor-pointer">
+                <div
+                    className={` border border-gray-200 w-3 h-5 rounded-md ${isSelected ? "#16A34A" :  "#9CA3AF"}`}
+                    onClick={() => toggleSeat(seat._id)} />
+
+            </div>
+
         )
     }
     return (

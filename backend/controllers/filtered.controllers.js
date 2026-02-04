@@ -1,5 +1,6 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import { Bus } from "../models/bus.models.js";
+import { Seats } from "../models/seats.models.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { getDistanceFromPlaces } from "../api/distance.helper.js";
@@ -69,8 +70,13 @@ const filteredResult = asyncHandler(async (req, res) => {
     };
   });
 
+  const seats = await Seats.find({
+    busId: { $in: availableBuses.map(b => b._id) }
+  });
+
+
   return res.status(200).json(
-    new ApiResponse(200, { busList: busesWithTime }, "Success")
+    new ApiResponse(200, { busList: busesWithTime, seats: seats }, "Success")
   );
 });
 

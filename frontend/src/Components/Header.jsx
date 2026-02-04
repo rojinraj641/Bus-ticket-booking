@@ -5,8 +5,8 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { boardingPoint, destinationPoint, setDate } from '../Features/Search/searchSlice.js';
-import { removeBusList, setBusList,setLoading } from '../Features/Search/busSlice.js';
-import { setTravelTime } from '../Features/Bus/travelTimeSlice.js';
+import { setBusList,setLoading } from '../Features/Search/busSlice.js';
+import { addSeats } from '../Features/Seats/seatSlice.js'
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
@@ -16,8 +16,19 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { boarding, destination, date } = useSelector((state) => state.search);
+  const { departureTime, arrivalTime, busType, amenities } = useSelector((state) => state.filters);
+  console.log('Departure time:', departureTime);
+  console.log('ArrivalTime:', arrivalTime);
+  console.log('BusType:',busType);
+  console.log('Amenities',amenities);
   const [swapAnimate, setSwapAnimate] = useState(false);
 
+  useEffect(()=>{
+    if(!boarding || !destination || !date){
+      return
+    }
+    handleSearchClick();
+  },[departureTime, arrivalTime,amenities, busType])
 
   const handleBoardingPoint = (value) => {
     const formatted = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
@@ -43,8 +54,19 @@ const Header = () => {
   const handleSearchClick = async () => {
     dispatch(setLoading(true));
     try {
-      const res = await axios.get(`api/v1/filtered?boarding=${boarding}&destination=${destination}&date=${date}`);
-      dispatch(setBusList(res.data.data.busList));
+      const res = await axios.get(`api/v1/filtered`,{
+        boarding,
+        destination,
+        date,
+        arrivalTime,
+        departureTime,
+        amenities,
+        busType
+      });
+      const { busList, seats } = res.data.data;
+      dispatch(setBusList(busList));
+      dispatch(addSeats(seats));
+      console.log('Seats on header component:',seats)
       navigate('/filtered');
     } catch (err) {
       toast.error('Something went wrong');
