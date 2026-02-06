@@ -8,7 +8,9 @@ import { convertHoursToHrMin } from "../utils/convertHr.js";
 import addTime from "../utils/addTime.js"
 
 const filteredResult = asyncHandler(async (req, res) => {
-  const { boarding, destination, date } = req.query;
+  const { page } = Number(req.query) || 0;
+  const { limit } = Number(req.query) || 10;
+  const { boarding, destination, date, departureTime, arrivalTime, busType, amenities } = req.body;
 
   if (!boarding || !destination || !date) {
     return res.status(400).json(
@@ -27,10 +29,58 @@ const filteredResult = asyncHandler(async (req, res) => {
     weekday: "long",
   });
 
-  const buses = await Bus.find({
-    stoppingPoints: { $all: [boarding, destination] },
-    day: dayName,
-  });
+  const pipeline = [
+    {
+      $match: {
+        day: dayName,
+        stoppingPoints: {
+          $all: [
+            { $elemMatch: { city: boarding } },
+            { $elemMatch: { city: destination } }
+          ]
+        },
+        amenities: {$in: amenities}
+      }
+    },
+    {
+      $addFields: {
+        boardingPoint: {
+          $first: {
+            $filter: {
+              input: "$stoppingPoints",
+              as: "sp",
+              cond: { $eq: ["$$sp.city", boarding] }
+            }
+          }
+        },
+        destinationPoint: {
+          $first: {
+            $filter: {
+              input: "$stoppingPoints",
+              as: "sp",
+              cond: { $eq: ["$$sp.city", destination] }
+            }
+          }
+        }
+      }
+    },
+    {
+      $match: {
+        $expr: {
+          $lt: ["$boardingPoint.order", "$destinationPoint.order"]
+        }
+      }
+    },
+    {
+      $sort: {ratings: -1}
+    }
+  ];
+
+  const buses = await Bus.aggregatePaginate(
+    Bus.aggregate(pipeline),
+    {page,limit}
+  )
+
 
   if (!buses.length) {
     return res.status(200).json(

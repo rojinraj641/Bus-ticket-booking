@@ -8,7 +8,7 @@ import { boardingPoint, destinationPoint, setDate } from '../Features/Search/sea
 import { setBusList,setLoading } from '../Features/Search/busSlice.js';
 import { addSeats } from '../Features/Seats/seatSlice.js'
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -17,10 +17,6 @@ const Header = () => {
   const dispatch = useDispatch();
   const { boarding, destination, date } = useSelector((state) => state.search);
   const { departureTime, arrivalTime, busType, amenities } = useSelector((state) => state.filters);
-  console.log('Departure time:', departureTime);
-  console.log('ArrivalTime:', arrivalTime);
-  console.log('BusType:',busType);
-  console.log('Amenities',amenities);
   const [swapAnimate, setSwapAnimate] = useState(false);
 
   useEffect(()=>{
@@ -54,7 +50,7 @@ const Header = () => {
   const handleSearchClick = async () => {
     dispatch(setLoading(true));
     try {
-      const res = await axios.get(`api/v1/filtered`,{
+      const res = await axios.post(`api/v1/filtered`,{
         boarding,
         destination,
         date,

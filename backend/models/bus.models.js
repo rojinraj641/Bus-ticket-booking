@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
+import stoppingPointsSchema from './stoppingPoints.models.js';
 
 const busSchema = new mongoose.Schema(
     {
@@ -12,8 +13,12 @@ const busSchema = new mongoose.Schema(
             enum: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
             required: true
         },
-        boardingTime: {
-            type: String,
+        tripStartingTime: {
+            type: Number,
+            required: true
+        },
+        tripEndingTime: {
+            type: Number,
             required: true
         },
         ratings: {
@@ -37,10 +42,7 @@ const busSchema = new mongoose.Schema(
             required: true,
             default: false
         },
-        stoppingPoints: {
-            type: [String],
-            required: true
-        },
+        stoppingPoints : [stoppingPointsSchema],
         totalSeats: {
             type: Number,
             required: true
