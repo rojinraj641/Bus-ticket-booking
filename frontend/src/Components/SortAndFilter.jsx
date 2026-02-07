@@ -12,7 +12,7 @@ const FILTER_GROUPS = [
   {
     title: "BUS TYPE",
     type: "busType",
-    options: ["Seater", "Sleeper", "AC", "Non AC"],
+    options: ["Seater", "Sleeper","Hybrid","AC","Non AC"],
   },
   {
     title: "ARRIVAL TIME",
@@ -74,10 +74,11 @@ const SortAndFilter = () => {
           {/* DESKTOP HEADER */}
           <h2 className="hidden md:block text-lg font-bold mb-4">FILTERS</h2>
 
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
             {FILTER_GROUPS.map((group, idx) => (
               <div key={idx}>
-                <h3 className="text-sm font-semibold mb-2">{group.title}</h3>
+                {group.title &&
+                <h3 className="text-sm font-semibold mb-2">{group.title}</h3>}
                 <div className="flex flex-col gap-2">
                   {group.options.map((option, i) => {
                     const id = `${group.type}-${i}`;

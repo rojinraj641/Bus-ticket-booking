@@ -34,15 +34,15 @@ const busSchema = new mongoose.Schema(
             default: 40
         },
         busType:{
-            type: String,
+            type: [String],
             required: true
         },
-        isACAvailable:{
-            type: Boolean,
-            required: true,
-            default: false
-        },
         stoppingPoints : [stoppingPointsSchema],
+        basePrice: {
+            type: Number,
+            required: true,
+            default: 200
+        },
         totalSeats: {
             type: Number,
             required: true

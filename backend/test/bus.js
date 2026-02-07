@@ -10,8 +10,7 @@ async function addBus() {
         // tripEndingTime: 705,
         // ratings: 4.5,
         // averageSpeed: 40,
-        // busType: 'Seater',
-        // isACAvailable: true,
+        // busType: ['Seater','Non AC'],
         // stoppingPoints: [
         // {'city': 'Kottarakkara', 'order': 0, 'distanceFromStart': 0, 'timeFromStart': 0},
         // {'city': 'Chengamanadu', 'order': 1,  'distanceFromStart': 5, 'timeFromStart': 15},

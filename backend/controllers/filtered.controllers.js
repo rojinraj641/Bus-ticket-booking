@@ -4,12 +4,11 @@ import { Seats } from "../models/seats.models.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { getDistanceFromPlaces } from "../api/distance.helper.js";
-import { convertHoursToHrMin } from "../utils/convertHr.js";
-import addTime from "../utils/addTime.js"
+import { buildTimeMatch } from "../utils/buildTimeMatch.js";
 
 const filteredResult = asyncHandler(async (req, res) => {
-  const { page } = Number(req.query) || 0;
-  const { limit } = Number(req.query) || 10;
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
   const { boarding, destination, date, departureTime, arrivalTime, busType, amenities } = req.body;
 
   if (!boarding || !destination || !date) {
@@ -17,6 +16,8 @@ const filteredResult = asyncHandler(async (req, res) => {
       new ApiError(400, null, "Missing required query params")
     );
   }
+
+  let distance = await getDistanceFromPlaces(boarding,destination);
 
   const timestamp = Number(date);
   if (!Number.isFinite(timestamp)) {
@@ -29,18 +30,36 @@ const filteredResult = asyncHandler(async (req, res) => {
     weekday: "long",
   });
 
+  const departureFilter = buildTimeMatch("departureTime", departureTime);
+  const arrivalFilter = buildTimeMatch("arrivalTime", arrivalTime);
+  const timeConditions = [];
+  if(departureFilter){
+    timeConditions.push(departureFilter);
+  }
+  if(arrivalFilter){
+    timeConditions.push(arrivalFilter);
+  }
+
+  const matchStage = {
+    day: {$in: [dayName]},
+    stoppingPoints: {
+      $all: [
+        { $elemMatch: { city: boarding } },
+        { $elemMatch: { city: destination } }
+      ]
+    },
+  }
+  
+  if (Array.isArray(busType) && busType.length > 0) {
+    matchStage.busType = { $in: busType };
+  }
+  if (Array.isArray(amenities) && amenities.length > 0) {
+    matchStage.amenities = { $in: amenities };
+  }
+
   const pipeline = [
     {
-      $match: {
-        day: dayName,
-        stoppingPoints: {
-          $all: [
-            { $elemMatch: { city: boarding } },
-            { $elemMatch: { city: destination } }
-          ]
-        },
-        amenities: {$in: amenities}
-      }
+      $match: matchStage
     },
     {
       $addFields: {
@@ -72,61 +91,47 @@ const filteredResult = asyncHandler(async (req, res) => {
       }
     },
     {
-      $sort: {ratings: -1}
-    }
+      $addFields: {
+        departureTime: {
+          $add: ["$tripStartingTime", "$boardingPoint.timeFromStart"]
+        },
+        arrivalTime: {
+          $add: ["$tripStartingTime", "$destinationPoint.timeFromStart"]
+        }
+      }
+    },
   ];
+
+  if(timeConditions.length>0){
+    pipeline.push({
+      $match: {
+        $and: timeConditions
+      }
+    },
+   {
+      $sort: { ratings: -1,_id: 1 }
+    })
+  }
 
   const buses = await Bus.aggregatePaginate(
     Bus.aggregate(pipeline),
-    {page,limit}
+    { page, limit }
   )
+  console.log('Buses found for this route: ', buses)
 
-
-  if (!buses.length) {
+  if (!buses.docs.length) {
     return res.status(200).json(
       new ApiResponse(200, { busList: [] }, "No buses found")
     );
   }
 
-  const availableBuses = buses.filter(bus => {
-    const bIndex = bus.stoppingPoints.indexOf(boarding);
-    const dIndex = bus.stoppingPoints.indexOf(destination);
-    return bIndex < dIndex;
-  });
-
-  if (!availableBuses.length) {
-    return res.status(200).json(
-      new ApiResponse(200, { busList: [] }, "No buses for this route")
-    );
-  }
-
-  let distance;
-  try {
-    distance = await getDistanceFromPlaces(boarding, destination);
-  } catch {
-    return res.status(503).json(
-      new ApiError(503, null, "Distance service failed")
-    );
-  }
-
-  const busesWithTime = availableBuses.map(bus => {
-    const timeRequired = Math.ceil(distance / bus.averageSpeed);
-    let duration = convertHoursToHrMin(timeRequired);
-    let tripEndingTime = addTime(bus.boardingTime, duration);
-    return {
-      ...bus.toObject(),
-      duration,
-      tripEndingTime
-    };
-  });
-
   const seats = await Seats.find({
-    busId: { $in: availableBuses.map(b => b._id) }
+    busId: { $in: buses.docs.map(b => b._id) }
   });
 
 
   return res.status(200).json(
-    new ApiResponse(200, { busList: busesWithTime, seats: seats }, "Success")
+    new ApiResponse(200, { busList: buses.docs, seats: seats, distance }, "Success")
   );
 });
 
