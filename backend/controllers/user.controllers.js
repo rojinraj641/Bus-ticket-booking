@@ -22,7 +22,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Check if user already exists
     const user = await User.findOne({ phone });
-
+ 
     if (!user) {
         if (!name || name.trim().length < 3) {
             throw new ApiError(400, "Name required for new users");
@@ -80,6 +80,13 @@ const verifyOtp = asyncHandler(async (req, res) => {
         // Generate JWT
         const token = generateToken(user._id);
 
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // true in production (HTTPS)
+            sameSite: "lax",
+            maxAge: 24 * 60 * 60 * 1000
+        });
+        
         res.status(200).json({
             success: true,
             message: user.wasNew ? "User registered and OTP verified" : "OTP verified. Logged in",
@@ -89,7 +96,6 @@ const verifyOtp = asyncHandler(async (req, res) => {
                 email: user.email,
                 phone: user.phone,
             },
-            token
         });
 
     } catch (error) {

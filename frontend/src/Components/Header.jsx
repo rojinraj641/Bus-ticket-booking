@@ -4,12 +4,12 @@ import Datepicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { boardingPoint, destinationPoint, setDate } from '../Features/Search/searchSlice.js';
+import { boardingPoint, destinationPoint, setDate, setDistance } from '../Features/Search/searchSlice.js';
 import { setBusList,setLoading } from '../Features/Search/busSlice.js';
 import { addSeats } from '../Features/Seats/seatSlice.js'
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from "../api/axios.api.js"
 import { ToastContainer, toast } from 'react-toastify';
 
 const Header = () => {
@@ -50,7 +50,7 @@ const Header = () => {
   const handleSearchClick = async () => {
     dispatch(setLoading(true));
     try {
-      const res = await axios.post(`api/v1/filtered`,{
+      const res = await api.post(`filtered`,{
         boarding,
         destination,
         date,
@@ -59,10 +59,10 @@ const Header = () => {
         amenities,
         busType
       });
-      const { busList, seats } = res.data.data;
+      const { busList, seats, distance} = res.data.data;
       dispatch(setBusList(busList));
       dispatch(addSeats(seats));
-      console.log('Seats on header component:',seats)
+      dispatch(setDistance(distance))
       navigate('/filtered');
     } catch (err) {
       toast.error('Something went wrong');

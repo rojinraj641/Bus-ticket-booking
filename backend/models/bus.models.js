@@ -1,67 +1,83 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
-import stoppingPointsSchema from './stoppingPoints.models.js';
 
+// A Bus is a physical vehicle in the fleet. It is reused across many trips.
+// Route/schedule/stop info does NOT live here — see Route and Trip models.
 const busSchema = new mongoose.Schema(
-    {
-        busName: {
-            type: String,
-            required: true
-        },
-        day:{
-            type: [String],
-            enum: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-            required: true
-        },
-        tripStartingTime: {
-            type: Number,
-            required: true
-        },
-        tripEndingTime: {
-            type: Number,
-            required: true
-        },
-        ratings: {
-            type: Number,
-            min: 0,
-            max: 5,
-            default: 0,
-            required: true
-        },
-        averageSpeed: {
-            type: Number,
-            required: true,
-            default: 40
-        },
-        busType:{
-            type: [String],
-            required: true
-        },
-        stoppingPoints : [stoppingPointsSchema],
-        basePrice: {
-            type: Number,
-            required: true,
-            default: 200
-        },
-        totalSeats: {
-            type: Number,
-            required: true
-        },
-        totalDeck: {
-            type: Number,
-            default: 1,
-            required: true
-        },
-        totalTravelTime: {
-            type: Number,
-            required: true
-        },
-        amenities: {
-            type: [String],
-            required: true
-        },
-    }, { timestamps: true });
+  {
+    operator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Operator",
+      required: true,
+    },
+
+    busName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    busNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
+    },
+
+    busType: {
+      type: [String],
+      enum: ["AC", "Non AC", "Sleeper", "Seater", "Semi Sleeper", "Luxury"],
+      required: true,
+    },
+
+    averageRating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
+    },
+
+    ratingCount: {
+      type: Number,
+      default: 0,
+    },
+
+    totalSeats: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
+    totalDeck: {
+      type: Number,
+      default: 1,
+      enum: [1, 2],
+    },
+
+    amenities: {
+      type: [String],
+      default: [],
+    },
+
+    images: {
+      type: [String],
+      default: [],
+    },
+
+    status: {
+      type: String,
+      enum: ["ACTIVE", "INACTIVE", "MAINTENANCE"],
+      default: "ACTIVE",
+    },
+  },
+  { timestamps: true }
+);
+
+busSchema.index({ busNumber: 1 });
+busSchema.index({ operator: 1 });
+busSchema.index({ status: 1 });
 
 busSchema.plugin(mongooseAggregatePaginate);
 
-export const Bus = mongoose.model("Bus", busSchema)
+export const Bus = mongoose.model("Bus", busSchema);

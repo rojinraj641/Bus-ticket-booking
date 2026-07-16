@@ -128,10 +128,10 @@ const filteredResult = asyncHandler(async (req, res) => {
   const seats = await Seats.find({
     busId: { $in: buses.docs.map(b => b._id) }
   });
-
+  console.log('Distance is:', distance)
 
   return res.status(200).json(
-    new ApiResponse(200, { busList: buses.docs, seats: seats, distance }, "Success")
+    new ApiResponse(200, { busList: buses.docs, seats: seats, distance: distance }, "Success")
   );
 });
 

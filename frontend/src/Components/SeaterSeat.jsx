@@ -17,17 +17,18 @@ const SeaterSeat = () => {
 
   const renderSeat = (seat) => {
     const isSelected = seatIds.includes(seat._id);
-
+    const isDisabled = seat.bookedBy || seat.lockedBy;
     return (
       <button
         key={seat._id}
         onClick={() => toggleSeat(seat._id)}
-        className="flex justify-center items-center"
+        className={`flex justify-center items-center ${isDisabled? 'cursor-not-allowed': null}`}
+        disabled={isDisabled}
       >
         <MdEventSeat
           size={22}
           className="md:w-[30px] md:h-[30px]"
-          style={{ color: isSelected ? "#16A34A" : "#9CA3AF" }}
+          style={{color: isSelected ? "#16A34A" : "#9CA3AF" }}
         />
       </button>
     );

@@ -4,11 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import SeatSelection from './SeatSelection';
 import { setBusId, resetBusId } from '../Features/Bus/busIdSlice';
+import { convertMinToHr } from '../utils/convertMinToHr';
 
 const BusInfo = () => {
   const dispatch = useDispatch();
-
-  const { boarding, destination } = useSelector((state) => state.search);
+  const { boarding, destination, distance } = useSelector((state) => state.search);
   const { busList } = useSelector((state) => state.bus);
   const { seats } = useSelector((state) => state.seats);
 
@@ -54,7 +54,7 @@ const BusInfo = () => {
             className="bg-white border border-gray-200 rounded-xl shadow-sm mb-4"
           >
             {/* TOP SECTION */}
-            <div className="p-4 md:p-5 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 items-center">
+            <div className="p-4 md:p-5 grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-4 items-center">
               {/* Operator */}
               <div className="col-span-2 md:col-span-2 text-center md:text-left">
                 <h3 className="font-semibold text-base md:text-lg text-gray-800">
@@ -63,10 +63,10 @@ const BusInfo = () => {
 
                 <div className="flex justify-center md:justify-start gap-2 mt-1">
                   <span className="text-[11px] px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">
-                    {bus.isACAvailable ? 'AC' : 'Non-AC'}
+                    {bus.busType.filter((type) => ['Non AC','AC'].includes(type))}
                   </span>
                   <span className="text-[11px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">
-                    {bus.busType}
+                    {bus.busType.filter((type)=> ['Seater','Sleeper','Hybrid'].includes(type))}
                   </span>
                 </div>
               </div>
@@ -74,15 +74,19 @@ const BusInfo = () => {
               {/* Departure */}
               <div className="text-center">
                 <p className="text-sm md:text-lg font-semibold">
-                  {bus.boardingTime}
+                  {convertMinToHr(bus.departureTime)}
                 </p>
                 <p className="text-[11px] text-gray-500">{boarding}</p>
               </div>
 
+              {/*Distance */}
+              <div className='text-center'>
+                <p className='text-sm md:text-lg font-semibold'>{distance} km</p>
+              </div>
               {/* Arrival */}
               <div className="text-center">
                 <p className="text-sm md:text-lg font-semibold">
-                  {bus.tripEndingTime}
+                  {convertMinToHr(bus.arrivalTime)}
                 </p>
                 <p className="text-[11px] text-gray-500">{destination}</p>
               </div>
@@ -101,7 +105,7 @@ const BusInfo = () => {
               {/* Price */}
               <div>
                 <p className="text-lg md:text-xl font-bold text-gray-800">
-                  ₹ {basePrice}
+                  ₹ {Math.floor(basePrice + distance*15)}
                 </p>
                 <p className="text-[11px] text-gray-500">Onwards</p>
               </div>

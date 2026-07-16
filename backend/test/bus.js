@@ -17,6 +17,7 @@ async function addBus() {
         // {'city': 'Kunnicodu', 'order': 2, 'distanceFromStart': 10, 'timeFromStart': 30},
         // {'city': 'Punalur', 'order': 3, 'distanceFromStart': 20, 'timeFromStart': 45 }
         // ],
+        // basePrice: 200,
         // totalSeats: 50,
         // totalDeck: 1,
         // totalTravelTime: 45,

@@ -1,33 +1,44 @@
 import mongoose from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
+// Passengers are lightweight, reusable "traveler profiles" tied to the
+// booking user (e.g. saved family members), not one-per-booking.
 const passengerSchema = new mongoose.Schema(
-    {
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        },
-        name: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        age: {
-            type: Number,
-            required: true,
-            min: 0
-        },
-        gender: {
-            type: String,
-            required: true,
-            enum: ["Male","Female","Other"]
-        },
-        place:{
-            type: String,
-            required: true
-        },
-    },{timestamps: true}
-)
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    age: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    gender: {
+      type: String,
+      required: true,
+      enum: ["Male", "Female", "Other"],
+    },
+    idProofType: {
+      type: String,
+      enum: ["Aadhaar", "PAN", "Passport", "DrivingLicense", null],
+      default: null,
+    },
+    idProofNumber: {
+      type: String,
+      default: null,
+    },
+  },
+  { timestamps: true }
+);
+
+passengerSchema.index({ user: 1 });
 
 passengerSchema.plugin(mongooseAggregatePaginate);
-export const Passenger = mongoose.model("Passenger",passengerSchema);
+export const Passenger = mongoose.model("Passenger", passengerSchema);

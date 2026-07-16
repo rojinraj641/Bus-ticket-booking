@@ -1,14 +1,35 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBusSimple, faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { resetUserDetails } from '../Features/User/userSlice.js';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import api from '../api/axios.api.js';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [menuOpen, setMenuOpen] = useState(false);
-  const name = useSelector((state) => state.user.name);
+  const [openlogout, setopenlogout] = useState(false);
+
+  const { name } = useSelector((state) => state.user);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const handleLogoutToggle = () => setopenlogout((prev) => !prev);
+
+  const handleLogout = async () => {
+  try {
+    await api.post("/logout");
+    setopenlogout(false);
+    dispatch(resetUserDetails());
+    navigate("/");
+  } catch (error) {
+    toast.error("Logout failed");
+  }
+};
+
 
   return (
     <nav className="bg-white shadow-md px-6 sm:px-10 py-4 relative z-10">
@@ -30,11 +51,20 @@ const Navbar = () => {
           <Link to="/track-ticket" className="hover:text-[#de1b0d] transition">Track Ticket</Link>
           <Link to="/wallet" className="hover:text-[#de1b0d] transition">Wallet</Link>
           <Link
-            to={name ? '/' : '/register'}
+            to={name ? '#' : '/register'}
             className="hover:text-[#de1b0d] transition"
+            onClick={name ? handleLogoutToggle : undefined}
           >
-            {name ? `Hello, ${name.split(' ')[0]}` : 'Login / Signup'}
+            {name ? `Hello, ${name} ` : 'Login / Signup'}
           </Link>
+          {openlogout &&
+            <button
+              className="hover:text-[#de1b0d] transition"
+              onClick={handleLogout}
+            >
+              Log Out
+            </button>
+          }
         </div>
       </div>
 
@@ -49,7 +79,7 @@ const Navbar = () => {
             onClick={toggleMenu}
             className="hover:text-[#de1b0d]"
           >
-            {name ? `Hello, ${name.split(' ')[0]}` : 'Login / Signup'}
+            {name ? `Hello,${name}` : 'Login / Signup'}
           </Link>
         </div>
       )}

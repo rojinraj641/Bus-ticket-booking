@@ -1,11 +1,12 @@
 import express from "express";
 import { filteredResult } from "../controllers/filtered.controllers.js";
+import auth from "../middlewares/auth.middleware.js";
 import locked from "../controllers/lockSeat.controllers.js";
 import fetchSeats from "../controllers/fetchSeat.controllers.js";
 
 const router = express.Router();
-router.route("/").post(filteredResult);
-router.route('/fetchSeats').get(fetchSeats);
-router.route("/lockSeats").post(locked);
+router.post("/",auth, filteredResult);
+router.post("/fetchSeats", auth, fetchSeats);
+router.post("/lockSeats", auth, locked);
 
 export default router;

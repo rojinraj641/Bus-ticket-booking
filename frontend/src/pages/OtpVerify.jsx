@@ -66,10 +66,8 @@ const OtpVerify = () => {
             const {token, user} = res.data;
             if (res.data.success) {
                 toast.success("OTP Verified Successfully!");
-                localStorage.setItem('token',token)
-                localStorage.setItem('phone',user.phone)
+                localStorage.setItem('accessToken',token)
                 localStorage.setItem('name',user.name)
-                localStorage.setItem('email',user.email)
                 navigate('/')  
             } else {
                 toast.error(res.data.message || "Invalid OTP. Please try again.");

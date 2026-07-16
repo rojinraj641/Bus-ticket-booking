@@ -6,6 +6,7 @@ import { Toaster, toast } from 'sonner';
 import { useNavigate } from "react-router-dom";
 import { setUserDetails } from '../Features/User/userSlice.js';
 import { useDispatch } from 'react-redux';
+import api from '../api/axios.api.js';
 
 const Signup = () => {
     const [phone, setPhone] = useState('');
@@ -45,7 +46,7 @@ const Signup = () => {
 
         try {
             setLoading(true);
-            const res = await axios.post('/api/v1/user/register', {
+            const res = await api.post('/user/register', {
                 phone,
                 name,
                 email

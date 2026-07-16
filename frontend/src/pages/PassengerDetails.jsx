@@ -2,12 +2,12 @@ import Navbar from "../Components/Navbar";
 import PassengerInfo from "../Components/PassengerInfo";
 import Footer from "../Components/Footer";
 import BusLoader from "../Components/BusLoader";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import { addContactDetails } from "../Features/Ticket/contactSlice";
 import axios from 'axios';
 import { Toaster, toast } from 'sonner';
-import { addPrice, subtractPrice } from "../Features/Seats/totalPriceSlice";
 import { updateCancellation } from "../Features/Bus/cancellationSlice";
 
 const PassengerDetails = () => {
@@ -15,56 +15,20 @@ const PassengerDetails = () => {
   const [phone, setPhone] = useState("");
   const [cancellation, setCancellation] = useState(true);
   const [loading, setLoading] = useState(false);
-  const selectedSeats = useSelector((state) => state.seat.selectedSeats);
-  const totalFare = useSelector((state) => state.totalPrice);
-  const passengers = useSelector((state) => state.passengers);
+  const {seatIds} = useSelector((state) => state.selectedSeats);
+  const { seats } = useSelector((state) => state.seats);
+  const {passengers} = useSelector((state) => state.passengers);
+  const {totalPrice} = useSelector((state) => state.totalPrice)
   const dispatch = useDispatch();
   const prevCancellation = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (prevCancellation.current !== null) {
-      if (cancellation && !prevCancellation.current) {
-        dispatch(addPrice(100));
-        dispatch(updateCancellation(true));
-      } else if (!cancellation && prevCancellation.current) {
-        dispatch(subtractPrice(100));
-        dispatch(updateCancellation(false))
-      }
-    }
-    prevCancellation.current = cancellation;
-  }, [cancellation]);
+  const selectedSeats = seats.filter((s) => seatIds.includes(s._id));
 
-  const handlePayment = async () => {
-    if (!email || !phone) {
-      toast.error('Please enter email and phone number');
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[6-9]\d{9}$/;
-
-    if (!emailRegex.test(email)) {
-      toast.error('Enter a valid email');
-      return;
-    }
-
-    if (!phoneRegex.test(phone)) {
-      toast.error('Enter a valid 10-digit phone number');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      
-      navigate('/payment');
-    } catch (error) {
-      toast.error('Something went wrong. Please try again.');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handlePayment = ()=>{
+    dispatch(addContactDetails({email, phone}))
+    console.log('Button Clicked')
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
@@ -79,7 +43,7 @@ const PassengerDetails = () => {
         <div className="flex flex-wrap gap-6 mb-8">
           {selectedSeats.map((seat, index) => (
             <div key={index} className="w-full sm:w-[48%] lg:w-[32%]">
-              <PassengerInfo index={index} seat={seat} />
+              <PassengerInfo index={index} seatNumber={seat.seatNumber} seatId={seat._id} />
             </div>
           ))}
         </div>
@@ -147,7 +111,7 @@ const PassengerDetails = () => {
 
         {/* Total & Payment */}
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <h1 className="text-xl font-semibold text-gray-800">Total Amount: ₹{totalFare}</h1>
+          <h1 className="text-xl font-semibold text-gray-800">Total Amount: ₹{cancellation? totalPrice + 100 : totalPrice}</h1>
           <button
             type="button"
             className={`mt-4 md:mt-0 px-6 py-2 font-semibold rounded-md transition-all ${

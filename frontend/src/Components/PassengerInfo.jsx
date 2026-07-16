@@ -1,19 +1,26 @@
 import Select from "react-dropdown-select";
-import { useState,useEffect } from "react";
-import { addPassenger } from "../Features/Passengers/passengerSlice.js";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import {upsertPassenger} from "../Features/Passengers/passengerSlice.js"
+import { useDispatch, useSelector } from "react-redux";
 import { Toaster, toast} from 'sonner';
+import { State } from "country-state-city"
 
-const PassengerInfo = ({ index, seat }) => {
+const PassengerInfo = ({ index, seatNumber, seatId}) => {
+  const states =  State.getStatesOfCountry("IN");
+  const stateOptions = states.map((s) => ({
+    label: s.name,
+    value: s.name
+  }));
+
   const [place, setPlace] = useState(null);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const dispatch = useDispatch();
   
-  const handleSave = () => {
+  const handleSave = (seatId) => {
     try{
-      dispatch(addPassenger({name, age, gender, place}))
+      dispatch(upsertPassenger({seatId, name, age, gender, place}))
       toast.success('Passenger added successfully')
     }
     catch(error){
@@ -21,13 +28,6 @@ const PassengerInfo = ({ index, seat }) => {
     }
   };
 
-  const options = [
-    { id: 1, place: "Kerala" },
-    { id: 2, place: "TamilNadu" },
-    { id: 3, place: "Karnataka" },
-    { id: 4, place: "Goa" },
-    { id: 5, place: "Maharashtra" },
-  ];
 
   const isValid = name && age && gender && place;
 
@@ -36,7 +36,7 @@ const PassengerInfo = ({ index, seat }) => {
       <Toaster richColors/>
       <h2 className="font-semibold text-xl text-gray-800 mb-4">
         Passenger {index + 1}{" "}
-        <span className="text-sm text-gray-500">| Seat {seat}</span>
+        <span className="text-sm text-gray-500">| Seat {seatNumber}</span>
       </h2>
 
       <div className="space-y-6">
@@ -102,9 +102,9 @@ const PassengerInfo = ({ index, seat }) => {
             State
           </label>
           <Select
-            options={options}
-            labelField="place"
-            valueField="id"
+            options={stateOptions}
+             labelField="label"
+             valueField="value"
             values={place ? [place] : []}
             onChange={(selected) => setPlace(selected[0])}
             className="border border-gray-300 rounded-md shadow-sm"
@@ -117,7 +117,7 @@ const PassengerInfo = ({ index, seat }) => {
 
       {/* Save Button */}
       <button
-        onClick={handleSave}
+        onClick={()=>handleSave(seatId)}
         disabled={!isValid}
         className={`mt-4 px-4 py-2 rounded-md text-white ${
           isValid

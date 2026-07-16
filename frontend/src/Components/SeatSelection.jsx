@@ -7,7 +7,8 @@ import PriceBreakout from './PriceBreakout';
 const SeatSelection = () => {
   const { busList } = useSelector((state) => state.bus);
   const { seatIds } = useSelector((state) => state.selectedSeats);
-  console.log('Seatid in seatselection component: ', seatIds)
+  const { busId } = useSelector((state) => state.busId);
+  const selected = busList.filter((bus)=> bus._id === busId);
 
   return (
     <div className="w-full px-4 py-8 md:px-10 bg-gray-50 min-h-screen">
@@ -15,13 +16,13 @@ const SeatSelection = () => {
       <div className='flex flex-row justify-between'>
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Seat Layout Section */}
-          {busList[0].busType === 'Seater' && (
+          {selected[0].busType.includes('Seater') && (
             <SeaterSeat />
           )}
-          {busList[0].busType === 'Sleeper' && (
+          {selected[0].busType.includes('Sleeper') && (
             <SleeperSeats />
           )}
-          {busList[0].busType === 'Hybrid' && (
+          {selected[0].busType.includes('Hybrid') && (
             <HybridSeats />
           )
           }
