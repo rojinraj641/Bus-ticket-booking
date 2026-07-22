@@ -1,23 +1,22 @@
 import mongoose from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-// Seats are scoped to a Trip, not a Bus — the same physical bus seat
-// (e.g. "12A") needs an independent availability/lock/booking state
-// for every trip it's used on.
 const seatSchema = new mongoose.Schema(
   {
     trip: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Trip",
       required: true,
+      index: true
     },
     seatNumber: {
       type: String,
       required: true,
+      index: true
     },
     seatType: {
       type: String,
-      enum: ["Sleeper", "Seater"],
+      enum: ["Sleeper", "Seater", "Semi Sleeper"],
       required: true,
     },
     seatPosition: {
@@ -40,6 +39,7 @@ const seatSchema = new mongoose.Schema(
       enum: ["Available", "Locked", "Booked"],
       required: true,
       default: "Available",
+      index: true
     },
     lockedBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -50,6 +50,7 @@ const seatSchema = new mongoose.Schema(
       // used by app-level job to auto-release stale locks (see note below)
       type: Date,
       default: null,
+      index: true
     },
     booking: {
       type: mongoose.Schema.Types.ObjectId,
@@ -70,11 +71,6 @@ const seatSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// One seatNumber must be unique within a trip
-seatSchema.index({ trip: 1, seatNumber: 1 }, { unique: true });
-seatSchema.index({ trip: 1, status: 1 });
-seatSchema.index({ lockExpiresAt: 1 });
 
 seatSchema.plugin(mongooseAggregatePaginate);
 

@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-// Wallet ledger entries live in Transaction (type: WALLET_TOPUP/WALLET_DEBIT),
-// queryable via Transaction.find({ user, type: /WALLET/ }). A wallet doc
-// only needs to track its live balance, not embed history.
 const walletSchema = new mongoose.Schema(
   {
     user: {
@@ -11,6 +8,7 @@ const walletSchema = new mongoose.Schema(
       ref: "User",
       required: true,
       unique: true,
+      index: true
     },
     availableBalance: {
       type: Number,
@@ -25,8 +23,6 @@ const walletSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-walletSchema.index({ user: 1 }, { unique: true });
 
 walletSchema.plugin(mongooseAggregatePaginate);
 

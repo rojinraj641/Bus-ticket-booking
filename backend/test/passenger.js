@@ -1,28 +1,48 @@
 import { Passenger } from "../models/passenger.models.js";
-import { User } from "../models/user.models.js";
+import mongoose from "mongoose";
 
 async function addPassenger() {
   try {
-    const user = await User.findOne({ phone: "8943939053" }).select("_id");
-    if (!user) {
-      console.log("User not found");
-      return;
-    }
-
-    const data = {
-      userId: user._id,
-      name: "Rojin Raj",
-      age: 23,
-      gender: "Male",
-      place: "Kerala",
-    };
-
-    // const res = await Passenger.insertOne(data);
-
-    if (!res) {
-      console.log("Passenger insertion failed");
-    } else {
-      console.log("Passenger inserted successfully");
+    const passengers = [
+      {
+        user: new mongoose.Types.ObjectId("687c00000000000000000001"),
+        name: "Rahul Sharma",
+        age: 28,
+        gender: "Male",
+      },
+      {
+        user: new mongoose.Types.ObjectId("687c00000000000000000002"),
+        name: "Priya Nair",
+        age: 24,
+        gender: "Female",
+      },
+      {
+        user: new mongoose.Types.ObjectId("687c00000000000000000003"),
+        name: "Arjun Reddy",
+        age: 35,
+        gender: "Male",
+      },
+      {
+        user: new mongoose.Types.ObjectId("687c00000000000000000004"),
+        name: "Sneha Patel",
+        age: 31,
+        gender: "Female",
+      },
+      {
+        user: new mongoose.Types.ObjectId("687c00000000000000000005"),
+        name: "Alex Morgan",
+        age: 27,
+        gender: "Other",
+      },
+    ];
+    if(await Passenger.countDocuments() <= 10){
+        const response = await Passenger.insertMany(passengers);  
+        if(response){
+            console.log('Passengers added successfully');
+        }
+    }else{
+        console.log("Passengers already exist. Skipping insertion");
+        return;
     }
   } catch (error) {
     console.log("Error inserting passenger:", error.message);

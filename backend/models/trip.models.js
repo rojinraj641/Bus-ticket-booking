@@ -1,33 +1,36 @@
 import mongoose from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-// A Trip is one scheduled departure: a specific Bus running a specific Route
-// on a specific date/time. This is what users actually search and book.
 const tripSchema = new mongoose.Schema(
   {
     bus: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Bus",
       required: true,
+      index: true
     },
     route: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Route",
       required: true,
+      index: true
     },
     operator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Operator",
       required: true,
+      index: true
     },
     departureDate: {
       // calendar date of the trip start (midnight UTC), used for date-range search
       type: Date,
       required: true,
+      index: true
     },
     departureDateTime: {
       type: Date,
       required: true,
+      index: true
     },
     arrivalDateTime: {
       type: Date,
@@ -48,16 +51,12 @@ const tripSchema = new mongoose.Schema(
       type: String,
       enum: ["SCHEDULED", "DEPARTED", "COMPLETED", "CANCELLED"],
       default: "SCHEDULED",
+      index: true
     },
   },
   { timestamps: true }
 );
-
-// Core search pattern: find trips on a route for a given date
-tripSchema.index({ route: 1, departureDate: 1 });
-tripSchema.index({ bus: 1, departureDateTime: 1 });
-tripSchema.index({ operator: 1, departureDate: 1 });
-tripSchema.index({ status: 1 });
+              
 
 tripSchema.plugin(mongooseAggregatePaginate);
 

@@ -9,6 +9,7 @@ const couponSchema = new mongoose.Schema(
       required: true,
       uppercase: true,
       trim: true,
+      index: true
     },
     couponImage: {
       type: String,
@@ -53,22 +54,23 @@ const couponSchema = new mongoose.Schema(
     offerStarts: {
       type: Date,
       required: true,
+      index: true
     },
     offerEnds: {
       type: Date,
       required: true,
+      index: true
     },
     isActive: {
       type: Boolean,
       required: true,
       default: true,
+      index: true
     },
   },
   { timestamps: true }
 );
 
-couponSchema.index({ couponCode: 1 }, { unique: true });
-couponSchema.index({ isActive: 1, offerStarts: 1, offerEnds: 1 });
 
 couponSchema.plugin(mongooseAggregatePaginate);
 

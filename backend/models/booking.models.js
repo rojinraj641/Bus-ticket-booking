@@ -7,11 +7,13 @@ const bookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true
     },
     trip: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Trip",
       required: true,
+      index: true
     },
     transaction: {
       type: mongoose.Schema.Types.ObjectId,
@@ -37,6 +39,7 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      index: true
     },
     bookingDate: {
       type: Date,
@@ -79,6 +82,7 @@ const bookingSchema = new mongoose.Schema(
       required: true,
       enum: ["Confirmed", "In Progress", "Cancelled", "Completed"],
       default: "In Progress",
+      index: true
     },
     cancelledAt: {
       type: Date,
@@ -87,11 +91,6 @@ const bookingSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-bookingSchema.index({ user: 1, createdAt: -1 });
-bookingSchema.index({ trip: 1 });
-bookingSchema.index({ pnr: 1 }, { unique: true });
-bookingSchema.index({ bookingStatus: 1 });
 
 bookingSchema.plugin(mongooseAggregatePaginate);
 

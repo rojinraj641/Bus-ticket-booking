@@ -11,7 +11,7 @@ import addBooking from "./test/booking.js";
 
 dotenv.config({ path: "./.env" });
 
-connectDB()
+await connectDB();
 await addBus()
 await addUser()
 await addCoupon()

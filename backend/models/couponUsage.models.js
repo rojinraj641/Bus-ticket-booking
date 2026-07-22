@@ -8,6 +8,7 @@ const couponUsageSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Coupon",
       required: true,
+      index: true
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -18,12 +19,10 @@ const couponUsageSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Booking",
       required: true,
+      index: true
     },
   },
   { timestamps: true }
 );
-
-couponUsageSchema.index({ coupon: 1, user: 1 });
-couponUsageSchema.index({ booking: 1 }, { unique: true });
 
 export const CouponUsage = mongoose.model("CouponUsage", couponUsageSchema);

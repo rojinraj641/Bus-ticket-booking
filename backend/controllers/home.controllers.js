@@ -11,8 +11,8 @@ const homeData = asyncHandler(async (req, res) => {
                 {
                     $group: {
                         _id: {
-                            from: "$departurePoint",
-                            to: "$destinationPoint"
+                            boardingPointCity: "$boardingPointCity",
+                            droppingPointCity: "$droppingPointCity"
                         },
                         totalBookings: { $sum: 1 }
                     }
@@ -22,9 +22,8 @@ const homeData = asyncHandler(async (req, res) => {
                 {
                     $project: {
                         _id: 0,
-                        from: "$_id.from",
-                        to: "$_id.to",
-                        totalBooking: 1
+                        boardingPointCity: "$_id.boardingPointCity",
+                        droppingPointCity: "$_id.droppingPointCity",
                     }
                 }
             ]),
@@ -32,6 +31,7 @@ const homeData = asyncHandler(async (req, res) => {
                 {$match:
                     {isActive: true}
                 },
+                {$limit: 6},
                 {
                     $project: {
                         _id: 0,

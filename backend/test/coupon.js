@@ -1,22 +1,167 @@
 import { Coupon } from "../models/coupon.models.js";
 
-const newCoupon = {
-  couponCode: 'WEL100',
-  description: 'Rs 100 off on first booking',
-  offerStarts: new Date(),
-  offerEnds: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  discountAmount: 100,
-  isActive: true
-};
-
 async function addCoupon() {
   try {
-    const count = await Coupon.countDocuments();
-    if (count < 1) {
-      const result = await Coupon.create(newCoupon);
-      console.log("✅ Coupon inserted:", result);
+    const coupons = [
+      {
+        couponCode: "WELCOME100",
+        couponImage: "welcome100.jpg",
+        description: "Get ₹100 off on your first booking.",
+        discountType: "FLAT",
+        discountValue: 100,
+        maxDiscountAmount: null,
+        minOrderAmount: 500,
+        usageLimitTotal: 10000,
+        usageLimitPerUser: 1,
+        usedCount: 4521,
+        offerStarts: new Date("2026-01-01"),
+        offerEnds: new Date("2026-12-31"),
+        isActive: true,
+      },
+      {
+        couponCode: "SAVE20",
+        couponImage: "save20.jpg",
+        description: "Get 20% off up to ₹250.",
+        discountType: "PERCENTAGE",
+        discountValue: 20,
+        maxDiscountAmount: 250,
+        minOrderAmount: 800,
+        usageLimitTotal: 5000,
+        usageLimitPerUser: 2,
+        usedCount: 1834,
+        offerStarts: new Date("2026-02-01"),
+        offerEnds: new Date("2026-11-30"),
+        isActive: true,
+      },
+      {
+        couponCode: "FLAT200",
+        couponImage: "flat200.jpg",
+        description: "Flat ₹200 discount on bookings above ₹1500.",
+        discountType: "FLAT",
+        discountValue: 200,
+        maxDiscountAmount: null,
+        minOrderAmount: 1500,
+        usageLimitTotal: 2000,
+        usageLimitPerUser: 1,
+        usedCount: 687,
+        offerStarts: new Date("2026-03-01"),
+        offerEnds: new Date("2026-10-31"),
+        isActive: true,
+      },
+      {
+        couponCode: "SUMMER15",
+        couponImage: "summer15.jpg",
+        description: "15% off on summer travel.",
+        discountType: "PERCENTAGE",
+        discountValue: 15,
+        maxDiscountAmount: 300,
+        minOrderAmount: 1000,
+        usageLimitTotal: 10000,
+        usageLimitPerUser: 3,
+        usedCount: 2911,
+        offerStarts: new Date("2026-04-01"),
+        offerEnds: new Date("2026-06-30"),
+        isActive: false,
+      },
+      {
+        couponCode: "FESTIVE500",
+        couponImage: "festive500.jpg",
+        description: "Flat ₹500 off on premium bookings.",
+        discountType: "FLAT",
+        discountValue: 500,
+        maxDiscountAmount: null,
+        minOrderAmount: 3000,
+        usageLimitTotal: 500,
+        usageLimitPerUser: 1,
+        usedCount: 127,
+        offerStarts: new Date("2026-09-15"),
+        offerEnds: new Date("2026-11-15"),
+        isActive: true,
+      },
+      {
+        couponCode: "WEEKEND25",
+        couponImage: "weekend25.jpg",
+        description: "25% off for weekend trips.",
+        discountType: "PERCENTAGE",
+        discountValue: 25,
+        maxDiscountAmount: 400,
+        minOrderAmount: 1200,
+        usageLimitTotal: null,
+        usageLimitPerUser: 5,
+        usedCount: 536,
+        offerStarts: new Date("2026-05-01"),
+        offerEnds: new Date("2026-12-31"),
+        isActive: true,
+      },
+      {
+        couponCode: "NEWUSER50",
+        couponImage: "newuser50.jpg",
+        description: "Flat ₹50 off for new users.",
+        discountType: "FLAT",
+        discountValue: 50,
+        maxDiscountAmount: null,
+        minOrderAmount: 300,
+        usageLimitTotal: null,
+        usageLimitPerUser: 1,
+        usedCount: 6420,
+        offerStarts: new Date("2026-01-01"),
+        offerEnds: new Date("2026-12-31"),
+        isActive: true,
+      },
+      {
+        couponCode: "MEGA30",
+        couponImage: "mega30.jpg",
+        description: "30% off up to ₹500.",
+        discountType: "PERCENTAGE",
+        discountValue: 30,
+        maxDiscountAmount: 500,
+        minOrderAmount: 2000,
+        usageLimitTotal: 3000,
+        usageLimitPerUser: 2,
+        usedCount: 1258,
+        offerStarts: new Date("2026-07-01"),
+        offerEnds: new Date("2026-09-30"),
+        isActive: true,
+      },
+      {
+        couponCode: "FLASH75",
+        couponImage: "flash75.jpg",
+        description: "Flat ₹75 off on bookings above ₹700.",
+        discountType: "FLAT",
+        discountValue: 75,
+        maxDiscountAmount: null,
+        minOrderAmount: 700,
+        usageLimitTotal: 1000,
+        usageLimitPerUser: 1,
+        usedCount: 999,
+        offerStarts: new Date("2026-06-01"),
+        offerEnds: new Date("2026-06-15"),
+        isActive: false,
+      },
+      {
+        couponCode: "TRAVEL10",
+        couponImage: "travel10.jpg",
+        description: "10% off on all bus bookings.",
+        discountType: "PERCENTAGE",
+        discountValue: 10,
+        maxDiscountAmount: 150,
+        minOrderAmount: 0,
+        usageLimitTotal: null,
+        usageLimitPerUser: 10,
+        usedCount: 2845,
+        offerStarts: new Date("2026-01-01"),
+        offerEnds: new Date("2026-12-31"),
+        isActive: true,
+      },
+    ];
+    if (await Coupon.countDocuments() <= 10) {
+      const response = await Coupon.insertMany(coupons);
+      if (response) {
+        console.log('Coupons added successfully');
+      }
     } else {
-      console.log("⚠️ Coupon already exists, skipping insert.");
+      console.log("Coupons already exist. Skipping insertion");
+      return;
     }
   } catch (error) {
     console.error(`❌ Failed to add new coupon: ${error.message}`);

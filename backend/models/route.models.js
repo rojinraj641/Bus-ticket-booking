@@ -43,16 +43,19 @@ const routeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Operator",
       required: true,
+      index: true
     },
     sourceCity: {
       type: String,
       required: true,
       trim: true,
+      index: true,
     },
     destinationCity: {
       type: String,
       required: true,
       trim: true,
+      index: true
     },
     totalDistanceKm: {
       type: Number,
@@ -78,10 +81,6 @@ const routeSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// Core search pattern: "buses from City A to City B"
-routeSchema.index({ sourceCity: 1, destinationCity: 1 });
-routeSchema.index({ operator: 1 });
 
 routeSchema.plugin(mongooseAggregatePaginate);
 

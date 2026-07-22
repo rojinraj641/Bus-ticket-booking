@@ -30,7 +30,6 @@ const Home = () => {
         const res = await axios.get("/api/v1/");
         setRoute(res.data.message.topRoute);
         setCoupon(res.data.message.coupons);
-        console.log(res.data.message.coupons);
       } catch (error) {
         console.log(error.message);
       }
@@ -43,15 +42,15 @@ const Home = () => {
       <Navbar />
       <Header />
 
-      <main className="flex-grow px-4 py-8 sm:px-6 lg:px-16">
+      <main className="flex flex-col px-4 py-16 gap-40 sm:px-6 lg:px-16">
         {/* Top Travelled Bus Routes */}
-        <section aria-label="Top Travelled Bus Routes" className="mb-16">
+        <section aria-label="Top Travelled Bus Routes">
           <h3 className="text-gray-900 text-center font-bold text-2xl sm:text-3xl mb-10">
             Top Travelled Bus Routes
           </h3>
-          <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+          <div className="flex flex-col justify-center items-center gap-6 md:flex-row md:justify-center md:items-center">
             {route.map((element, index) => (
-              <HomeCard key={index} title={`From ${element.from} to ${element.to}`} />
+              <HomeCard key={index} boardingPoint={element.boardingPointCity} droppingPoint={element.droppingPointCity} />
             ))}
           </div>
         </section>
