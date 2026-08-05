@@ -1,79 +1,20 @@
-import axios from "axios";
-import { useState, useEffect } from 'react';
-import Header from '../Components/Header';
-import Navbar from '../Components/Navbar';
-import Footer from '../Components/Footer';
-import HomeCard from '../Components/HomeCard';
-import OfferCard from '../Components/OfferCard';
-import { useDispatch } from "react-redux";
-import { login } from "../Features/User/authSlice.js";
-import { setUserDetails } from "../Features/User/userSlice.js";
+import HeroSection from "../Components/HeroSection";
+import Navbar from "../Components/Navbar";
+import HomeCard from "../Components/HomeCard";
+import WhyChooseUs from "../Components/WhyChooseUs";
+import Footer from "../Components/Footer";
+import AuthModal from "../Components/AuthModal";
 
 const Home = () => {
-  const [route, setRoute] = useState([]);
-  const [coupon, setCoupon] = useState([]);
-  const dispatch = useDispatch();
-  useEffect(() => {
-      const token = localStorage.getItem("token");
-      const phone = localStorage.getItem('phone');
-      const name = localStorage.getItem('name');
-      const email = localStorage.getItem('email');
-      if (token) {
-        dispatch(login(token));
-        dispatch(setUserDetails({phone,name,email}))
-      }
-    }, [dispatch]);
-    
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get("/api/v1/");
-        setRoute(res.data.message.topRoute);
-        setCoupon(res.data.message.coupons);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    fetchData();
-  }, []);
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="flex flex-col">
       <Navbar />
-      <Header />
-
-      <main className="flex flex-col px-4 py-16 gap-40 sm:px-6 lg:px-16">
-        {/* Top Travelled Bus Routes */}
-        <section aria-label="Top Travelled Bus Routes">
-          <h3 className="text-gray-900 text-center font-bold text-2xl sm:text-3xl mb-10">
-            Top Travelled Bus Routes
-          </h3>
-          <div className="flex flex-col justify-center items-center gap-6 md:flex-row md:justify-center md:items-center">
-            {route.map((element, index) => (
-              <HomeCard key={index} boardingPoint={element.boardingPointCity} droppingPoint={element.droppingPointCity} />
-            ))}
-          </div>
-        </section>
-
-        {/* Offers Section */}
-        <section
-          aria-label="Bus Ticket Offers and Deals"
-          className="bg-white rounded-2xl mx-auto w-full sm:w-11/12 max-w-7xl border border-gray-200 shadow-lg p-6 sm:p-10"
-        >
-          <h2 className="text-xl sm:text-2xl md:text-3xl text-center text-gray-900 font-semibold mb-8">
-            Bus Ticket Offers and Deals
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 place-items-center">
-            {coupon.map((element, index) => (
-              <OfferCard key={index} offer={element.couponCode} text={element.description} />
-            ))}
-          </div>
-        </section>
-      </main>
-
+      <HeroSection />
+      <HomeCard />
+      <WhyChooseUs />
       <Footer />
+      <AuthModal />
     </div>
-  );
-};
-
+  )
+}
 export default Home;

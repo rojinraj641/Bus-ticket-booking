@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
-import CouponSection from '../Components/CouponSection';
 import PaymentMethods from '../Components/PaymentMethods';
 import BookingDetails from '../Components/BookingDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faClock } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { addCoupons } from '../Features/Coupons/couponSlice';
 import { useNavigate } from 'react-router-dom';
 
 const SessionExpiredRedirect = () => {
@@ -47,19 +45,6 @@ const Payment = () => {
   };
 
   useEffect(() => {
-    const fetchCoupons = async () => {
-      try {
-        const response = await axios.get('api/v1/payment');
-        const activeCoupons = response.data.data;
-        setCoupons(activeCoupons);
-      } catch (error) {
-        console.log('An error occurred while fetching coupons');
-      }
-    };
-    fetchCoupons();
-  }, []);
-
-  useEffect(() => {
     if (timeLeft <= 0) {
       setIsSessionExpired(true);
       return;
@@ -69,14 +54,6 @@ const Payment = () => {
     }, 1000);
     return () => clearInterval(timerId);
   }, [timeLeft]);
-
-  const handleApplyCoupon = (coupon) => {
-    dispatch(addCoupons(coupon));
-  };
-
-  const handlePaymentMethodChange = (method) => {
-    setSelectedPaymentMethod(method);
-  };
 
   const handleProceedToPay = () => {
     if (!selectedPaymentMethod) {
@@ -111,10 +88,6 @@ const Payment = () => {
         <main className="py-8">
           <div className="flex flex-col lg:flex-row w-full max-w-7xl mx-auto px-4 lg:px-8 gap-8">
             <div className="w-full lg:w-1/2 space-y-10">
-              <CouponSection
-                coupons={coupons}
-                onApplyCoupon={handleApplyCoupon}
-              />
               <PaymentMethods
                 selectedMethod={selectedPaymentMethod}
                 onMethodChange={handlePaymentMethodChange}

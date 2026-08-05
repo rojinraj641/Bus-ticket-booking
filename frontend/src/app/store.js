@@ -13,6 +13,7 @@ import travelTimeReducer from '../Features/Bus/travelTimeSlice.js';
 import selectedCouponsReducer from '../Features/Coupons/couponSlice.js';
 import userReducer from '../Features/User/userSlice.js'
 import authSliceReducer from '../Features/User/authSlice.js'
+import uiSliceReducer from '../Features/User/uiSlice.js'
 
 const store = configureStore({
     reducer:{
@@ -29,7 +30,8 @@ const store = configureStore({
         travelTime: travelTimeReducer,
         selectedCoupons: selectedCouponsReducer,
         user: userReducer,
-        authSlice: authSliceReducer
+        auth: authSliceReducer,
+        ui: uiSliceReducer
     }
 })
 

@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
 .react-date-picker__wrapper {
     border: none !important;
     box-shadow: none !important;
