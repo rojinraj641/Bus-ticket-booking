@@ -27,11 +27,11 @@ const HomeCard = () => {
 
   return (
     <section className="py-20 px-8 bg-white">
-      <h2 className="text-5xl font-bold text-center text-[#111827]">
+      <h2 className="text-4xl md:text-5xl font-bold text-center text-[#111827]">
         Top Travelled Places
       </h2>
 
-      <p className="text-center text-gray-500 text-lg mt-4 mb-14">
+      <p className="text-center text-gray-500 text-sm md:text-lg mt-4 mb-14">
         Discover the most popular destinations across India.
       </p>
 
@@ -55,16 +55,16 @@ const HomeCard = () => {
             <div className="absolute bottom-6 left-6 text-white">
               <div className="flex items-center gap-2 mb-2">
                 <MapPin size={20} />
-                <span className="text-sm font-medium uppercase tracking-wider">
+                <span className="text-xs md:text-sm font-medium uppercase tracking-wider">
                   Popular Destination
                 </span>
               </div>
 
-              <h3 className="text-3xl font-bold">
+              <h3 className="text-lg md:text-3xl font-bold">
                 {city.name}
               </h3>
 
-              <p className="text-sm text-gray-200 mt-1">
+              <p className="text-xs md:text-sm text-gray-200 mt-1">
                 Explore routes →
               </p>
             </div>

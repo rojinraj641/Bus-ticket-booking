@@ -30,11 +30,11 @@ const features = [
 const WhyChooseUs = () => {
   return (
     <section className="py-20 px-8">
-      <h2 className="text-4xl font-bold text-center text-[#111827]">
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-[#111827]">
         Why Choose BookMyTrip?
       </h2>
 
-      <p className="text-center text-[#4B5563] mt-4 mb-14 max-w-2xl mx-auto">
+      <p className="text-center text-sm md:text-lg text-[#4B5563] mt-4 mb-14 max-w-2xl mx-auto">
         Everything you need for a simple, reliable, and comfortable bus booking
         experience.
       </p>
@@ -49,14 +49,14 @@ const WhyChooseUs = () => {
               className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 text-center"
             >
               <div className="flex justify-center mb-5">
-                <Icon size={42} className="text-[#3B82F6]" />
+                <Icon className="text-[#3B82F6] size-10 md:size-11" />
               </div>
 
               <h3 className="text-xl font-semibold text-[#111827] mb-3">
                 {feature.title}
               </h3>
 
-              <p className="text-gray-600 leading-7">
+              <p className="text-gray-600 text-sm md:text-base leading-7">
                 {feature.description}
               </p>
             </div>

@@ -46,12 +46,12 @@ const Navbar = () => {
   const navLinkClass = 'text-white/90 font-bold hover:text-white transition-colors';
 
   return (
-    <nav className="bg-[#2563E8] shadow-md px-6 sm:px-10 py-4 relative z-10">
+    <nav className="bg-[#2563E8] border-[#3B82F6] shadow-xl px-6 sm:px-10 py-4 relative z-10">
       <div className="flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
           <FontAwesomeIcon icon={faBusSimple} className="text-white" size="xl" />
-          <span className="text-2xl font-bold text-white">BookMyTrip</span>
+          <span className="text-xl md:text-2xl font-bold text-white">BookMyTrip</span>
         </Link>
 
         {/* Hamburger for Mobile */}
@@ -65,7 +65,7 @@ const Navbar = () => {
         </button>
 
         {/* Desktop Nav */}
-        <div className="hidden sm:flex items-center space-x-8 text-sm">
+        <div className="hidden sm:flex items-center space-x-8 text-xs md:text-sm">
           <Link to="/my-booking" className={navLinkClass}>MY BOOKING</Link>
           <Link to="/track-ticket" className={navLinkClass}>TRACK TICKET</Link>
           <Link to="/wallet" className={navLinkClass}>WALLET</Link>
@@ -80,7 +80,7 @@ const Navbar = () => {
 
             {name && openLogout && (
               <button
-                className="absolute right-0 mt-2 bg-white text-[#4B5563] font-bold px-4 py-2 rounded-md shadow-lg hover:text-[#de1b0d] transition-colors whitespace-nowrap"
+                className="absolute right-0 mt-2 bg-white text-[#4B5563] text-xs md:text-base font-bold px-4 py-2 rounded-md shadow-lg hover:text-[#de1b0d] transition-colors whitespace-nowrap"
                 onClick={handleLogout}
               >
                 Log Out
@@ -92,7 +92,7 @@ const Navbar = () => {
 
       {/* Mobile Nav */}
       {menuOpen && (
-        <div className="sm:hidden mt-4 bg-white rounded-md shadow-lg py-4 px-4 flex flex-col gap-3 text-gray-800 text-sm font-medium">
+        <div className="sm:hidden mt-4 bg-white rounded-md shadow-lg py-4 px-4 flex flex-col gap-3 text-gray-800 text-xs md:text-sm font-medium">
           <Link to="/my-booking" onClick={toggleMenu} className="hover:text-[#de1b0d]">MY BOOKING</Link>
           <Link to="/track-ticket" onClick={toggleMenu} className="hover:text-[#de1b0d]">TRACK TICKET</Link>
           <Link to="/wallet" onClick={toggleMenu} className="hover:text-[#de1b0d]">WALLET</Link>
@@ -107,7 +107,7 @@ const Navbar = () => {
           {name && openLogout && (
             <button
               onClick={handleLogout}
-              className="text-left hover:text-[#de1b0d]"
+              className="text-left hover:text-[#de1b0d] text-xs md:text-base font-bold px-4 py-2 rounded-md transition-colors whitespace-nowrap"
             >
               Log Out
             </button>

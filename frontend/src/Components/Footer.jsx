@@ -8,16 +8,16 @@ const Footer = () => {
         <footer className="relative mt-20 bg-gradient-to-b from-[#1F2937] via-[#111827] to-[#030712] text-white overflow-hidden">
             {/* CTA */}
             <div className="max-w-5xl mx-auto px-6 pt-20 text-center">
-                <h2 className="text-5xl font-bold">
+                <h2 className="text-4xl md:text-5xl font-bold">
                     Ready for your next journey?
                 </h2>
 
-                <p className="mt-5 text-lg text-gray-300">
+                <p className="mt-5 text-sm md:text-lg text-gray-300">
                     Discover routes across India and book your bus in just a few clicks.
                 </p>
 
                 <button 
-                className="mt-8 rounded-xl bg-[#2563EB] px-8 py-4 text-lg font-semibold shadow-xl transition hover:bg-blue-700"
+                className="mt-8 rounded-xl bg-[#2563EB] px-8 py-4 text-sm md:text-lg font-semibold shadow-xl transition hover:bg-blue-700"
                 onClick={handleSearchClick}>
                     Search Buses
                 </button>
@@ -102,15 +102,15 @@ const Footer = () => {
 
             {/* Footer Content */}
             <div className="relative z-10 max-w-6xl mx-auto px-6 py-16">
-                <h3 className="text-center text-4xl font-bold">
+                <h3 className="text-center text-3xl md:text-4xl font-bold">
                     BookMyTrip
                 </h3>
 
-                <p className="mt-3 text-center text-lg text-gray-300">
+                <p className="mt-3 text-center text-sm md:text-lg text-gray-300">
                     Travel More. Worry Less.
                 </p>
 
-                <p className="mt-2 text-center text-gray-500">
+                <p className="mt-2 text-center text-xs md:text-sm text-gray-500">
                     Built with React • Node.js • Express • MongoDB
                 </p>
 
@@ -119,26 +119,26 @@ const Footer = () => {
                         href="#"
                         className="transition hover:text-[#2563EB]"
                     >
-                        <Github size={28} />
+                        <Github className="text-gray-300 hover:text-[#2563EB] size-6 md:size-7" />
                     </a>
 
                     <a
                         href="#"
                         className="transition hover:text-[#2563EB]"
                     >
-                        <Linkedin size={28} />
+                        <Linkedin className="text-gray-300 hover:text-[#2563EB] size-6 md:size-7" />
                     </a>
 
                     <a
                         href="#"
                         className="transition hover:text-[#2563EB]"
                     >
-                        <Mail size={28} />
+                        <Mail className="text-gray-300 hover:text-[#2563EB] size-6 md:size-7" />
                     </a>
                 </div>
 
                 <div className="mt-12 border-t border-gray-700 pt-6">
-                    <p className="text-center text-gray-500">
+                    <p className="text-xs md:text-sm text-center text-gray-500">
                         © 2026 BookMyTrip. All rights reserved.
                     </p>
                 </div>
