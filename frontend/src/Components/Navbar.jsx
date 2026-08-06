@@ -51,7 +51,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
           <FontAwesomeIcon icon={faBusSimple} className="text-white" size="xl" />
-          <span className="text-xl md:text-2xl font-bold text-white">BookMyTrip</span>
+          <span className="text-2xl font-bold text-white">BookMyTrip</span>
         </Link>
 
         {/* Hamburger for Mobile */}

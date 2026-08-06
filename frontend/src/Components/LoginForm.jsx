@@ -176,7 +176,7 @@ const LoginForm = () => {
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
-            width="400"
+            width="fit-content"
             text="continue_with"
             shape="rectangular"
             logo_alignment="center"

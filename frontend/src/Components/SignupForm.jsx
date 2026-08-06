@@ -241,7 +241,7 @@ const SignupForm = () => {
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
-            width="400"
+            width="fit-content"
             text="signup_with"
             shape="rectangular"
             logo_alignment='center'

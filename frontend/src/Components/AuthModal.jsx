@@ -33,7 +33,7 @@ const AuthModal = () => {
       onClick={() => dispatch(closeAuthModal())}
     >
       <div
-        className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6 relative animate-[fadeIn_0.15s_ease-out]"
+        className="bg-white rounded-xl shadow-xl w-11/12 md:w-full max-w-md p-6 py-8 relative animate-[fadeIn_0.15s_ease-out]"
         onClick={(e) => e.stopPropagation()} // don't close when clicking inside
       >
         <button
