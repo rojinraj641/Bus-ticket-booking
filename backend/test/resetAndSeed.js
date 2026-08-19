@@ -141,6 +141,7 @@ const seedData = async () => {
       destinationCity: "Hyderabad",
       totalDistanceKm: 570,
       totalDurationMinutes: 480,
+      operatingDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
       stoppingPoints: [
         { order: 1, city: "Bengaluru", offsetFromStartMinutes: 0, distanceFromStartKm: 0, isBoardingPoint: true, isDroppingPoint: false, landmark: "Majestic" },
         { order: 2, city: "Anantapur", offsetFromStartMinutes: 180, distanceFromStartKm: 210, isBoardingPoint: true, isDroppingPoint: false, landmark: "Bus Stand" },
@@ -154,6 +155,7 @@ const seedData = async () => {
       destinationCity: "Bengaluru",
       totalDistanceKm: 355,
       totalDurationMinutes: 350,
+      operatingDays: ["Monday", "Wednesday", "Friday", "Sunday"],
       stoppingPoints: [
         { order: 1, city: "Chennai", offsetFromStartMinutes: 0, distanceFromStartKm: 0, isBoardingPoint: true, isDroppingPoint: false, landmark: "Koyambedu" },
         { order: 2, city: "Vellore", offsetFromStartMinutes: 120, distanceFromStartKm: 140, isBoardingPoint: true, isDroppingPoint: false, landmark: "Town Hall" },
@@ -167,6 +169,7 @@ const seedData = async () => {
       destinationCity: "Vijayawada",
       totalDistanceKm: 290,
       totalDurationMinutes: 310,
+      operatingDays: ["Monday", "Wednesday", "Friday", "Saturday"],
       stoppingPoints: [
         { order: 1, city: "Hyderabad", offsetFromStartMinutes: 0, distanceFromStartKm: 0, isBoardingPoint: true, isDroppingPoint: false, landmark: "RTC X Roads" },
         { order: 2, city: "Warangal", offsetFromStartMinutes: 120, distanceFromStartKm: 140, isBoardingPoint: true, isDroppingPoint: false, landmark: "Bus Station" },
@@ -180,6 +183,7 @@ const seedData = async () => {
       destinationCity: "Coimbatore",
       totalDistanceKm: 220,
       totalDurationMinutes: 240,
+      operatingDays: ["Tuesday", "Thursday", "Saturday", "Sunday"],
       stoppingPoints: [
         { order: 1, city: "Bengaluru", offsetFromStartMinutes: 0, distanceFromStartKm: 0, isBoardingPoint: true, isDroppingPoint: false, landmark: "Electronic City" },
         { order: 2, city: "Salem", offsetFromStartMinutes: 120, distanceFromStartKm: 110, isBoardingPoint: true, isDroppingPoint: false, landmark: "Bus Stand" },
@@ -193,6 +197,7 @@ const seedData = async () => {
       destinationCity: "Bengaluru",
       totalDistanceKm: 590,
       totalDurationMinutes: 500,
+      operatingDays: ["Tuesday", "Thursday", "Friday", "Sunday"],
       stoppingPoints: [
         { order: 1, city: "Hyderabad", offsetFromStartMinutes: 0, distanceFromStartKm: 0, isBoardingPoint: true, isDroppingPoint: false, landmark: "Gachibowli" },
         { order: 2, city: "Kurnool", offsetFromStartMinutes: 180, distanceFromStartKm: 210, isBoardingPoint: true, isDroppingPoint: false, landmark: "Depot" },
@@ -204,19 +209,29 @@ const seedData = async () => {
 
   const today = new Date();
   const tripRecords = [];
+  const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+  const getNextDateForDay = (dayName, baseDate) => {
+    const targetDayIndex = weekdayNames.indexOf(dayName);
+    const todayIndex = baseDate.getDay();
+    const diff = (targetDayIndex - todayIndex + 7) % 7;
+    const nextDate = new Date(baseDate);
+    nextDate.setDate(baseDate.getDate() + diff);
+    return nextDate;
+  };
 
   const tripTemplates = [
-    { routeIndex: 0, busIndex: 0, dateOffset: 0, departureHour: 21, departureMin: 30, durationMinutes: 480, basePrice: 1099 },
-    { routeIndex: 1, busIndex: 1, dateOffset: 1, departureHour: 19, departureMin: 15, durationMinutes: 350, basePrice: 899 },
-    { routeIndex: 2, busIndex: 2, dateOffset: 2, departureHour: 20, departureMin: 45, durationMinutes: 310, basePrice: 759 },
-    { routeIndex: 3, busIndex: 3, dateOffset: 3, departureHour: 22, departureMin: 0, durationMinutes: 240, basePrice: 699 },
-    { routeIndex: 4, busIndex: 4, dateOffset: 4, departureHour: 18, departureMin: 30, durationMinutes: 500, basePrice: 1199 },
-    { routeIndex: 0, busIndex: 0, dateOffset: 5, departureHour: 23, departureMin: 0, durationMinutes: 480, basePrice: 1150 },
+    { routeIndex: 0, busIndex: 0, dayName: "Wednesday", departureHour: 21, departureMin: 30, durationMinutes: 480, basePrice: 1099 },
+    { routeIndex: 1, busIndex: 1, dayName: "Thursday", departureHour: 19, departureMin: 15, durationMinutes: 350, basePrice: 899 },
+    { routeIndex: 2, busIndex: 2, dayName: "Friday", departureHour: 20, departureMin: 45, durationMinutes: 310, basePrice: 759 },
+    { routeIndex: 3, busIndex: 3, dayName: "Saturday", departureHour: 22, departureMin: 0, durationMinutes: 240, basePrice: 699 },
+    { routeIndex: 4, busIndex: 4, dayName: "Sunday", departureHour: 18, departureMin: 30, durationMinutes: 500, basePrice: 1199 },
+    { routeIndex: 0, busIndex: 0, dayName: "Saturday", departureHour: 23, departureMin: 0, durationMinutes: 480, basePrice: 1150 },
   ];
 
   for (const template of tripTemplates) {
-    const departureDateTime = new Date(today);
-    departureDateTime.setDate(today.getDate() + template.dateOffset);
+    const departureDate = getNextDateForDay(template.dayName, today);
+    const departureDateTime = new Date(departureDate);
     departureDateTime.setHours(template.departureHour, template.departureMin, 0, 0);
 
     const arrivalDateTime = new Date(departureDateTime);

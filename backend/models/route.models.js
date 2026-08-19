@@ -65,6 +65,23 @@ const routeSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    operatingDays: {
+      type: [String],
+      required: true,
+      enum: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      validate: {
+        validator: (days) => Array.isArray(days) && days.length > 0,
+        message: "A route must have at least one operating day",
+      },
+    },
     stoppingPoints: {
       type: [stoppingPointSchema],
       required: true,
