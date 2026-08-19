@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import SeatSelection from './SeatSelection';
 import { setBusId, resetBusId } from '../Features/Bus/busIdSlice';
 import { convertMinToHr } from '../utils/convertMinToHr';
 
@@ -128,12 +127,7 @@ const BusInfo = () => {
               </div>
             </div>
 
-            {/* SEAT LAYOUT */}
-            {isOpen && (
-              <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-xl">
-                <SeatSelection />
-              </div>
-            )}
+        
           </div>
         );
       })}
