@@ -1,11 +1,15 @@
 import { useState, useRef } from "react";
 import { MapPin, CalendarDays } from "lucide-react";
 import useMediaQuery from "../Hooks/useMediaQuery";
+import { useSelector, useDispatch } from "react-redux";
 
 const SearchBar = () => {
     const dateRef = useRef(null);
+    const dispatch = useDispatch();
     const today = new Date().toISOString().split("T")[0];
-    const [departureDate, setDepartureDate] = useState(today);
+    const boarding = useSelector((state) => state.search.boarding);
+    const destination = useSelector((state) => state.search.destination);
+    const date = useSelector((state) => state.search.date);
 
     // Use the custom hook to determine if the screen width is less than 768px
     const isMobile = useMediaQuery('(max-width: 767px)');
@@ -21,6 +25,8 @@ const SearchBar = () => {
                     <input
                         type="text"
                         placeholder="Boarding Point"
+                        value={boarding}
+                        onChange={(e) => dispatch(setBoarding(e.target.value))}
                         className="h-12 w-full pl-9 bg-[#F8FAFC] text-xs md:text-sm text-[#4B5563] placeholder:text-[#4B5563] border border-gray-300 rounded-lg outline-none focus:border-blue-500"
                     />
                 </div>
@@ -33,6 +39,8 @@ const SearchBar = () => {
                     <input
                         type="text"
                         placeholder="Destination Point"
+                        value={destination}
+                        onChange={(e) => dispatch(setDestination(e.target.value))}
                         className="h-12 w-full pl-9 bg-[#F8FAFC] text-xs md:text-sm text-[#4B5563] placeholder:text-[#4B5563] border border-gray-300 rounded-lg outline-none focus:border-blue-500"
                     />
                 </div>
@@ -41,9 +49,9 @@ const SearchBar = () => {
                     <input
                         ref={dateRef}
                         type="date"
-                        value={departureDate}
+                        value={date}
                         min={today}
-                        onChange={(e) => setDepartureDate(e.target.value)}
+                        onChange={(e) => dispatch(setDate(e.target.value))}
                         className="h-12 w-full px-3 text-xs md:text-sm bg-[#F8FAFC] text-[#4B5563] border border-gray-300 rounded-lg outline-none focus:border-blue-500"
                     />
                     <CalendarDays
@@ -70,6 +78,8 @@ const SearchBar = () => {
                 <input
                     type="text"
                     placeholder="Boarding Point"
+                    value={boarding}
+                    onChange={(e) => dispatch(setBoarding(e.target.value))}
                     className="h-14 pl-10 bg-[#F8FAFC] text-[#4B5563]  placeholder:text-[#4B5563] border border-gray-300 rounded-xl outline-none focus:border-blue-500"
                 />
             </div>
@@ -81,6 +91,8 @@ const SearchBar = () => {
                 <input
                     type="text"
                     placeholder="Destination Point"
+                    value={destination}
+                    onChange={(e) => dispatch(setDestination(e.target.value))}
                     className="h-14 pl-10 bg-[#F8FAFC]  placeholder:text-[#4B5563] border border-gray-300 rounded-xl outline-none focus:border-blue-500"
                 />
             </div>
@@ -88,9 +100,9 @@ const SearchBar = () => {
                 <input
                     ref={dateRef}
                     type="date"
-                    value={departureDate}
+                    value={date}
                     min={today}
-                    onChange={(e) => setDepartureDate(e.target.value)}
+                    onChange={(e) => dispatch(setDate(e.target.value))}
                     className="h-14 px-4 bg-[#F8FAFC] text-[#4B5563] border border-gray-300 rounded-xl outline-none focus:border-blue-500"
                 />
                 <CalendarDays

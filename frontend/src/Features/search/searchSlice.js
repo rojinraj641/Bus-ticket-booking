@@ -2,14 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const searchSlice = createSlice({
     name: 'search',
-    initialState: { boarding: '',destination: '', date: Date.now(), distance: 0},
+    initialState: { boarding: '',destination: '', date: new Date().toISOString().split("T")[0]},
     reducers: {
-        boardingPoint: (state,action) => {state.boarding = action.payload},
-        destinationPoint: (state,action) => {state.destination = action.payload},
+        setBoarding: (state,action) => {state.boarding = action.payload},
+        setDestination: (state,action) => {state.destination = action.payload},
         setDate: (state,action) => {state.date = action.payload},
-        setDistance: (state,action) => {state.distance = action.payload}
     }
 })
 
-export const { boardingPoint, destinationPoint, setDate, setDistance } = searchSlice.actions;
+export const { setBoarding, setDestination, setDate } = searchSlice.actions;
 export default searchSlice.reducer;

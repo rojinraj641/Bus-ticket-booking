@@ -1,9 +1,11 @@
 import { MapPin } from "lucide-react";
-
+import {useEffect, useRef} from "react";
 import bangalore from "../Assests/cities/bangalore.jpg";
 import coimbatore from "../Assests/cities/coimbatore.jpg";
 import goa from "../Assests/cities/goa.jpg";
 import hyderabad from "../Assests/cities/hyderabad.jpg";
+import {setDestination} from "../Features/Search/searchSlice";
+import { useDispatch } from "react-redux";
 
 const HomeCard = () => {
   const cities = [
@@ -25,6 +27,12 @@ const HomeCard = () => {
     },
   ];
 
+  const cityRefs = useRef('');
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(setDestination(cityRefs.current))
+  });
+
   return (
     <section className="py-20 px-8 bg-white">
       <h2 className="text-4xl md:text-5xl font-bold text-center text-[#111827]">
@@ -40,6 +48,7 @@ const HomeCard = () => {
           <div
             key={city.name}
             className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer"
+            onClick={() => cityRefs.current[city.name]?.scrollIntoView({ behavior: "smooth" })}
           >
             {/* Image */}
             <img

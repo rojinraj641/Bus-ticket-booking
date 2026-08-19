@@ -4,7 +4,7 @@ import Datepicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { boardingPoint, destinationPoint, setDate, setDistance } from '../Features/Search/searchSlice.js';
+import { setBoarding, setDestination, setDate } from '../Features/Search/searchSlice.js';
 import { setBusList,setLoading } from '../Features/Search/busSlice.js';
 import { addSeats } from '../Features/Seats/seatSlice.js'
 import { useNavigate } from 'react-router-dom';
@@ -28,12 +28,12 @@ const Header = () => {
 
   const handleBoardingPoint = (value) => {
     const formatted = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-    dispatch(boardingPoint(formatted));
+    dispatch(setBoarding(formatted));
   };
 
   const handleDestinationPoint = (value) => {
     const formatted = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-    dispatch(destinationPoint(formatted));
+    dispatch(setDestination(formatted));
   };
 
   const handleDate = (value) => {
@@ -42,8 +42,8 @@ const Header = () => {
 
   const handleSwap = () => {
     setSwapAnimate(true);
-    dispatch(boardingPoint(destination));
-    dispatch(destinationPoint(boarding));
+    dispatch(setBoarding(destination));
+    dispatch(setDestination(boarding));
     setTimeout(() => setSwapAnimate(false), 300);
   };
 
@@ -59,10 +59,9 @@ const Header = () => {
         amenities,
         busType
       });
-      const { busList, seats, distance} = res.data.data;
+      const { busList, seats } = res.data.data;
       dispatch(setBusList(busList));
       dispatch(addSeats(seats));
-      dispatch(setDistance(distance))
       navigate('/filtered');
     } catch (err) {
       toast.error('Something went wrong');
