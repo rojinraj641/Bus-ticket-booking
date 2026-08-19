@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { MapPin, CalendarDays } from "lucide-react";
 import useMediaQuery from "../Hooks/useMediaQuery";
 import { useSelector, useDispatch } from "react-redux";
+import { setBoarding, setDestination, setDate } from "../Features/Search/searchSlice";
 
 const SearchBar = () => {
     const dateRef = useRef(null);

@@ -26,12 +26,7 @@ const HomeCard = () => {
       image: hyderabad,
     },
   ];
-
-  const cityRefs = useRef('');
   const dispatch = useDispatch();
-  useEffect(()=>{
-    dispatch(setDestination(cityRefs.current))
-  });
 
   return (
     <section className="py-20 px-8 bg-white">
@@ -48,7 +43,10 @@ const HomeCard = () => {
           <div
             key={city.name}
             className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer"
-            onClick={() => cityRefs.current[city.name]?.scrollIntoView({ behavior: "smooth" })}
+            onClick={() => {
+              dispatch(setDestination(city.name));
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
           >
             {/* Image */}
             <img
