@@ -89,6 +89,10 @@ const SearchBar = () => {
             dispatch(setToast({message: "Please enter a date", success: false}));
             return;
         }
+        if(boarding === destination){
+            dispatch(setToast({message: "Both boarding and destination can't be same place", success: false}));
+            return
+        }
         try{
             const res = await api.get('/filtered',{
                 params:{
