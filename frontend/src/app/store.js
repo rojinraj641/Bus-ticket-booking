@@ -14,6 +14,7 @@ import selectedCouponsReducer from '../Features/Coupons/couponSlice.js';
 import userReducer from '../Features/User/userSlice.js'
 import authSliceReducer from '../Features/User/authSlice.js'
 import uiSliceReducer from '../Features/User/uiSlice.js'
+import toastReducer from '../Features/Error/toastSlice.js'
 
 const store = configureStore({
     reducer:{
@@ -31,7 +32,8 @@ const store = configureStore({
         selectedCoupons: selectedCouponsReducer,
         user: userReducer,
         auth: authSliceReducer,
-        ui: uiSliceReducer
+        ui: uiSliceReducer,
+        toast: toastReducer
     }
 })
 

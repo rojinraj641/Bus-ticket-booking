@@ -65,7 +65,7 @@ const filteredResult = asyncHandler(async (req, res) => {
       departureTime = null,
       amenities = [],
       busType = [],
-    } = req.body;
+    } = req.query;
 
     if (!boarding || !destination || !date) {
       throw new ApiError(400, "Boarding point, destination point and date are required");

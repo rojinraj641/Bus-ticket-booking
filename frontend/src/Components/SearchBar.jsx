@@ -4,12 +4,15 @@ import useMediaQuery from "../Hooks/useMediaQuery";
 import api from "../Api/axios.api.js";
 import { useSelector, useDispatch } from "react-redux";
 import { setBoarding, setDestination, setDate } from "../Features/Search/searchSlice";
+import { useNavigate } from "react-router-dom";
+import { setToast, resetToast } from "../Features/Error/toastSlice.js";
 
 const SearchBar = () => {
     const dateRef = useRef(null);
     const boardingRef = useRef(null);
     const destinationRef = useRef(null);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const today = new Date().toISOString().split("T")[0];
     const boarding = useSelector((state) => state.search.boarding);
     const destination = useSelector((state) => state.search.destination);
@@ -53,7 +56,6 @@ const SearchBar = () => {
 
     //Debounce function to fetch suggestions for destination points
     useEffect(() => {
-        console.log('Destination changed');
         if (!destination || destination.trim().length < 2) {
             setDestinationSuggestions([]);
             return;
@@ -73,9 +75,42 @@ const SearchBar = () => {
         return () => clearTimeout(timeoutId);
     }, [destination])
 
+    const handleSearch = async() =>{
+        dispatch(resetToast());
+        if(!boarding){
+            dispatch(setToast({message: 'Please enter a boarding point', success: false}))
+            return;
+        }
+        if(!destination){
+            dispatch(setToast({message: 'Please enter a destination point', success: false}));
+            return;
+        }
+        if(!date){
+            dispatch(setToast({message: "Please enter a date", success: false}));
+            return;
+        }
+        try{
+            const res = await api.get('/filtered',{
+                params:{
+                    boarding,
+                    destination,
+                    date
+                }
+            });
+            console.log(res.data.data);
+            if(res.data.data){
+                navigate('/filtered');
+            }
+        }
+        catch(error){
+            dispatch(setToast({message: `Unable to fetch buses, Please try again`, success: false}))
+        }
+    }
+
     //Mobile layout
     if (isMobile) {
         return (
+            <>
             <div className="bg-white backdrop-blur-md border-t border-[#F8FAFC] shadow-xl rounded-t-2xl py-10 px-4 flex flex-col gap-3 w-full">
                 <div ref={boardingRef} className="relative">
                     <MapPin
@@ -155,15 +190,19 @@ const SearchBar = () => {
                     />
                 </div>
 
-                <button className="h-12 w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm md:text-base transition-colors duration-200">
+                <button 
+                className="h-12 w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm md:text-base transition-colors duration-200"
+                onClick={handleSearch}>
                     Search Buses
                 </button>
             </div>
+            </>
         );
     }
 
     //Desktop layout
     return (
+        <>
         <div className="bg-white/40 backdrop-blur-md border border-white/30 shadow-xl rounded-2xl p-6 flex items-center gap-4 w-fit max-w-6xl">
             <div ref={boardingRef} className="relative flex-1">
                 <MapPin
@@ -241,10 +280,14 @@ const SearchBar = () => {
                 />
             </div>
 
-            <button className="h-14 w-40 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors duration-200">
+            <button 
+            className="h-14 w-40 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors duration-200"
+            onClick={handleSearch}
+            >
                 Search Buses
             </button>
         </div>
+        </>
     );
 };
 
