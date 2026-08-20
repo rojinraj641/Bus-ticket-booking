@@ -49,14 +49,24 @@ const tripSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["SCHEDULED", "DEPARTED", "COMPLETED", "CANCELLED"],
+      enum: ["SCHEDULED", "BOARDING", "DEPARTED", "DELAYED", "COMPLETED", "CANCELLED"],
       default: "SCHEDULED",
+      index: true
+    },
+    tripCode: {
+      type: String,
+      unique: true,
+      required: true,
+      uppercase: true,
+      trim: true,
       index: true
     },
   },
   { timestamps: true }
 );
-              
+
+tripSchema.index({ route: 1, departureDateTime: 1, status: 1 });
+tripSchema.index({ bus: 1, departureDateTime: 1 });
 
 tripSchema.plugin(mongooseAggregatePaginate);
 

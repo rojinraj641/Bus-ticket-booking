@@ -41,5 +41,12 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.pre("save", function (next) {
+  if (this.phone && !this.phone.startsWith("+")) {
+    this.phone = "+91" + this.phone.replace(/^0+/, "");
+  }
+  next();
+});
+
 userSchema.plugin(mongooseAggregatePaginate);
 export const User = mongoose.model("User", userSchema);

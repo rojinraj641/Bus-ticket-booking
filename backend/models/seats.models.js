@@ -72,6 +72,8 @@ const seatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+seatSchema.index({ trip: 1, seatNumber: 1 });
+
 seatSchema.plugin(mongooseAggregatePaginate);
 
 export const Seats = mongoose.model("Seats", seatSchema);

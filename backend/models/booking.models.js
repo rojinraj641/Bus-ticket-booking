@@ -41,11 +41,6 @@ const bookingSchema = new mongoose.Schema(
       unique: true,
       index: true
     },
-    bookingDate: {
-      type: Date,
-      required: true,
-      default: Date.now,
-    },
     // snapshot fields — copied at booking time so a later Route/stop edit
     // never changes a ticket that's already been issued
     boardingPointCity: {
@@ -86,6 +81,20 @@ const bookingSchema = new mongoose.Schema(
     },
     cancelledAt: {
       type: Date,
+      default: null,
+    },
+    cancellationReason: {
+      type: String,
+      default: null,
+    },
+    refundAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    cancelledBy: {
+      type: String,
+      enum: ["USER", "OPERATOR", "ADMIN", "SYSTEM"],
       default: null,
     },
   },

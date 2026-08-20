@@ -26,3 +26,5 @@ const couponUsageSchema = new mongoose.Schema(
 );
 
 export const CouponUsage = mongoose.model("CouponUsage", couponUsageSchema);
+
+couponUsageSchema.index({ coupon: 1, user: 1, booking: 1 }, { unique: true });

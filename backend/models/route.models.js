@@ -6,6 +6,10 @@ const stoppingPointSchema = new mongoose.Schema(
     order: {
       type: Number,
       required: true,
+      validate: {
+        validator: Number.isInteger,
+        message: "Stop order must be an integer",
+      }
     },
     city: {
       type: String,
@@ -86,14 +90,25 @@ const routeSchema = new mongoose.Schema(
       type: [stoppingPointSchema],
       required: true,
       validate: {
-        validator: (arr) => arr.length >= 2,
-        message: "A route needs at least a source and destination stop",
+        validator: (arr) => {
+          const orders = arr.map(sp => sp.order);
+          return new Set(orders).size === orders.length;
+        },
+        message: "Stop order values must be unique",
       },
     },
     status: {
       type: String,
       enum: ["ACTIVE", "INACTIVE"],
       default: "ACTIVE",
+    },
+    routeCode: {
+      type: String,
+      unique: true,
+      required: true,
+      uppercase: true,
+      trim: true,
+      index: true
     },
   },
   { timestamps: true }
