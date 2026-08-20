@@ -7,7 +7,7 @@ import errorHandler from "./middlewares/error.middleware.js";
 const app = express();
 
 //CRON
-startUnlockSeatsCron();
+// startUnlockSeatsCron();
 
 //Application level middlewares
 app.use(cors({

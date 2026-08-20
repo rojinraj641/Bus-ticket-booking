@@ -6,7 +6,7 @@ import fetchSeats from "../controllers/fetchSeat.controllers.js";
 
 const router = express.Router();
 router.get("/suggestions", getRouteSuggestions);
-router.post("/", filteredResult);
+router.get("/", filteredResult);
 router.post("/fetchSeats", fetchSeats);
 router.post("/lockSeats", locked);
 
