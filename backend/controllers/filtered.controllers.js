@@ -1,8 +1,6 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import { Bus } from "../models/bus.models.js";
-import { Seats } from "../models/seats.models.js";
 import { Trip } from "../models/trip.models.js";
-import { Route } from "../models/route.models.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 
@@ -26,22 +24,6 @@ const normalizeTime = (value) => {
   }
 
   return String(value);
-};
-
-const canonicalCity = (value) => {
-  if (!value || typeof value !== "string") return value;
-
-  const normalized = value.trim();
-  const aliases = {
-    bangalore: "Bengaluru",
-    bengaluru: "Bengaluru",
-    hyderabad: "Hyderabad",
-    chennai: "Chennai",
-    vijayawada: "Vijayawada",
-    coimbatore: "Coimbatore",
-  };
-
-  return aliases[normalized.toLowerCase()] || normalized;
 };
 
 const parseSearchDate = (value) => {
@@ -73,49 +55,8 @@ const parseSearchDate = (value) => {
   return null;
 };
 
-export const getRouteSuggestions = asyncHandler(async (req, res) => {
-  const { q = "", type = "both" } = req.query;
-  const search = String(q).trim();
-
-  if (!search) {
-    return res.status(200).json(new ApiResponse(200, { suggestions: [] }, "Suggestions fetched successfully"));
-  }
-
-  const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-
-  let match = {};
-  if (type === "boarding") {
-    match = { sourceCity: { $regex: regex } };
-  } else if (type === "destination") {
-    match = { destinationCity: { $regex: regex } };
-  } else {
-    match = {
-      $or: [{ sourceCity: { $regex: regex } }, { destinationCity: { $regex: regex } }],
-    };
-  }
-
-  const matches = await Route.find(match, {
-    sourceCity: 1,
-    destinationCity: 1,
-    _id: 0,
-  })
-    .limit(8)
-    .lean();
-
-  const suggestions = [...new Set(
-    matches.flatMap((route) => {
-      if (type === "boarding") return [route.sourceCity];
-      if (type === "destination") return [route.destinationCity];
-      return [route.sourceCity, route.destinationCity];
-    })
-  )].filter(Boolean);
-
-  return res.status(200).json(new ApiResponse(200, { suggestions }, "Suggestions fetched successfully"));
-});
-
 const filteredResult = asyncHandler(async (req, res) => {
   try {
-    const payload = req.body && Object.keys(req.body).length ? req.body : req.query;
     const {
       boarding,
       destination,
@@ -124,12 +65,9 @@ const filteredResult = asyncHandler(async (req, res) => {
       departureTime = null,
       amenities = [],
       busType = [],
-    } = payload;
+    } = req.body;
 
-    const normalizedBoarding = canonicalCity(boarding);
-    const normalizedDestination = canonicalCity(destination);
-
-    if (!normalizedBoarding || !normalizedDestination || !date) {
+    if (!boarding || !destination || !date) {
       throw new ApiError(400, "Boarding point, destination point and date are required");
     }
 

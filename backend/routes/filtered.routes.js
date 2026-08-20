@@ -1,5 +1,6 @@
 import express from "express";
-import filteredResult, { getRouteSuggestions } from "../controllers/filtered.controllers.js";
+import filteredResult from "../controllers/filtered.controllers.js";
+import getRouteSuggestions from "../controllers/getRouteSuggestions.controllers.js";
 import locked from "../controllers/lockSeat.controllers.js";
 import fetchSeats from "../controllers/fetchSeat.controllers.js";
 
