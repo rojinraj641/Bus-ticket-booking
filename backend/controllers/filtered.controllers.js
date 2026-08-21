@@ -95,7 +95,6 @@ const filteredResult = asyncHandler(async (req, res) => {
   // ----------------------------------------
   // 2. Parse date
   // ----------------------------------------
-  console.log("Date send to the backend", date);
   const selectedDate = parseSearchDate(date);
 
   if (!selectedDate || Number.isNaN(selectedDate.getTime())) {
@@ -106,11 +105,11 @@ const filteredResult = asyncHandler(async (req, res) => {
     weekday: "long",
   }).format(selectedDate);
 
-  const startOfDay = new Date(selectedDate);
-  startOfDay.setHours(0, 0, 0, 0);
+  // const startOfDay = new Date(selectedDate);
+  // startOfDay.setHours(0, 0, 0, 0);
 
-  const endOfDay = new Date(selectedDate);
-  endOfDay.setHours(23, 59, 59, 999);
+  // const endOfDay = new Date(selectedDate);
+  // endOfDay.setHours(23, 59, 59, 999);
 
   // ----------------------------------------
   // 3. Normalize filters
@@ -145,14 +144,14 @@ const filteredResult = asyncHandler(async (req, res) => {
 
   const requestedDepartureParts = requestedDepartureTime
     ? requestedDepartureTime
-        .split(":")
-        .map((part) => Number.parseInt(part, 10))
+      .split(":")
+      .map((part) => Number.parseInt(part, 10))
     : null;
 
   const requestedArrivalParts = requestedArrivalTime
     ? requestedArrivalTime
-        .split(":")
-        .map((part) => Number.parseInt(part, 10))
+      .split(":")
+      .map((part) => Number.parseInt(part, 10))
     : null;
 
   if (
@@ -193,24 +192,20 @@ const filteredResult = asyncHandler(async (req, res) => {
   // 6. Trip matching
   // ----------------------------------------
 
-  const tripMatch = {
-    status: "SCHEDULED",
+  // const tripMatch = {
+  //   status: "SCHEDULED",
 
-    departureDate: {
-      $gte: startOfDay,
-      $lt: endOfDay,
-    },
-  };
-
-  // ----------------------------------------
-  // 7. Aggregation pipeline
-  // ----------------------------------------
+  //   departureDate: {
+  //     $gte: startOfDay,
+  //     $lt: endOfDay,
+  //   },
+  // };
 
   const pipeline = [
     // Find scheduled trips for the requested date
-    {
-      $match: tripMatch,
-    },
+    // {
+    //   $match: tripMatch,
+    // },
 
     // Get route
     {
@@ -376,34 +371,34 @@ const filteredResult = asyncHandler(async (req, res) => {
 
     ...(requestedDepartureParts
       ? [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  {
-                    $eq: [
-                      {
-                        $hour:
-                          "$requestedDepartureDateTime",
-                      },
-                      requestedDepartureParts[0],
-                    ],
-                  },
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: [
+                    {
+                      $hour:
+                        "$requestedDepartureDateTime",
+                    },
+                    requestedDepartureParts[0],
+                  ],
+                },
 
-                  {
-                    $eq: [
-                      {
-                        $minute:
-                          "$requestedDepartureDateTime",
-                      },
-                      requestedDepartureParts[1],
-                    ],
-                  },
-                ],
-              },
+                {
+                  $eq: [
+                    {
+                      $minute:
+                        "$requestedDepartureDateTime",
+                    },
+                    requestedDepartureParts[1],
+                  ],
+                },
+              ],
             },
           },
-        ]
+        },
+      ]
       : []),
 
     // ----------------------------------------
@@ -412,34 +407,34 @@ const filteredResult = asyncHandler(async (req, res) => {
 
     ...(requestedArrivalParts
       ? [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  {
-                    $eq: [
-                      {
-                        $hour:
-                          "$requestedArrivalDateTime",
-                      },
-                      requestedArrivalParts[0],
-                    ],
-                  },
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: [
+                    {
+                      $hour:
+                        "$requestedArrivalDateTime",
+                    },
+                    requestedArrivalParts[0],
+                  ],
+                },
 
-                  {
-                    $eq: [
-                      {
-                        $minute:
-                          "$requestedArrivalDateTime",
-                      },
-                      requestedArrivalParts[1],
-                    ],
-                  },
-                ],
-              },
+                {
+                  $eq: [
+                    {
+                      $minute:
+                        "$requestedArrivalDateTime",
+                    },
+                    requestedArrivalParts[1],
+                  ],
+                },
+              ],
             },
           },
-        ]
+        },
+      ]
       : []),
 
     // ----------------------------------------
@@ -472,20 +467,20 @@ const filteredResult = asyncHandler(async (req, res) => {
 
     ...(requestedBusTypes.length
       ? [
-          {
-            $match: {
-              "busData.busType": {
-                $in: requestedBusTypes.map(
-                  (type) =>
-                    new RegExp(
-                      `^${escapeRegex(type)}$`,
-                      "i"
-                    )
-                ),
-              },
+        {
+          $match: {
+            "busData.busType": {
+              $in: requestedBusTypes.map(
+                (type) =>
+                  new RegExp(
+                    `^${escapeRegex(type)}$`,
+                    "i"
+                  )
+              ),
             },
           },
-        ]
+        },
+      ]
       : []),
 
     // ----------------------------------------
@@ -494,20 +489,20 @@ const filteredResult = asyncHandler(async (req, res) => {
 
     ...(requestedAmenities.length
       ? [
-          {
-            $match: {
-              "busData.amenities": {
-                $in: requestedAmenities.map(
-                  (amenity) =>
-                    new RegExp(
-                      `^${escapeRegex(amenity)}$`,
-                      "i"
-                    )
-                ),
-              },
+        {
+          $match: {
+            "busData.amenities": {
+              $in: requestedAmenities.map(
+                (amenity) =>
+                  new RegExp(
+                    `^${escapeRegex(amenity)}$`,
+                    "i"
+                  )
+              ),
             },
           },
-        ]
+        },
+      ]
       : []),
 
     // ----------------------------------------
@@ -581,11 +576,10 @@ const filteredResult = asyncHandler(async (req, res) => {
   // ----------------------------------------
   // 8. Execute aggregation
   // ----------------------------------------
-
   let busList;
-
   try {
     busList = await Trip.aggregate(pipeline);
+    console.log("Bus list are", busList);
   } catch (aggregateError) {
     throw new ApiError(
       500,

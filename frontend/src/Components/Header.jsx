@@ -122,14 +122,16 @@ const Header = () => {
   const handleSearchClick = async () => {
     dispatch(setLoading(true));
     try {
-      const res = await api.post('/filtered', {
-        boarding,
-        destination,
-        date,
-        arrivalTime: arrivalTime || null,
-        departureTime: departureTime || null,
-        amenities: amenities || [],
-        busType: busType || [],
+      const res = await api.get('/filtered', {
+        params: {
+          boarding,
+          destination,
+          date,
+          arrivalTime: arrivalTime || null,
+          departureTime: departureTime || null,
+          amenities: amenities || [],
+          busType: busType || [],
+        }
       });
       const { busList } = res.data.data;
       dispatch(setBusList(busList));
