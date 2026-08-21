@@ -5,7 +5,6 @@ import PaymentMethods from '../Components/PaymentMethods';
 import BookingDetails from '../Components/BookingDetails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faClock } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 

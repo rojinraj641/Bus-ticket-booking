@@ -7,7 +7,7 @@ import { convertMinToHr } from '../utils/convertMinToHr';
 
 const BusInfo = () => {
   const dispatch = useDispatch();
-  const { boarding, destination, distance } = useSelector((state) => state.search);
+  const { boarding, destination } = useSelector((state) => state.search);
   const { busList } = useSelector((state) => state.bus);
   const { seats } = useSelector((state) => state.seats);
 
@@ -36,16 +36,16 @@ const BusInfo = () => {
   return (
     <>
       {busList.map((bus) => {
-        const busSeats = seats.filter((s) => s.busId === bus._id);
-        const availableSeats = busSeats.filter(
-          (s) => s.status === 'Available'
-        );
+        // const busSeats = seats.filter((s) => s.busId === bus._id);
+        // const availableSeats = busSeats.filter(
+        //   (s) => s.status === 'Available'
+        // );
 
-        const basePrice = busSeats.length
-          ? Math.min(...busSeats.map((s) => s.basePrice))
-          : 'N/A';
+        // const basePrice = busSeats.length
+        //   ? Math.min(...busSeats.map((s) => s.basePrice))
+        //   : 'N/A';
 
-        const isOpen = openBusId === bus._id;
+        // const isOpen = openBusId === bus._id;
 
         return (
           <div
@@ -126,8 +126,6 @@ const BusInfo = () => {
                 </p>
               </div>
             </div>
-
-        
           </div>
         );
       })}

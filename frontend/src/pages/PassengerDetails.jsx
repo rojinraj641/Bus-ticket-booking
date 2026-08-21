@@ -6,9 +6,7 @@ import { useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { addContactDetails } from "../Features/Ticket/contactSlice";
-import axios from 'axios';
-import { Toaster, toast } from 'sonner';
-import { updateCancellation } from "../Features/Bus/cancellationSlice";
+import { Toaster } from 'sonner';
 
 const PassengerDetails = () => {
   const [email, setEmail] = useState("");

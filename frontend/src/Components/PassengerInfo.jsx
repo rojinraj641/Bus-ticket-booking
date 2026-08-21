@@ -1,7 +1,7 @@
 import Select from "react-dropdown-select";
 import { useState } from "react";
 import {upsertPassenger} from "../Features/Passengers/passengerSlice.js"
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Toaster, toast} from 'sonner';
 import { State } from "country-state-city"
 

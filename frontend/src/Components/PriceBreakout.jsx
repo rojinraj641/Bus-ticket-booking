@@ -1,9 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { setLoading } from "../Features/Search/busSlice.js";
 import { addPrice } from "../Features/Ticket/priceSlice.js";
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios.api.js";
+import api from "../Api/axios.api.js";
 import { toast, ToastContainer} from "react-toastify"
 
 const PriceBreakout = () => {
@@ -13,9 +12,6 @@ const PriceBreakout = () => {
 
   const { seats } = useSelector((state) => state.seats);
   const { seatIds } = useSelector((state) => state.selectedSeats);
-  const { busList } = useSelector((state) => state.bus);
-  const { busId } = useSelector((state) => state.busId);
-  const { distance } = useSelector((state) => state.search);
 
   const selectedSeats = seats.filter(s =>
     seatIds.includes(s._id)

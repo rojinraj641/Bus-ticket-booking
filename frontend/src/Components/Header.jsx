@@ -5,14 +5,12 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBoarding, setDestination, setDate } from '../Features/Search/searchSlice.js';
-import { setBusList, setLoading } from '../Features/Search/busSlice.js';
-import { useNavigate } from 'react-router-dom';
+import { setBusList, removeBusList } from '../Features/Bus/busSlice.js';
 import { useState, useEffect, useRef } from 'react';
 import api from "../Api/axios.api.js";
-import { ToastContainer, toast } from 'react-toastify';
+import { setToast, resetToast } from '../Features/Error/toastSlice.js';
 
 const Header = () => {
-  const navigate = useNavigate();
   const destinationRef = useRef(null);
   const boardingRef = useRef(null);
   const dispatch = useDispatch();
@@ -120,7 +118,7 @@ const Header = () => {
   };
 
   const handleSearchClick = async () => {
-    dispatch(setLoading(true));
+    dispatch(resetToast());
     try {
       const res = await api.get('/filtered', {
         params: {
@@ -134,18 +132,15 @@ const Header = () => {
         }
       });
       const { busList } = res.data.data;
+      dispatch(removeBusList());
       dispatch(setBusList(busList));
     } catch (err) {
-      toast.error('Something went wrong');
-    } finally {
-      dispatch(setLoading(false));
+      dispatch(setToast("Something went wrong"));
     }
   };
 
   return (
     <header className="flex flex-wrap items-center justify-center gap-3 border-b border-blue-100 bg-gradient-to-r from-[#F8FAFC] via-[#EFF6FF] to-[#F8FAFC] px-4 py-4 shadow-[0_10px_30px_rgba(37,99,235,0.08)] sm:px-6 sm:py-5">
-      <ToastContainer />
-
       {/* Mobile Layout */}
       <div className="flex w-full flex-col gap-3 rounded-2xl border border-blue-100 bg-white/90 p-3 shadow-[0_8px_24px_rgba(148,163,184,0.18)] backdrop-blur-sm sm:hidden">
         <div ref={boardingRef} className="relative">

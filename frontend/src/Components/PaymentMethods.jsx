@@ -1,5 +1,3 @@
-import React from 'react';
-
 function PaymentMethods({ selectedMethod, onMethodChange, onProceedToPay }) {
   const paymentOptions = [
     { id: 'credit-card', label: 'Credit Card', icon: 'fa-credit-card' },

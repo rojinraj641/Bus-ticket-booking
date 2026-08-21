@@ -6,14 +6,12 @@ import FilteredResult from "./pages/FilteredResult";
 import Payment from "./Pages/Payment";
 import PassengerDetails from "./Pages/PassengerDetails";
 import TrackTicket from "./Pages/TrackTicket";
-import Loader from "./Components/Loader";
 import './App.css';
 import { useSelector } from "react-redux";
 import { toast, ToastContainer} from "react-toastify"
 import { useEffect } from "react";
 
 function App() {
-  const { loading } = useSelector((state)=>state.bus.loading);
   const { message, success } = useSelector((state)=>state.toast);
   useEffect(()=>{
     if(success && message){
@@ -26,7 +24,6 @@ function App() {
 
   return (
     <Router>
-      {loading && <Loader/>}
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Home/>} />

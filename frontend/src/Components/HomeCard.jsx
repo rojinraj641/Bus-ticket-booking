@@ -1,5 +1,4 @@
 import { MapPin } from "lucide-react";
-import {useEffect, useRef} from "react";
 import bangalore from "../Assests/cities/bangalore.jpg";
 import coimbatore from "../Assests/cities/coimbatore.jpg";
 import goa from "../Assests/cities/goa.jpg";
