@@ -9,6 +9,7 @@ import { setBusList, removeBusList } from '../Features/Bus/busSlice.js';
 import { useState, useEffect, useRef } from 'react';
 import api from "../Api/axios.api.js";
 import { setToast, resetToast } from '../Features/Error/toastSlice.js';
+import { formatTimeRange } from "../utils/timeRangeUtils.js";
 
 const Header = () => {
   const destinationRef = useRef(null);
@@ -120,13 +121,20 @@ const Header = () => {
   const handleSearchClick = async () => {
     dispatch(resetToast());
     try {
+      const departureTimeRanges = (departureTime || [])
+        .map(formatTimeRange)
+        .filter(Boolean);
+      const arrivalTimeRanges = (arrivalTime || [])
+        .map(formatTimeRange)
+        .filter(Boolean);
+
       const res = await api.get('/filtered', {
         params: {
           boarding,
           destination,
           date,
-          arrivalTime: arrivalTime || null,
-          departureTime: departureTime || null,
+          arrivalTime: arrivalTimeRanges.length > 0 ? arrivalTimeRanges.join(',') : null,
+          departureTime: departureTimeRanges.length > 0 ? departureTimeRanges.join(',') : null,
           amenities: amenities || [],
           busType: busType || [],
         }

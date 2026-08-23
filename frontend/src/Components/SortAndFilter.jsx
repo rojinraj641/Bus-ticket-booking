@@ -1,14 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBus,
-  faCheck,
-  faChevronLeft,
-  faChevronRight,
-  faClock,
-  faFilter,
-  faSnowflake,
-  faWifi,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBus, faCheck, faClock, faSnowflake, faWifi } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFilter } from "../Features/Search/filterSlice.js";
 import clsx from "clsx";
@@ -24,7 +15,7 @@ const FILTER_GROUPS = [
     title: "Bus Type",
     type: "busType",
     icon: faBus,
-    options: ["Seater", "Sleeper", "Hybrid", "AC", "Non AC"],
+    options: ["AC Sleeper", "Non AC Sleeper", "AC Seater", "Non AC Seater"],
   },
   {
     title: "Arrival Time",
@@ -54,6 +45,7 @@ const SortAndFilter = ({ collapsed = false, onToggleCollapse }) => {
     );
   };
 
+
   const FilterCheckbox = ({ id, label, checked, onChange, color = "blue" }) => (
     <label
       htmlFor={id}
@@ -76,7 +68,7 @@ const SortAndFilter = ({ collapsed = false, onToggleCollapse }) => {
   if (collapsed) {
     return (
         <div className="flex flex-col items-center gap-3 pt-2">
-          {FILTER_GROUPS.map((group, idx) => (
+          {FILTER_GROUPS.map((group) => (
             <div
               key={group.type}
               className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm"
@@ -93,7 +85,7 @@ const SortAndFilter = ({ collapsed = false, onToggleCollapse }) => {
   return (
     <div className="flex h-full flex-col bg-gradient-to-b from-white via-slate-50 to-white p-4 md:p-5">
       <div className="flex-1 space-y-5 overflow-y-auto pr-1">
-        {FILTER_GROUPS.map((group, idx) => (
+        {FILTER_GROUPS.map((group) => (
           <div key={group.type} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
             <div className="mb-3 flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">

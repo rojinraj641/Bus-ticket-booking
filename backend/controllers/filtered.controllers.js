@@ -21,14 +21,59 @@ const normalizeArray = (value) => {
   return [];
 };
 
-const normalizeTime = (value) => {
-  if (!value) return null;
+const parseTimeRanges = (value) => {
+  if (!value) return [];
 
-  if (Array.isArray(value)) {
-    return value[0];
+  const parts = normalizeArray(value);
+
+  const ranges = [];
+
+  for (const part of parts) {
+    const [startStr, endStr] = part.split("-");
+
+    const start = Number(startStr);
+    const end = Number(endStr);
+
+    if (
+      Number.isNaN(start) ||
+      Number.isNaN(end) ||
+      start < 0 ||
+      start > 23 ||
+      end < 0 ||
+      end > 24 ||
+      start >= end
+    ) {
+      continue;
+    }
+
+    ranges.push({ start, end });
   }
+  return ranges;
+};
 
-  return String(value);
+const buildTimeRangeMatch = (field, ranges) => {
+  if (!ranges.length) return null;
+
+  const istHour = {
+    $toInt: {
+      $dateToString: {
+        date: field,
+        format: "%H",
+        timezone: "Asia/Kolkata",
+      },
+    },
+  };
+  
+  return {
+    $expr: {
+      $or: ranges.map((range) => ({
+        $and: [
+          { $gte: [istHour, range.start] },
+          { $lt: [istHour, range.end] },
+        ],
+      })),
+    },
+  };
 };
 
 const parseSearchDate = (value) => {
@@ -118,8 +163,8 @@ const filteredResult = asyncHandler(async (req, res) => {
   const requestedAmenities = normalizeArray(amenities);
   const requestedBusTypes = normalizeArray(busType);
 
-  const requestedDepartureTime = normalizeTime(departureTime);
-  const requestedArrivalTime = normalizeTime(arrivalTime);
+  const requestedDepartureTimeRanges = parseTimeRanges(departureTime);
+  const requestedArrivalTimeRanges = parseTimeRanges(arrivalTime);
 
   // ----------------------------------------
   // 4. Create regexes for city matching
@@ -142,49 +187,25 @@ const filteredResult = asyncHandler(async (req, res) => {
   // 5. Validate time filters
   // ----------------------------------------
 
-  const requestedDepartureParts = requestedDepartureTime
-    ? requestedDepartureTime
-      .split(":")
-      .map((part) => Number.parseInt(part, 10))
-    : null;
+  const invalidDepartureRange = requestedDepartureTimeRanges.some(
+    (range) => range.start < 0 || range.start > 23 || range.end < 0 || range.end > 24
+  );
 
-  const requestedArrivalParts = requestedArrivalTime
-    ? requestedArrivalTime
-      .split(":")
-      .map((part) => Number.parseInt(part, 10))
-    : null;
+  const invalidArrivalRange = requestedArrivalTimeRanges.some(
+    (range) => range.start < 0 || range.start > 23 || range.end < 0 || range.end > 24
+  );
 
-  if (
-    requestedDepartureParts &&
-    (
-      requestedDepartureParts.length !== 2 ||
-      requestedDepartureParts.some((part) => Number.isNaN(part)) ||
-      requestedDepartureParts[0] < 0 ||
-      requestedDepartureParts[0] > 23 ||
-      requestedDepartureParts[1] < 0 ||
-      requestedDepartureParts[1] > 59
-    )
-  ) {
+  if (invalidDepartureRange) {
     throw new ApiError(
       400,
-      "Departure time must be in HH:MM format"
+      "Departure time ranges must contain valid hours (0-23)"
     );
   }
 
-  if (
-    requestedArrivalParts &&
-    (
-      requestedArrivalParts.length !== 2 ||
-      requestedArrivalParts.some((part) => Number.isNaN(part)) ||
-      requestedArrivalParts[0] < 0 ||
-      requestedArrivalParts[0] > 23 ||
-      requestedArrivalParts[1] < 0 ||
-      requestedArrivalParts[1] > 59
-    )
-  ) {
+  if (invalidArrivalRange) {
     throw new ApiError(
       400,
-      "Arrival time must be in HH:MM format"
+      "Arrival time ranges must contain valid hours (0-23)"
     );
   }
 
@@ -349,8 +370,8 @@ const filteredResult = asyncHandler(async (req, res) => {
           $dateAdd: {
             startDate: "$departureDateTime",
             unit: "minute",
-            amount:
-              "$boardingPoint.offsetFromStartMinutes",
+            amount: "$boardingPoint.offsetFromStartMinutes",
+            timezone: "Asia/Kolkata",
           },
         },
 
@@ -358,8 +379,8 @@ const filteredResult = asyncHandler(async (req, res) => {
           $dateAdd: {
             startDate: "$departureDateTime",
             unit: "minute",
-            amount:
-              "$destinationPoint.offsetFromStartMinutes",
+            amount: "$destinationPoint.offsetFromStartMinutes",
+            timezone: "Asia/Kolkata",
           },
         },
       },
@@ -369,72 +390,30 @@ const filteredResult = asyncHandler(async (req, res) => {
     // Departure time filter
     // ----------------------------------------
 
-    ...(requestedDepartureParts
+    ...(requestedDepartureTimeRanges.length
       ? [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $eq: [
-                    {
-                      $hour:
-                        "$requestedDepartureDateTime",
-                    },
-                    requestedDepartureParts[0],
-                  ],
-                },
-
-                {
-                  $eq: [
-                    {
-                      $minute:
-                        "$requestedDepartureDateTime",
-                    },
-                    requestedDepartureParts[1],
-                  ],
-                },
-              ],
-            },
+          {
+            $match: buildTimeRangeMatch(
+              "$requestedDepartureDateTime",
+              requestedDepartureTimeRanges
+            ),
           },
-        },
-      ]
+        ]
       : []),
 
     // ----------------------------------------
     // Arrival time filter
     // ----------------------------------------
 
-    ...(requestedArrivalParts
+    ...(requestedArrivalTimeRanges.length
       ? [
-        {
-          $match: {
-            $expr: {
-              $and: [
-                {
-                  $eq: [
-                    {
-                      $hour:
-                        "$requestedArrivalDateTime",
-                    },
-                    requestedArrivalParts[0],
-                  ],
-                },
-
-                {
-                  $eq: [
-                    {
-                      $minute:
-                        "$requestedArrivalDateTime",
-                    },
-                    requestedArrivalParts[1],
-                  ],
-                },
-              ],
-            },
+          {
+            $match: buildTimeRangeMatch(
+              "$requestedArrivalDateTime",
+              requestedArrivalTimeRanges
+            ),
           },
-        },
-      ]
+        ]
       : []),
 
     // ----------------------------------------
