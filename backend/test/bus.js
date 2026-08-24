@@ -36,7 +36,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Sundar Express"),
         busName: "Sundar Express Volvo",
         busNumber: "KL01AB1234",
-        busType: ["AC Sleeper"],
+        busType: "AC Sleeper",
         averageRating: 4.5,
         ratingCount: 128,
         totalSeats: 36,
@@ -56,7 +56,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Blue Mountain Travels"),
         busName: "Blue Mountain Premium",
         busNumber: "KL02CD5678",
-        busType: ["AC Seater"],
+        busType: "AC Seater",
         averageRating: 4.2,
         ratingCount: 95,
         totalSeats: 40,
@@ -75,7 +75,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Royal Coach Lines"),
         busName: "Royal Coach Sleeper",
         busNumber: "TN38EF9012",
-        busType: ["AC Sleeper"],
+        busType: "AC Sleeper",
         averageRating: 4.7,
         ratingCount: 214,
         totalSeats: 32,
@@ -96,7 +96,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Green Valley Transit"),
         busName: "Green Valley Express",
         busNumber: "KA05GH3456",
-        busType: ["Non AC Seater"],
+        busType: "Non AC Seater",
         averageRating: 3.9,
         ratingCount: 67,
         totalSeats: 45,
@@ -113,7 +113,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Golden Chariot Travels"),
         busName: "Golden Chariot Luxury",
         busNumber: "AP28IJ7890",
-        busType: ["AC Sleeper"],
+        busType: "AC Sleeper",
         averageRating: 4.8,
         ratingCount: 310,
         totalSeats: 36,
@@ -135,7 +135,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Silver Line Express"),
         busName: "Silver Line AC",
         busNumber: "TS09KL2345",
-        busType: ["AC Seater"],
+        busType: "AC Seater",
         averageRating: 4.1,
         ratingCount: 82,
         totalSeats: 40,
@@ -153,7 +153,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Rajdhani Roadways"),
         busName: "Rajdhani Volvo Sleeper",
         busNumber: "DL01MN6789",
-        busType: ["AC Sleeper"],
+        busType: "AC Sleeper",
         averageRating: 4.6,
         ratingCount: 189,
         totalSeats: 36,
@@ -174,7 +174,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Superfast Travels Co"),
         busName: "Superfast Express",
         busNumber: "TN10OP1234",
-        busType: ["Non AC Sleeper"],
+        busType: "Non AC Sleeper",
         averageRating: 3.8,
         ratingCount: 54,
         totalSeats: 36,
@@ -192,7 +192,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Comfort Ride Lines"),
         busName: "Comfort Ride Premium",
         busNumber: "KA03QR5678",
-        busType: ["AC Seater"],
+        busType: "AC Seater",
         averageRating: 4.3,
         ratingCount: 116,
         totalSeats: 40,
@@ -211,7 +211,7 @@ const addBuses = async () => {
         operator: operatorMap.get("Namma Travels"),
         busName: "Namma Travels Sleeper",
         busNumber: "KA01ST9012",
-        busType: ["AC Sleeper"],
+        busType: "AC Sleeper",
         averageRating: 4.4,
         ratingCount: 143,
         totalSeats: 36,
@@ -238,6 +238,8 @@ const addBuses = async () => {
         `These operators were not found: ${missingOperators.join(", ")}`
       );
     }
+    await Bus.deleteMany({});
+
     if(await Bus.countDocuments() < 10){
          await Bus.insertMany(buses);
          console.log("Buses seeded successfully!");

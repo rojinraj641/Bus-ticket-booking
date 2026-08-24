@@ -237,12 +237,18 @@ const BusInfo = () => {
                     {bus.departureTime}
                   </p>
                   <p className="text-xs text-[#4B5563] font-medium truncate">{boarding}</p>
+                  <p className="text-xs text-[#4B5563] font-medium truncate">{new Date(bus.departureDateTime).toLocaleString("en-IN", {
+                      timeZone: "Asia/Kolkata",
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}</p>
                 </div>
 
                 <div className="flex flex-col items-center px-2">
                   <div className="flex items-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
-                    <div className="w-10 h-0.5 bg-gradient-to-r from-[#2563EB] to-[#3B82F6] rounded-full mx-1" />
+                    <div className="w-10 h-0.5 bg-gradient-to-r from-[#2563EB] to-[#3B82F6] rounded-full" />
                     <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
                   </div>
                   <p className="text-[10px] font-semibold text-[#4B5563] mt-1">{bus.distance} km</p>
@@ -253,6 +259,12 @@ const BusInfo = () => {
                     {bus.arrivalTime}
                   </p>
                   <p className="text-xs text-[#4B5563] font-medium truncate">{destination}</p>
+                  <p className="text-xs text-[#4B5563] font-medium truncate">{new Date(bus.arrivalDateTime).toLocaleString("en-IN", {
+                      timeZone: "Asia/Kolkata",
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}</p>
                 </div>
               </div>
 

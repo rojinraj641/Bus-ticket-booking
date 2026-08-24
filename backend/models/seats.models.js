@@ -22,7 +22,7 @@ const seatSchema = new mongoose.Schema(
     },
     seatType: {
       type: String,
-      enum: ["Sleeper", "Seater", "Semi Sleeper"],
+      enum: ["Sleeper", "Seater"],
       required: true,
     },
     seatPosition: {

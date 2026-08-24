@@ -26,7 +26,7 @@ const busSchema = new mongoose.Schema(
     },
 
     busType: {
-      type: [String],
+      type: String,
       enum: ["AC Sleeper","Non AC Sleeper","AC Seater", "Non AC Seater"],
       required: true,
     },
