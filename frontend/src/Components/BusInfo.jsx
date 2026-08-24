@@ -33,18 +33,6 @@ const BusInfo = () => {
     return faBus;
   };
 
-  const formatTime = (dateTime) => {
-    if (!dateTime) return '';
-    const date = new Date(dateTime);
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-  };
-
-  const formatDate = (dateTime) => {
-    if (!dateTime) return '';
-    const date = new Date(dateTime);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  };
-
   const getSeatUrgency = (available, total) => {
     if (!available || !total) return { color: 'text-[#22C55E]', bg: 'bg-green-50', label: 'Available' };
     const ratio = available / total;
@@ -134,10 +122,9 @@ const BusInfo = () => {
               <div className="flex items-center gap-3 px-6">
                 <div className="text-right">
                   <p className="text-lg font-bold text-[#111827]">
-                    {formatTime(bus.departureDateTime)}
+                    {bus.departureTime}
                   </p>
                   <p className="text-xs text-[#4B5563] mt-0.5">{boarding}</p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">{formatDate(bus.departureDateTime)}</p>
                 </div>
 
                 <div className="flex flex-col items-center px-2">
@@ -148,15 +135,16 @@ const BusInfo = () => {
                   </div>
                   <div className="mt-1 text-center">
                     <p className="text-xs font-semibold text-[#4B5563]">{bus.distance} km</p>
+                    <p>{bus.departureTime}</p>
+                    <p>{bus.arrivalTime}</p>
                   </div>
                 </div>
 
                 <div className="text-left">
                   <p className="text-lg font-bold text-[#111827]">
-                    {formatTime(bus.arrivalDateTime)}
+                    {bus.arrivalTime}
                   </p>
                   <p className="text-xs text-[#4B5563] mt-0.5">{destination}</p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">{formatDate(bus.arrivalDateTime)}</p>
                 </div>
               </div>
 
@@ -232,10 +220,9 @@ const BusInfo = () => {
               <div className="flex items-center justify-between bg-slate-50 rounded-xl p-3 mb-3">
                 <div className="text-center flex-1">
                   <p className="text-base font-bold text-[#111827]">
-                    {formatTime(bus.departureDateTime)}
+                    {bus.departureTime}
                   </p>
                   <p className="text-xs text-[#4B5563] font-medium truncate">{boarding}</p>
-                  <p className="text-[10px] text-gray-400">{formatDate(bus.departureDateTime)}</p>
                 </div>
 
                 <div className="flex flex-col items-center px-2">
@@ -249,10 +236,9 @@ const BusInfo = () => {
 
                 <div className="text-center flex-1">
                   <p className="text-base font-bold text-[#111827]">
-                    {formatTime(bus.arrivalDateTime)}
+                    {bus.arrivalTime}
                   </p>
                   <p className="text-xs text-[#4B5563] font-medium truncate">{destination}</p>
-                  <p className="text-[10px] text-gray-400">{formatDate(bus.arrivalDateTime)}</p>
                 </div>
               </div>
 
@@ -279,7 +265,7 @@ const BusInfo = () => {
                   </p>
                   <p className="text-[10px] text-[#4B5563]">Onwards</p>
                   <div className={`inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-md text-xs font-medium ${seatUrgency.bg} ${seatUrgency.color}`}>
-                    {bus.availableSeatCount} seats left
+                     {bus.availableSeatsCount} seats left
                   </div>
                 </div>
 

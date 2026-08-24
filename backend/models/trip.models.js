@@ -21,20 +21,10 @@ const tripSchema = new mongoose.Schema(
       required: true,
       index: true
     },
-    departureDate: {
-      // calendar date of the trip start (midnight UTC), used for date-range search
-      type: Date,
+    departureTime: {
+      type: String,
       required: true,
-      index: true
-    },
-    departureDateTime: {
-      type: Date,
-      required: true,
-      index: true
-    },
-    arrivalDateTime: {
-      type: Date,
-      required: true,
+      match: /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/,
     },
     basePrice: {
       type: Number,
@@ -65,8 +55,6 @@ const tripSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-tripSchema.index({ route: 1, departureDateTime: 1, status: 1 });
-tripSchema.index({ bus: 1, departureDateTime: 1 });
 
 tripSchema.plugin(mongooseAggregatePaginate);
 

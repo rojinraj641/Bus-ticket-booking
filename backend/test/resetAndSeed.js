@@ -71,7 +71,7 @@ const seedData = async () => {
       operator: operators[0]._id,
       busName: "Orange Travels Volvo",
       busNumber: "TS09AB1001",
-      busType: ["AC", "Sleeper"],
+      busType: ["AC Sleeper"],
       averageRating: 4.7,
       ratingCount: 342,
       totalSeats: 36,
@@ -84,7 +84,7 @@ const seedData = async () => {
       operator: operators[1]._id,
       busName: "VRL Express",
       busNumber: "KA01CD2002",
-      busType: ["AC", "Seater"],
+      busType: ["AC Seater"],
       averageRating: 4.2,
       ratingCount: 198,
       totalSeats: 45,
@@ -97,7 +97,7 @@ const seedData = async () => {
       operator: operators[2]._id,
       busName: "SRS Royal",
       busNumber: "KA03EF3003",
-      busType: ["Non AC", "Seater"],
+      busType: ["Non AC Seater"],
       averageRating: 4.0,
       ratingCount: 156,
       totalSeats: 49,
@@ -110,7 +110,7 @@ const seedData = async () => {
       operator: operators[3]._id,
       busName: "Purple Star Deluxe",
       busNumber: "KL07GH4004",
-      busType: ["AC", "Sleeper"],
+      busType: ["AC Sleeper"],
       averageRating: 4.5,
       ratingCount: 281,
       totalSeats: 40,
@@ -123,7 +123,7 @@ const seedData = async () => {
       operator: operators[0]._id,
       busName: "Orange City Link",
       busNumber: "TN10JK5005",
-      busType: ["AC", "Semi Sleeper"],
+      busType: ["AC Semi Sleeper"],
       averageRating: 4.3,
       ratingCount: 214,
       totalSeats: 42,
@@ -229,14 +229,25 @@ const seedData = async () => {
     { routeIndex: 0, busIndex: 0, dayName: "Saturday", departureHour: 23, departureMin: 0, durationMinutes: 480, basePrice: 1150 },
   ];
 
-  for (const template of tripTemplates) {
+  const tripBookingMeta = tripTemplates.map((template) => {
     const departureDate = getNextDateForDay(template.dayName, today);
     const departureDateTime = new Date(departureDate);
     departureDateTime.setHours(template.departureHour, template.departureMin, 0, 0);
 
-    const arrivalDateTime = new Date(departureDateTime);
-    arrivalDateTime.setMinutes(arrivalDateTime.getMinutes() + template.durationMinutes);
+    const route = routes[template.routeIndex];
+    const boardingPoint = route.stoppingPoints.find((sp) => sp.isBoardingPoint);
+    const droppingPoint = route.stoppingPoints.find((sp) => sp.isDroppingPoint);
 
+    const boardingDateTime = new Date(departureDateTime);
+    boardingDateTime.setMinutes(boardingDateTime.getMinutes() + (boardingPoint?.offsetFromStartMinutes || 0));
+
+    const droppingDateTime = new Date(departureDateTime);
+    droppingDateTime.setMinutes(droppingDateTime.getMinutes() + (droppingPoint?.offsetFromStartMinutes || 0));
+
+    return { boardingDateTime, droppingDateTime };
+  });
+
+  for (const template of tripTemplates) {
     const route = routes[template.routeIndex];
     const bus = buses[template.busIndex];
 
@@ -244,9 +255,7 @@ const seedData = async () => {
       bus: bus._id,
       route: route._id,
       operator: route.operator,
-      departureDate: new Date(departureDateTime.getFullYear(), departureDateTime.getMonth(), departureDateTime.getDate()),
-      departureDateTime,
-      arrivalDateTime,
+      departureTime: `${String(template.departureHour).padStart(2, "0")}:${String(template.departureMin).padStart(2, "0")}`,
       basePrice: template.basePrice,
       availableSeatsCount: bus.totalSeats,
       status: "SCHEDULED",
@@ -267,7 +276,7 @@ const seedData = async () => {
   for (const trip of trips) {
     const bus = buses.find((entry) => entry._id.toString() === trip.bus.toString());
     const seatCount = bus.totalSeats;
-    const seatTypes = bus.busType.includes("Sleeper") ? ["Sleeper", "Sleeper", "Seater", "Seater"] : ["Seater", "Seater", "Semi Sleeper"];
+    const seatTypes = bus.busType.some((type) => type.includes("Sleeper")) ? ["Sleeper", "Sleeper", "Seater", "Seater"] : ["Seater", "Seater", "Semi Sleeper"];
 
     for (let i = 0; i < seatCount; i += 1) {
       const seatType = seatTypes[i % seatTypes.length];
@@ -375,9 +384,9 @@ const seedData = async () => {
       passengers: [passengers[0]._id],
       pnr: "RB4X9K2",
       boardingPointCity: "Bengaluru",
-      boardingDateTime: trips[0].departureDateTime,
+      boardingDateTime: tripBookingMeta[0].boardingDateTime,
       droppingPointCity: "Hyderabad",
-      droppingDateTime: trips[0].arrivalDateTime,
+      droppingDateTime: tripBookingMeta[0].droppingDateTime,
       couponApplied: coupons[0]._id,
       discountAmount: 110,
       totalAmount: 989,
@@ -392,9 +401,9 @@ const seedData = async () => {
       passengers: [passengers[1]._id],
       pnr: "RB8N2V4",
       boardingPointCity: "Chennai",
-      boardingDateTime: trips[1].departureDateTime,
+      boardingDateTime: tripBookingMeta[1].boardingDateTime,
       droppingPointCity: "Bengaluru",
-      droppingDateTime: trips[1].arrivalDateTime,
+      droppingDateTime: tripBookingMeta[1].droppingDateTime,
       couponApplied: coupons[1]._id,
       discountAmount: 200,
       totalAmount: 699,
@@ -409,9 +418,9 @@ const seedData = async () => {
       passengers: [passengers[2]._id],
       pnr: "RB3H7Q9",
       boardingPointCity: "Hyderabad",
-      boardingDateTime: trips[2].departureDateTime,
+      boardingDateTime: tripBookingMeta[2].boardingDateTime,
       droppingPointCity: "Vijayawada",
-      droppingDateTime: trips[2].arrivalDateTime,
+      droppingDateTime: tripBookingMeta[2].droppingDateTime,
       couponApplied: coupons[2]._id,
       discountAmount: 38,
       totalAmount: 721,
@@ -426,9 +435,9 @@ const seedData = async () => {
       passengers: [passengers[3]._id],
       pnr: "RB9P2L5",
       boardingPointCity: "Bengaluru",
-      boardingDateTime: trips[3].departureDateTime,
+      boardingDateTime: tripBookingMeta[3].boardingDateTime,
       droppingPointCity: "Coimbatore",
-      droppingDateTime: trips[3].arrivalDateTime,
+      droppingDateTime: tripBookingMeta[3].droppingDateTime,
       couponApplied: null,
       discountAmount: 0,
       totalAmount: 699,
