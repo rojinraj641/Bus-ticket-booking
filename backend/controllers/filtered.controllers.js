@@ -53,7 +53,6 @@ const parseTimeRanges = (value) => {
 
 const buildTimeRangeMatch = (field, ranges) => {
   if (!ranges.length) return null;
-
   const istHour = {
     $toInt: {
       $dateToString: {
@@ -541,6 +540,7 @@ const filteredResult = asyncHandler(async (req, res) => {
           $dateToString: {
             format: "%H:%M",
             date: "$requestedDepartureDateTime",
+            timezone: "Asia/Kolkata",
           },
         },
 
@@ -548,6 +548,7 @@ const filteredResult = asyncHandler(async (req, res) => {
           $dateToString: {
             format: "%H:%M",
             date: "$requestedArrivalDateTime",
+            timezone: "Asia/Kolkata",
           },
         },
 
@@ -578,7 +579,7 @@ const filteredResult = asyncHandler(async (req, res) => {
   let busList;
   try {
     busList = await Trip.aggregate(pipeline);
-    console.log("Bus list are", busList);
+   // console.log("Bus list are", busList);
   } catch (aggregateError) {
     throw new ApiError(
       500,
