@@ -1,154 +1,252 @@
 import { Bus } from "../models/bus.models.js";
-import mongoose from "mongoose";
+import { Operator } from "../models/operator.models.js";
 
-//Adding New Bus
-async function addBus() {
-    try {
-        const buses = [
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000001"),
-                busName: "Orange Travels Volvo",
-                busNumber: "TS09AB1001",
-                busType: ["AC Sleeper"],
-                averageRating: 4.7,
-                ratingCount: 342,
-                totalSeats: 36,
-                totalDeck: 1,
-                amenities: ["WiFi", "Charging Point", "Blanket", "Water Bottle"],
-                images: ["orange1.jpg", "orange2.jpg"],
-                status: "ACTIVE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000002"),
-                busName: "SRS Travels",
-                busNumber: "KA01CD2002",
-                busType: ["AC Seater"],
-                averageRating: 4.2,
-                ratingCount: 198,
-                totalSeats: 45,
-                totalDeck: 1,
-                amenities: ["Charging Point", "CCTV"],
-                images: ["srs1.jpg"],
-                status: "ACTIVE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000003"),
-                busName: "VRL Travels",
-                busNumber: "KA03EF3003",
-                busType: ["Non AC Seater"],
-                averageRating: 4.0,
-                ratingCount: 156,
-                totalSeats: 49,
-                totalDeck: 1,
-                amenities: ["Water Bottle"],
-                images: ["vrl1.jpg"],
-                status: "ACTIVE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000004"),
-                busName: "Kallada Travels",
-                busNumber: "KL07GH4004",
-                busType: ["AC Sleeper"],
-                averageRating: 4.5,
-                ratingCount: 281,
-                totalSeats: 40,
-                totalDeck: 1,
-                amenities: ["WiFi", "Charging Point", "Reading Light"],
-                images: ["kallada1.jpg"],
-                status: "ACTIVE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000005"),
-                busName: "Parveen Travels",
-                busNumber: "TN10JK5005",
-                busType: ["AC Semi Sleeper"],
-                averageRating: 4.3,
-                ratingCount: 214,
-                totalSeats: 42,
-                totalDeck: 1,
-                amenities: ["Charging Point", "Water Bottle"],
-                images: ["parveen1.jpg"],
-                status: "ACTIVE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000006"),
-                busName: "GreenLine Travels",
-                busNumber: "AP16LM6006",
-                busType: ["AC Sleeper"],
-                averageRating: 4.8,
-                ratingCount: 401,
-                totalSeats: 30,
-                totalDeck: 2,
-                amenities: ["WiFi", "Charging Point", "Blanket", "TV"],
-                images: ["greenline1.jpg", "greenline2.jpg"],
-                status: "ACTIVE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000007"),
-                busName: "Morning Star",
-                busNumber: "TS12MN7007",
-                busType: ["Non AC Semi Sleeper"],
-                averageRating: 3.9,
-                ratingCount: 98,
-                totalSeats: 40,
-                totalDeck: 1,
-                amenities: ["Charging Point"],
-                images: ["morningstar1.jpg"],
-                status: "MAINTENANCE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000008"),
-                busName: "Yolo Bus",
-                busNumber: "MH14OP8008",
-                busType: ["AC Seater"],
-                averageRating: 4.6,
-                ratingCount: 325,
-                totalSeats: 48,
-                totalDeck: 1,
-                amenities: ["WiFi", "Charging Point", "Snacks"],
-                images: ["yolo1.jpg"],
-                status: "ACTIVE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000009"),
-                busName: "IntrCity SmartBus",
-                busNumber: "DL05QR9009",
-                busType: ["AC Sleeper"],
-                averageRating: 4.4,
-                ratingCount: 260,
-                totalSeats: 34,
-                totalDeck: 1,
-                amenities: ["WiFi", "Blanket", "Charging Point", "GPS Tracking"],
-                images: ["intrcity1.jpg"],
-                status: "ACTIVE",
-            },
-            {
-                operator: new mongoose.Types.ObjectId("687b00000000000000000010"),
-                busName: "Royal Cruiser",
-                busNumber: "TN22ST1010",
-                busType: ["AC Sleeper"],
-                averageRating: 3.8,
-                ratingCount: 67,
-                totalSeats: 36,
-                totalDeck: 1,
-                amenities: ["Charging Point", "Water Bottle"],
-                images: ["royal1.jpg"],
-                status: "INACTIVE",
-            },
-        ];
-        if(await Bus.countDocuments() <= 10){
-            const response = await Bus.insertMany(buses);
-            if(response){
-                console.log('Buses added successfully');
-            }       
-        }else{
-            console.log("Buses already exist. Skipping insertion");
-            return;
-        }
-    }
-    catch (error) {
-        console.log('Failed to add bus');
-    }
-}
+const addBuses = async () => {
+  try {
+    const operatorNames = [
+      "Sundar Express",
+      "Blue Mountain Travels",
+      "Royal Coach Lines",
+      "Green Valley Transit",
+      "Golden Chariot Travels",
+      "Silver Line Express",
+      "Rajdhani Roadways",
+      "Superfast Travels Co",
+      "Comfort Ride Lines",
+      "Namma Travels",
+    ];
 
-export default addBus
+    // Find all operators using their names
+    const operators = await Operator.find({
+      name: { $in: operatorNames },
+    }).select("_id name");
+
+    // Convert operators into an object:
+    // {
+    //   "Sundar Express": ObjectId(...),
+    //   "Blue Mountain Travels": ObjectId(...),
+    //   ...
+    // }
+    const operatorMap = new Map(
+      operators.map((operator) => [operator.name, operator._id])
+    );
+
+    const buses = [
+      {
+        operator: operatorMap.get("Sundar Express"),
+        busName: "Sundar Express Volvo",
+        busNumber: "KL01AB1234",
+        busType: ["AC Sleeper"],
+        averageRating: 4.5,
+        ratingCount: 128,
+        totalSeats: 36,
+        totalDeck: 2,
+        amenities: [
+          "WiFi",
+          "Charging Point",
+          "Blanket",
+          "Water Bottle",
+          "Reading Light",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Blue Mountain Travels"),
+        busName: "Blue Mountain Premium",
+        busNumber: "KL02CD5678",
+        busType: ["AC Seater"],
+        averageRating: 4.2,
+        ratingCount: 95,
+        totalSeats: 40,
+        totalDeck: 1,
+        amenities: [
+          "WiFi",
+          "Charging Point",
+          "Water Bottle",
+          "Air Conditioning",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Royal Coach Lines"),
+        busName: "Royal Coach Sleeper",
+        busNumber: "TN38EF9012",
+        busType: ["AC Sleeper"],
+        averageRating: 4.7,
+        ratingCount: 214,
+        totalSeats: 32,
+        totalDeck: 2,
+        amenities: [
+          "WiFi",
+          "Charging Point",
+          "Blanket",
+          "Pillow",
+          "Water Bottle",
+          "Reading Light",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Green Valley Transit"),
+        busName: "Green Valley Express",
+        busNumber: "KA05GH3456",
+        busType: ["Non AC Seater"],
+        averageRating: 3.9,
+        ratingCount: 67,
+        totalSeats: 45,
+        totalDeck: 1,
+        amenities: [
+          "Charging Point",
+          "Water Bottle",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Golden Chariot Travels"),
+        busName: "Golden Chariot Luxury",
+        busNumber: "AP28IJ7890",
+        busType: ["AC Sleeper"],
+        averageRating: 4.8,
+        ratingCount: 310,
+        totalSeats: 36,
+        totalDeck: 2,
+        amenities: [
+          "WiFi",
+          "Charging Point",
+          "Blanket",
+          "Pillow",
+          "Water Bottle",
+          "Reading Light",
+          "Entertainment",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Silver Line Express"),
+        busName: "Silver Line AC",
+        busNumber: "TS09KL2345",
+        busType: ["AC Seater"],
+        averageRating: 4.1,
+        ratingCount: 82,
+        totalSeats: 40,
+        totalDeck: 1,
+        amenities: [
+          "WiFi",
+          "Charging Point",
+          "Water Bottle",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Rajdhani Roadways"),
+        busName: "Rajdhani Volvo Sleeper",
+        busNumber: "DL01MN6789",
+        busType: ["AC Sleeper"],
+        averageRating: 4.6,
+        ratingCount: 189,
+        totalSeats: 36,
+        totalDeck: 2,
+        amenities: [
+          "WiFi",
+          "Charging Point",
+          "Blanket",
+          "Pillow",
+          "Water Bottle",
+          "Reading Light",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Superfast Travels Co"),
+        busName: "Superfast Express",
+        busNumber: "TN10OP1234",
+        busType: ["Non AC Sleeper"],
+        averageRating: 3.8,
+        ratingCount: 54,
+        totalSeats: 36,
+        totalDeck: 2,
+        amenities: [
+          "Charging Point",
+          "Blanket",
+          "Water Bottle",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Comfort Ride Lines"),
+        busName: "Comfort Ride Premium",
+        busNumber: "KA03QR5678",
+        busType: ["AC Seater"],
+        averageRating: 4.3,
+        ratingCount: 116,
+        totalSeats: 40,
+        totalDeck: 1,
+        amenities: [
+          "WiFi",
+          "Charging Point",
+          "Water Bottle",
+          "Reading Light",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+
+      {
+        operator: operatorMap.get("Namma Travels"),
+        busName: "Namma Travels Sleeper",
+        busNumber: "KA01ST9012",
+        busType: ["AC Sleeper"],
+        averageRating: 4.4,
+        ratingCount: 143,
+        totalSeats: 36,
+        totalDeck: 2,
+        amenities: [
+          "WiFi",
+          "Charging Point",
+          "Blanket",
+          "Pillow",
+          "Water Bottle",
+        ],
+        images: [],
+        status: "ACTIVE",
+      },
+    ];
+
+    // Make sure every operator was found
+    const missingOperators = operatorNames.filter(
+      (name) => !operatorMap.has(name)
+    );
+
+    if (missingOperators.length > 0) {
+      throw new Error(
+        `These operators were not found: ${missingOperators.join(", ")}`
+      );
+    }
+    if(await Bus.countDocuments() < 10){
+         await Bus.insertMany(buses);
+         console.log("Buses seeded successfully!");
+    }else{
+        console.log("Total 10 buses added");
+    }
+  } catch (error) {
+    console.error("Error seeding buses:", error);
+  }
+};
+
+export default addBuses;

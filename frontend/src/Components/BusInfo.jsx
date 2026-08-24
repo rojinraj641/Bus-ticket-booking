@@ -7,10 +7,12 @@ import { setBusId, resetBusId } from '../Features/Bus/busIdSlice';
 const BusInfo = () => {
   const dispatch = useDispatch();
   const { boarding, destination } = useSelector((state) => state.search);
+  const { busId } = useSelector((state) => state.busId); 
   const { busList } = useSelector((state) => state.bus);
   const [openBusId, setOpenBusId] = useState(null);
 
   const handleToggleSeats = (busId) => {
+    console.log('Bus id is', busId);
     setOpenBusId((prev) => {
       if (prev === busId) {
         dispatch(resetBusId());
@@ -128,15 +130,13 @@ const BusInfo = () => {
                 </div>
 
                 <div className="flex flex-col items-center px-2">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center">
                     <div className="w-2 h-2 rounded-full bg-[#2563EB]" />
                     <div className="w-16 h-0.5 bg-gradient-to-r from-[#2563EB] to-[#3B82F6] rounded-full" />
                     <div className="w-2 h-2 rounded-full bg-[#2563EB]" />
                   </div>
                   <div className="mt-1 text-center">
                     <p className="text-xs font-semibold text-[#4B5563]">{bus.distance} km</p>
-                    <p>{bus.departureTime}</p>
-                    <p>{bus.arrivalTime}</p>
                   </div>
                 </div>
 

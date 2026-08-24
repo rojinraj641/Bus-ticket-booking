@@ -9,6 +9,12 @@ const seatSchema = new mongoose.Schema(
       required: true,
       index: true
     },
+    bus: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Bus',
+      required: true,
+      index: true
+    },
     seatNumber: {
       type: String,
       required: true,
@@ -72,7 +78,7 @@ const seatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-seatSchema.index({ trip: 1, seatNumber: 1 });
+seatSchema.index({ trip: 1, bus: 1, seatNumber: 1 });
 
 seatSchema.plugin(mongooseAggregatePaginate);
 

@@ -5,34 +5,34 @@ async function addPassenger() {
   try {
     const passengers = [
       {
-        user: new mongoose.Types.ObjectId("687c00000000000000000001"),
-        name: "Rahul Sharma",
-        age: 28,
+        user: new mongoose.Types.ObjectId("687c00000000000000000011"),
+        name: "Vikram Singh",
+        age: 29,
         gender: "Male",
       },
       {
-        user: new mongoose.Types.ObjectId("687c00000000000000000002"),
-        name: "Priya Nair",
-        age: 24,
+        user: new mongoose.Types.ObjectId("687c00000000000000000012"),
+        name: "Ananya Gupta",
+        age: 26,
         gender: "Female",
       },
       {
-        user: new mongoose.Types.ObjectId("687c00000000000000000003"),
-        name: "Arjun Reddy",
-        age: 35,
+        user: new mongoose.Types.ObjectId("687c00000000000000000013"),
+        name: "Karthik Raman",
+        age: 33,
         gender: "Male",
       },
       {
-        user: new mongoose.Types.ObjectId("687c00000000000000000004"),
-        name: "Sneha Patel",
+        user: new mongoose.Types.ObjectId("687c00000000000000000014"),
+        name: "Divya Menon",
         age: 31,
         gender: "Female",
       },
       {
-        user: new mongoose.Types.ObjectId("687c00000000000000000005"),
-        name: "Alex Morgan",
+        user: new mongoose.Types.ObjectId("687c00000000000000000015"),
+        name: "Priya Singh",
         age: 27,
-        gender: "Other",
+        gender: "Female",
       },
     ];
     if(await Passenger.countDocuments() <= 10){

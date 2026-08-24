@@ -9,208 +9,208 @@ async function addBooking() {
     }
     const bookings = [
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000001"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000011"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000021"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000011"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000021"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000031"),
         seats: [
-          new mongoose.Types.ObjectId("687a00000000000000000031")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a00000000000000000041")
         ],
-        pnr: "RB100001",
-        boardingPointCity: "Hyderabad",
-        boardingDateTime: new Date("2026-07-20T20:30:00Z"),
-        droppingPointCity: "Bangalore",
-        droppingDateTime: new Date("2026-07-21T06:15:00Z"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a00000000000000000051")
+        ],
+        pnr: "RB200001",
+        boardingPointCity: "Mumbai",
+        boardingDateTime: new Date("2026-09-10T22:00:00Z"),
+        droppingPointCity: "Pune",
+        droppingDateTime: new Date("2026-09-11T01:00:00Z"),
         couponApplied: null,
         discountAmount: 0,
-        totalAmount: 950,
+        totalAmount: 599,
         bookingStatus: "Confirmed"
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000002"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000012"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000022"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000012"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000022"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000032"),
         seats: [
-          new mongoose.Types.ObjectId("687a00000000000000000032"),
-          new mongoose.Types.ObjectId("687a00000000000000000033")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a00000000000000000042"),
           new mongoose.Types.ObjectId("687a00000000000000000043")
         ],
-        pnr: "RB100002",
-        boardingPointCity: "Chennai",
-        boardingDateTime: new Date("2026-07-22T18:00:00Z"),
-        droppingPointCity: "Coimbatore",
-        droppingDateTime: new Date("2026-07-23T03:30:00Z"),
-        couponApplied: new mongoose.Types.ObjectId("687a00000000000000000051"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a00000000000000000052"),
+          new mongoose.Types.ObjectId("687a00000000000000000053")
+        ],
+        pnr: "RB200002",
+        boardingPointCity: "Delhi",
+        boardingDateTime: new Date("2026-09-12T21:30:00Z"),
+        droppingPointCity: "Jaipur",
+        droppingDateTime: new Date("2026-09-13T02:30:00Z"),
+        couponApplied: new mongoose.Types.ObjectId("687a00000000000000000061"),
         discountAmount: 150,
-        totalAmount: 1450,
+        totalAmount: 749,
         bookingStatus: "Confirmed"
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000003"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000013"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000023"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000013"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000023"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000033"),
         seats: [
-          new mongoose.Types.ObjectId("687a00000000000000000034")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a00000000000000000044")
         ],
-        pnr: "RB100003",
-        boardingPointCity: "Delhi",
-        boardingDateTime: new Date("2026-07-25T16:30:00Z"),
-        droppingPointCity: "Jaipur",
-        droppingDateTime: new Date("2026-07-25T22:30:00Z"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a00000000000000000054")
+        ],
+        pnr: "RB200003",
+        boardingPointCity: "Kolkata",
+        boardingDateTime: new Date("2026-09-14T20:00:00Z"),
+        droppingPointCity: "Bhubaneswar",
+        droppingDateTime: new Date("2026-09-15T04:00:00Z"),
         couponApplied: null,
         discountAmount: 0,
-        totalAmount: 650,
+        totalAmount: 1499,
         bookingStatus: "Completed"
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000004"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000014"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000024"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000014"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000024"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000034"),
         seats: [
-          new mongoose.Types.ObjectId("687a00000000000000000035")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a00000000000000000045")
         ],
-        pnr: "RB100004",
-        boardingPointCity: "Mumbai",
-        boardingDateTime: new Date("2026-07-26T19:00:00Z"),
-        droppingPointCity: "Pune",
-        droppingDateTime: new Date("2026-07-26T23:30:00Z"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a00000000000000000055")
+        ],
+        pnr: "RB200004",
+        boardingPointCity: "Ahmedabad",
+        boardingDateTime: new Date("2026-09-16T06:00:00Z"),
+        droppingPointCity: "Udaipur",
+        droppingDateTime: new Date("2026-09-16T10:30:00Z"),
         couponApplied: null,
         discountAmount: 0,
-        totalAmount: 500,
+        totalAmount: 699,
         bookingStatus: "Cancelled",
-        cancelledAt: new Date("2026-07-25T10:00:00Z")
+        cancelledAt: new Date("2026-09-15T12:00:00Z")
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000005"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000015"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000025"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000015"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000025"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000035"),
         seats: [
-          new mongoose.Types.ObjectId("687a00000000000000000036")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a00000000000000000046")
         ],
-        pnr: "RB100005",
-        boardingPointCity: "Kochi",
-        boardingDateTime: new Date("2026-07-28T21:00:00Z"),
-        droppingPointCity: "Trivandrum",
-        droppingDateTime: new Date("2026-07-29T02:30:00Z"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a00000000000000000056")
+        ],
+        pnr: "RB200005",
+        boardingPointCity: "Pune",
+        boardingDateTime: new Date("2026-09-18T19:45:00Z"),
+        droppingPointCity: "Goa",
+        droppingDateTime: new Date("2026-09-19T04:45:00Z"),
         couponApplied: null,
-        discountAmount: 50,
-        totalAmount: 700,
+        discountAmount: 100,
+        totalAmount: 1699,
         bookingStatus: "In Progress"
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000006"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000016"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000026"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000016"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000026"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000036"),
         seats: [
-          new mongoose.Types.ObjectId("687a00000000000000000037")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a00000000000000000047")
         ],
-        pnr: "RB100006",
-        boardingPointCity: "Hyderabad",
-        boardingDateTime: new Date("2026-07-30T22:00:00Z"),
-        droppingPointCity: "Vijayawada",
-        droppingDateTime: new Date("2026-07-31T05:00:00Z"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a00000000000000000057")
+        ],
+        pnr: "RB200006",
+        boardingPointCity: "Mumbai",
+        boardingDateTime: new Date("2026-09-20T23:30:00Z"),
+        droppingPointCity: "Pune",
+        droppingDateTime: new Date("2026-09-21T02:30:00Z"),
         couponApplied: null,
         discountAmount: 0,
-        totalAmount: 850,
+        totalAmount: 649,
         bookingStatus: "Confirmed"
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000007"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000017"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000027"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000017"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000027"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000037"),
         seats: [
-          new mongoose.Types.ObjectId("687a00000000000000000038"),
-          new mongoose.Types.ObjectId("687a00000000000000000039")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a00000000000000000048"),
           new mongoose.Types.ObjectId("687a00000000000000000049")
         ],
-        pnr: "RB100007",
-        boardingPointCity: "Bangalore",
-        boardingDateTime: new Date("2026-08-01T20:00:00Z"),
-        droppingPointCity: "Goa",
-        droppingDateTime: new Date("2026-08-02T08:30:00Z"),
-        couponApplied: new mongoose.Types.ObjectId("687a00000000000000000052"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a00000000000000000058"),
+          new mongoose.Types.ObjectId("687a00000000000000000059")
+        ],
+        pnr: "RB200007",
+        boardingPointCity: "Delhi",
+        boardingDateTime: new Date("2026-09-22T21:30:00Z"),
+        droppingPointCity: "Jaipur",
+        droppingDateTime: new Date("2026-09-23T02:30:00Z"),
+        couponApplied: new mongoose.Types.ObjectId("687a00000000000000000062"),
         discountAmount: 200,
-        totalAmount: 1800,
+        totalAmount: 699,
         bookingStatus: "Confirmed"
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000008"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000018"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000028"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000018"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000028"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000038"),
         seats: [
-          new mongoose.Types.ObjectId("687a0000000000000000003A")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a0000000000000000004A")
         ],
-        pnr: "RB100008",
-        boardingPointCity: "Pune",
-        boardingDateTime: new Date("2026-08-03T17:00:00Z"),
-        droppingPointCity: "Nagpur",
-        droppingDateTime: new Date("2026-08-04T04:30:00Z"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a0000000000000000005A")
+        ],
+        pnr: "RB200008",
+        boardingPointCity: "Kolkata",
+        boardingDateTime: new Date("2026-09-24T20:00:00Z"),
+        droppingPointCity: "Bhubaneswar",
+        droppingDateTime: new Date("2026-09-25T04:00:00Z"),
         couponApplied: null,
         discountAmount: 0,
-        totalAmount: 1200,
+        totalAmount: 1499,
         bookingStatus: "Completed"
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000009"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000019"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000029"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000019"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000029"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000039"),
         seats: [
-          new mongoose.Types.ObjectId("687a0000000000000000003B")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a0000000000000000004B")
         ],
-        pnr: "RB100009",
-        boardingPointCity: "Mysore",
-        boardingDateTime: new Date("2026-08-05T15:30:00Z"),
-        droppingPointCity: "Bangalore",
-        droppingDateTime: new Date("2026-08-05T19:30:00Z"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a0000000000000000005B")
+        ],
+        pnr: "RB200009",
+        boardingPointCity: "Ahmedabad",
+        boardingDateTime: new Date("2026-09-26T06:00:00Z"),
+        droppingPointCity: "Udaipur",
+        droppingDateTime: new Date("2026-09-26T10:30:00Z"),
         couponApplied: null,
-        discountAmount: 25,
-        totalAmount: 475,
+        discountAmount: 50,
+        totalAmount: 649,
         bookingStatus: "Confirmed"
       },
       {
-        user: new mongoose.Types.ObjectId("687a00000000000000000010"),
-        trip: new mongoose.Types.ObjectId("687a00000000000000000020"),
-        transaction: new mongoose.Types.ObjectId("687a00000000000000000030"),
+        user: new mongoose.Types.ObjectId("687a00000000000000000020"),
+        trip: new mongoose.Types.ObjectId("687a00000000000000000030"),
+        transaction: new mongoose.Types.ObjectId("687a00000000000000000040"),
         seats: [
-          new mongoose.Types.ObjectId("687a0000000000000000003C")
-        ],
-        passengers: [
           new mongoose.Types.ObjectId("687a0000000000000000004C")
         ],
-        pnr: "RB100010",
-        boardingPointCity: "Visakhapatnam",
-        boardingDateTime: new Date("2026-08-06T18:30:00Z"),
-        droppingPointCity: "Hyderabad",
-        droppingDateTime: new Date("2026-08-07T06:30:00Z"),
+        passengers: [
+          new mongoose.Types.ObjectId("687a0000000000000000005C")
+        ],
+        pnr: "RB200010",
+        boardingPointCity: "Pune",
+        boardingDateTime: new Date("2026-09-28T19:45:00Z"),
+        droppingPointCity: "Goa",
+        droppingDateTime: new Date("2026-09-29T04:45:00Z"),
         couponApplied: null,
-        discountAmount: 100,
-        totalAmount: 1100,
+        discountAmount: 0,
+        totalAmount: 1799,
         bookingStatus: "In Progress"
       }
     ]
@@ -219,7 +219,7 @@ async function addBooking() {
       console.log("Bookings added successfully");
     }
   } catch (error) {
-    console.error("❌ Booking Failed:", error.message);
+    console.error("Booking Failed:", error.message);
   }
 }
 
