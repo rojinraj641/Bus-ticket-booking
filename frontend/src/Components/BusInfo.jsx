@@ -7,7 +7,7 @@ import { setBusId, resetBusId } from '../Features/Bus/busIdSlice';
 const BusInfo = () => {
   const dispatch = useDispatch();
   const { boarding, destination } = useSelector((state) => state.search);
-  const { busId } = useSelector((state) => state.busId); 
+  const { busId } = useSelector((state) => state.busId);
   const { busList } = useSelector((state) => state.bus);
   const [openBusId, setOpenBusId] = useState(null);
 
@@ -69,11 +69,10 @@ const BusInfo = () => {
         return (
           <div
             key={bus._id}
-            className={`bg-white rounded-2xl border transition-all duration-300 ${
-              isOpen
-                ? 'border-[#2563EB] shadow-[0_8px_30px_rgba(37,99,235,0.15)]'
-                : 'border-blue-100 shadow-[0_4px_20px_rgba(37,99,235,0.06)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.12)] hover:border-blue-200'
-            }`}
+            className={`bg-white rounded-2xl border transition-all duration-300 ${isOpen
+              ? 'border-[#2563EB] shadow-[0_8px_30px_rgba(37,99,235,0.15)]'
+              : 'border-blue-100 shadow-[0_4px_20px_rgba(37,99,235,0.06)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.12)] hover:border-blue-200'
+              }`}
           >
             {/* Desktop Layout */}
             <div className="hidden md:flex md:items-center md:justify-between md:p-5 gap-4">
@@ -127,6 +126,14 @@ const BusInfo = () => {
                     {bus.departureTime}
                   </p>
                   <p className="text-xs text-[#4B5563] mt-0.5">{boarding}</p>
+                  <p className="text-xs text-[#4B5563] mt-0.5">
+                    {new Date(bus.departureDateTime).toLocaleString("en-IN", {
+                      timeZone: "Asia/Kolkata",
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </p>
                 </div>
 
                 <div className="flex flex-col items-center px-2">
@@ -145,6 +152,14 @@ const BusInfo = () => {
                     {bus.arrivalTime}
                   </p>
                   <p className="text-xs text-[#4B5563] mt-0.5">{destination}</p>
+                  <p className="text-xs text-[#4B5563] mt-0.5">
+                    {new Date(bus.arrivalDateTime).toLocaleString("en-IN", {
+                      timeZone: "Asia/Kolkata",
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </p>
                 </div>
               </div>
 
@@ -174,11 +189,10 @@ const BusInfo = () => {
 
                 <button
                   onClick={() => handleToggleSeats(bus._id)}
-                  className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 shadow-sm ${
-                    isOpen
-                      ? 'bg-slate-100 text-[#4B5563] hover:bg-slate-200'
-                      : 'bg-[#2563EB] text-white hover:bg-[#1D4ED8] shadow-[0_4px_14px_rgba(37,99,235,0.4)]'
-                  }`}
+                  className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 shadow-sm ${isOpen
+                    ? 'bg-slate-100 text-[#4B5563] hover:bg-slate-200'
+                    : 'bg-[#2563EB] text-white hover:bg-[#1D4ED8] shadow-[0_4px_14px_rgba(37,99,235,0.4)]'
+                    }`}
                 >
                   {isOpen ? 'Hide Seats' : 'Select Seats'}
                 </button>
@@ -265,17 +279,16 @@ const BusInfo = () => {
                   </p>
                   <p className="text-[10px] text-[#4B5563]">Onwards</p>
                   <div className={`inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-md text-xs font-medium ${seatUrgency.bg} ${seatUrgency.color}`}>
-                     {bus.availableSeatsCount} seats left
+                    {bus.availableSeatsCount} seats left
                   </div>
                 </div>
 
                 <button
                   onClick={() => handleToggleSeats(bus._id)}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                    isOpen
-                      ? 'bg-slate-100 text-[#4B5563]'
-                      : 'bg-[#2563EB] text-white shadow-[0_4px_14px_rgba(37,99,235,0.4)] active:scale-95'
-                  }`}
+                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${isOpen
+                    ? 'bg-slate-100 text-[#4B5563]'
+                    : 'bg-[#2563EB] text-white shadow-[0_4px_14px_rgba(37,99,235,0.4)] active:scale-95'
+                    }`}
                 >
                   {isOpen ? 'Hide Seats' : 'Select Seats'}
                 </button>

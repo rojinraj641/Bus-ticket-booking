@@ -63,7 +63,7 @@ const buildTimeRangeMatch = (field, ranges) => {
       },
     },
   };
-  
+
   return {
     $expr: {
       $or: ranges.map((range) => ({
@@ -359,7 +359,27 @@ const filteredResult = asyncHandler(async (req, res) => {
         },
       },
     },
-
+    // ---------------------------------------------------------------
+    // Converting the string value of departureTime into HH:MM format
+    // ---------------------------------------------------------------
+    {
+      $set: {
+        tripDepartureDateTime: {
+          $dateFromString: {
+            dateString: {
+              $concat: [
+                date,
+                "T",
+                "$departureTime",
+                ":00"
+              ]
+            },
+            format: "%Y-%m-%dT%H:%M:%S",
+            timezone: "Asia/Kolkata"
+          }
+        }
+      }
+    },
     // ----------------------------------------
     // Calculate actual segment times
     // ----------------------------------------
@@ -368,7 +388,7 @@ const filteredResult = asyncHandler(async (req, res) => {
       $set: {
         requestedDepartureDateTime: {
           $dateAdd: {
-            startDate: "$departureDateTime",
+            startDate: "$tripDepartureDateTime",
             unit: "minute",
             amount: "$boardingPoint.offsetFromStartMinutes",
             timezone: "Asia/Kolkata",
@@ -377,7 +397,7 @@ const filteredResult = asyncHandler(async (req, res) => {
 
         requestedArrivalDateTime: {
           $dateAdd: {
-            startDate: "$departureDateTime",
+            startDate: "$tripDepartureDateTime",
             unit: "minute",
             amount: "$destinationPoint.offsetFromStartMinutes",
             timezone: "Asia/Kolkata",
@@ -392,13 +412,13 @@ const filteredResult = asyncHandler(async (req, res) => {
 
     ...(requestedDepartureTimeRanges.length
       ? [
-          {
-            $match: buildTimeRangeMatch(
-              "$requestedDepartureDateTime",
-              requestedDepartureTimeRanges
-            ),
-          },
-        ]
+        {
+          $match: buildTimeRangeMatch(
+            "$requestedDepartureDateTime",
+            requestedDepartureTimeRanges
+          ),
+        },
+      ]
       : []),
 
     // ----------------------------------------
@@ -407,13 +427,13 @@ const filteredResult = asyncHandler(async (req, res) => {
 
     ...(requestedArrivalTimeRanges.length
       ? [
-          {
-            $match: buildTimeRangeMatch(
-              "$requestedArrivalDateTime",
-              requestedArrivalTimeRanges
-            ),
-          },
-        ]
+        {
+          $match: buildTimeRangeMatch(
+            "$requestedArrivalDateTime",
+            requestedArrivalTimeRanges
+          ),
+        },
+      ]
       : []),
 
     // ----------------------------------------
