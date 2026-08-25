@@ -16,7 +16,7 @@ import { toggleSeatSelection } from "../Features/Seats/selectedSeatsSlice.js";
 
 const TOTAL_SEATS = 45;
 const SEATS_PER_ROW = 5;
-const LEFT_SIDE_COUNT = 3;
+const LEFT_SIDE_COUNT = 2;
 const TOTAL_ROWS = Math.ceil(TOTAL_SEATS / SEATS_PER_ROW); // 9
 
 // Simple, actual steering-wheel icon (Lucide has no bus/car wheel icon)
@@ -95,17 +95,7 @@ const SeaterSeats = () => {
   // Single click -> select only (no-op if already selected)
   const handleSeatSelect = (seat) => {
     if (seat.status !== "Available") return;
-    if (!isSelected(seat)) {
-      dispatch(toggleSeatSelection({ busId, seatId: seat.id }));
-    }
-  };
-
-  // Double click -> deselect only (no-op if not selected)
-  const handleSeatDeselect = (seat) => {
-    if (seat.status !== "Available") return;
-    if (isSelected(seat)) {
-      dispatch(toggleSeatSelection({ busId, seatId: seat.id }));
-    }
+    dispatch(toggleSeatSelection({ busId, seatId: seat.id }));
   };
 
   const statusCounts = useMemo(() => {
@@ -177,16 +167,9 @@ const SeaterSeats = () => {
       <div key={seat.id} className="relative inline-flex">
         <button
           onClick={() => handleSeatSelect(seat)}
-          onDoubleClick={() => handleSeatDeselect(seat)}
           disabled={isDisabled}
           className={`relative flex flex-col items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-lg font-semibold text-[11px] md:text-xs transition-all duration-150 ${bgClass} ${borderClass} ${textClass} ${interactiveClass}`}
-          title={
-            isDisabled
-              ? `${seat.seatNumber} - ${seat.status}`
-              : isSel
-              ? `${seat.seatNumber} - Double-click to deselect`
-              : `${seat.seatNumber} - Click to select`
-          }
+          title={`${seat.seatNumber} - ${seat.status}`}
         >
           {iconComp}
           <span className="mt-0.5">{seat.seatNumber}</span>
@@ -198,32 +181,10 @@ const SeaterSeats = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      {/* ===================== Header ===================== */}
-      <div className="mb-2">
-        <div className="flex items-center gap-2 mb-0.5">
-          <Bus className="w-5 h-5 text-[#2563EB]" />
-          <h2 className="text-lg md:text-xl font-bold text-[#111827]">
-            Seat Selection
-          </h2>
-        </div>
-        <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm text-[#4B5563]">
-          <span className="flex items-center gap-1">
-            <CircleDot className="w-3.5 h-3.5 text-green-500" />
-            Single Deck - Seater
-          </span>
-          <span>
-            {statusCounts.available +
-              statusCounts.booked +
-              statusCounts.locked}{" "}
-            Total Seats
-          </span>
-        </div>
-      </div>
-
       {/* ===================== Bus Body ===================== */}
       <div className="relative bg-gradient-to-b from-blue-50 to-white rounded-xl border border-blue-100 shadow-md px-2.5 py-3 md:px-6 md:py-4">
         {/* Driver Area */}
-        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-blue-50">
+        <div className="flex items-center justify-end pr-48 gap-2 mb-3 pb-2 border-b border-blue-50">
           <DriverWheel className="w-6 h-6 md:w-7 md:h-7 text-slate-600" />
           <span className="text-[11px] md:text-xs font-semibold text-slate-500 tracking-wide">
             DRIVER

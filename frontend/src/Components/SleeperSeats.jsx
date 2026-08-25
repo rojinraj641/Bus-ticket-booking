@@ -149,17 +149,7 @@ const SleeperSeats = () => {
   // Single click -> select only (no-op if already selected)
   const handleSeatSelect = (seat) => {
     if (seat.status !== "Available") return;
-    if (!isSelected(seat)) {
-      dispatch(toggleSeatSelection({ busId, seatId: seat.id }));
-    }
-  };
-
-  // Double click -> deselect only (no-op if not selected)
-  const handleSeatDeselect = (seat) => {
-    if (seat.status !== "Available") return;
-    if (isSelected(seat)) {
-      dispatch(toggleSeatSelection({ busId, seatId: seat.id }));
-    }
+    dispatch(toggleSeatSelection({ busId, seatId: seat.id }));
   };
 
   const statusCounts = useMemo(() => {
@@ -208,8 +198,8 @@ const SleeperSeats = () => {
 
     const sizeClass =
       size === "sm"
-        ? "w-11 h-8 text-[10px]"
-        : "w-14 h-9 md:w-16 md:h-10 text-[11px] md:text-xs";
+        ? "w-10 h-24 text-[10px]"
+        : "w-10 h-24 md:w-16 md:h-10 text-[11px] md:text-xs";
 
     let bgClass = "";
     let borderClass = "";
@@ -255,16 +245,9 @@ const SleeperSeats = () => {
       <div key={seat.id} className="relative inline-flex">
         <button
           onClick={() => handleSeatSelect(seat)}
-          onDoubleClick={() => handleSeatDeselect(seat)}
           disabled={isDisabled}
           className={`relative flex flex-col items-center ${sizeClass} rounded-md font-semibold transition-all duration-150 ${bgClass} ${borderClass} ${textClass} ${interactiveClass} overflow-hidden`}
-          title={
-            isDisabled
-              ? `${seat.seatNumber} - ${seat.status}`
-              : isSelectedSeat
-              ? `${seat.seatNumber} - Double-click to deselect`
-              : `${seat.seatNumber} - Click to select`
-          }
+          title={`${seat.seatNumber} - ${seat.status}`}
         >
           {/* pillow notch */}
           <div className={`w-4 h-1 md:w-5 md:h-1.5 rounded-full mt-1 ${pillowClass}`} />
@@ -381,7 +364,7 @@ const SleeperSeats = () => {
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* ===================== Header ===================== */}
-      <div className="mb-2">
+      {/* <div className="mb-2">
         <div className="flex items-center gap-2 mb-0.5">
           <Bus className="w-5 h-5 text-blue-600" />
           <h2 className="text-lg md:text-xl font-bold text-[#111827]">
@@ -405,7 +388,7 @@ const SleeperSeats = () => {
             </span>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* Deck Toggle (only when both decks exist) */}
       {deckData.hasBoth && (
@@ -433,7 +416,7 @@ const SleeperSeats = () => {
       {/* ===================== Bus Body ===================== */}
       <div className="relative bg-gradient-to-b from-blue-50 to-white rounded-xl border border-blue-100 shadow-md px-2.5 py-3 md:px-6 md:py-4">
         {/* Driver Area */}
-        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-blue-50">
+        <div className="flex justify-center items-center gap-2 mb-3 pb-2 border-b border-blue-50">
           <DriverWheel className="w-6 h-6 md:w-7 md:h-7 text-slate-600" />
           <span className="text-[11px] md:text-xs font-semibold text-slate-500 tracking-wide">
             DRIVER

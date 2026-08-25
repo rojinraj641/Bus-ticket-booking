@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBus,
   faStar,
-  faRoute,
   faMoneyBillWave,
   faReceipt,
   faCreditCard,
@@ -15,8 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import api from "../Api/axios.api";
 import { setToast, resetToast } from "../Features/Error/toastSlice.js";
-import { addPrice } from "../Features/Ticket/priceSlice.js";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const PriceBreakout = () => {
   const dispatch = useDispatch();
@@ -28,13 +26,12 @@ const PriceBreakout = () => {
   const { seatIds } = useSelector((state) => state.selectedSeats);
   const { busId } = useSelector((state) => state.busId);
   const { busList } = useSelector((state) => state.bus);
+  const { price } = useSelector((state) => state.price);
 
   const bus = useMemo(
     () => busList.find((b) => b._id === busId),
     [busList, busId]
   );
-
-  const distance = bus?.distance || 0;
 
   const selectedSeats = useMemo(
     () => seats.filter((s) => seatIds.includes(s._id)),
@@ -43,22 +40,13 @@ const PriceBreakout = () => {
 
   const selectedSeatNumbers = selectedSeats.map((s) => s.seatNumber);
 
-  const seatPrice = useMemo(
-    () =>
-      selectedSeats.reduce(
-        (sum, s) => sum + Number(s.basePrice || 0),
-        0
-      ),
-    [selectedSeats]
-  );
-
+  const seatPrice = price;
   const convenienceFee = 25;
   const serviceCharge = 40;
-  const distanceCharge = Math.ceil(distance * 15);
   const ticketPrice = useMemo(
     () =>
-      Math.ceil(seatPrice + convenienceFee + serviceCharge + distanceCharge),
-    [seatPrice, distanceCharge]
+      Math.ceil((seatPrice*selectedSeats.length) + convenienceFee + serviceCharge ),
+    [seatPrice, selectedSeats]
   );
 
   if (seatIds.length === 0) return null;
@@ -66,7 +54,6 @@ const PriceBreakout = () => {
   const handleLockSeats = async () => {
     try {
       setLoading(true);
-      dispatch(addPrice(ticketPrice));
       await api.post("/lockSeats", { seatIds });
       dispatch(resetToast());
       dispatch(setToast({ message: "Seats locked! Complete your booking.", success: true }));
@@ -101,8 +88,6 @@ const PriceBreakout = () => {
 
   return (
     <>
-      <ToastContainer />
-
       {/* ===================== DESKTOP ===================== */}
       <div className="hidden lg:block">
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-6">
@@ -170,11 +155,6 @@ const PriceBreakout = () => {
                 label="Service Tax"
                 value={serviceCharge}
                 icon={faCreditCard}
-              />
-              <FareRow
-                label="Distance Charge"
-                value={distanceCharge}
-                icon={faRoute}
               />
               <div className="border-t border-slate-200 my-2" />
               <FareRow
@@ -246,14 +226,10 @@ const PriceBreakout = () => {
               <span className="text-slate-500">Convenience Fee</span>
               <span>₹{convenienceFee}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-slate-500">Distance Charge</span>
-              <span>₹{distanceCharge}</span>
-            </div>
             <hr className="my-2 border-slate-200" />
             <div className="flex justify-between font-semibold">
               <span className="text-[#111827]">Total</span>
-              <span className="text-[#2563EB]">₹{ticketPrice.toLocaleString()}</span>
+              <span className="text-[#2563EB]">₹{price}</span>
             </div>
           </div>
         </div>

@@ -9,7 +9,8 @@ const fetchSeats = asyncHandler(async (req, res) => {
         if (!busId) {
             throw new ApiError(400, "busId query param is required");
         }
-        const seats = await Seats.find({ bus: busId });
+        const seats = await Seats.find({bus: busId}).sort({seatNumber: 1});
+        console.log(seats)
         if (seats.length >= 1) {
             return res.status(200).json(new ApiResponse(200, seats, "Seats fetched successfully"));
         }

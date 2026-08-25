@@ -25,7 +25,7 @@ const store = configureStore({
         filters: filterReducer,
         passengers: passengerReducer,
         busId: busIdReducer,
-        totalPrice: priceReducer,
+        price: priceReducer,
         contact: contactReducer,
         cancellation: cancellationReducer,
         travelTime: travelTimeReducer,
@@ -33,7 +33,7 @@ const store = configureStore({
         user: userReducer,
         auth: authSliceReducer,
         ui: uiSliceReducer,
-        toast: toastReducer
+        toast: toastReducer,
     }
 })
 

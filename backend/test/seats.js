@@ -76,7 +76,7 @@ const addSeats = async () => {
           trip: trip._id,
           bus: bus._id,
 
-          seatNumber: `S${i}`,
+          seatNumber: i,
 
           seatType: isSleeper
             ? "Sleeper"

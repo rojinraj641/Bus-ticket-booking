@@ -5,7 +5,8 @@ import { faStar, faBus, faWifi, faPlug, faSnowflake, faTv, faWater, faChair } fr
 import { setBusId, resetBusId } from '../Features/Bus/busIdSlice';
 import api from '../Api/axios.api';
 import { setToast, resetToast } from '../Features/Error/toastSlice.js';
-import { addSeats, clearSeats } from '../Features/Seats/seatSlice.js'
+import { addSeats, clearSeats } from '../Features/Seats/seatSlice.js';
+import { addPrice, resetPrice } from '../Features/Ticket/priceSlice.js';
 import SeatSelection from './SeatSelection';
 
 const BusInfo = () => {
@@ -14,14 +15,18 @@ const BusInfo = () => {
   const { busList } = useSelector((state) => state.bus);
   const [openBusId, setOpenBusId] = useState(null);
 
-  const handleToggleSeats = async (busId) => {
+  const handleToggleSeats = async (busId, price) => {
     try {
       if (openBusId !== busId) {
         const response = await api.get('/filtered/fetchSeats', {
           params: { busId }
         })
-        dispatch(clearSeats());
-        dispatch(addSeats(response.data.data));
+        if (response) {
+          dispatch(clearSeats());
+          dispatch(addSeats(response.data.data));
+          dispatch(resetPrice());
+          dispatch(addPrice(price));
+        }
       }
 
       setOpenBusId((prev) => {
@@ -203,7 +208,7 @@ const BusInfo = () => {
                 </div>
 
                 <button
-                  onClick={() => handleToggleSeats(bus._id)}
+                  onClick={() => handleToggleSeats(bus._id, price)}
                   className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-200 shadow-sm ${isOpen
                     ? 'bg-slate-100 text-[#4B5563] hover:bg-slate-200'
                     : 'bg-[#2563EB] text-white hover:bg-[#1D4ED8] shadow-[0_4px_14px_rgba(37,99,235,0.4)]'
@@ -311,7 +316,7 @@ const BusInfo = () => {
                 </div>
 
                 <button
-                  onClick={() => handleToggleSeats(bus._id)}
+                  onClick={() => handleToggleSeats(bus._id, price)}
                   className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${isOpen
                     ? 'bg-slate-100 text-[#4B5563]'
                     : 'bg-[#2563EB] text-white shadow-[0_4px_14px_rgba(37,99,235,0.4)] active:scale-95'

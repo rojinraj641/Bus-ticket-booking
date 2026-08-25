@@ -16,7 +16,7 @@ const seatSchema = new mongoose.Schema(
       index: true
     },
     seatNumber: {
-      type: String,
+      type: Number,
       required: true,
       index: true
     },

@@ -1,25 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const priceSlice = createSlice({
-  name: "totalPrice",
+const price = createSlice({
+  name: "price",
   initialState: {
-    totalPrice: 0
+    price: 0
   },
   reducers: {
     addPrice: (state, action) => {
-      state.totalPrice += Number(action.payload);
+      state.price += Number(action.payload);
     },
     subtractPrice: (state, action) => {
-      state.totalPrice = Math.max(
-        state.totalPrice - Number(action.payload),
+      state.price = Math.max(
+        state.price - Number(action.payload),
         0
       );
     },
     resetPrice: (state) => {
-      state.totalPrice = 0;
+      state.price = 0;
     }
   }
 });
 
-export const { addPrice, subtractPrice, resetPrice } = priceSlice.actions;
-export default priceSlice.reducer;
+export const { addPrice, subtractPrice, resetPrice } = price.actions;
+export default price.reducer;
