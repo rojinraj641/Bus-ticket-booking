@@ -1,171 +1,293 @@
+import { useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
-import { addPrice } from "../Features/Ticket/priceSlice.js";
 import { useNavigate } from "react-router-dom";
-import api from "../Api/axios.api.js";
-import { toast, ToastContainer} from "react-toastify"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBus,
+  faStar,
+  faRoute,
+  faMoneyBillWave,
+  faReceipt,
+  faCreditCard,
+  faChevronDown,
+  faChevronUp,
+  faCheckCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import api from "../Api/axios.api";
+import { setToast, resetToast } from "../Features/Error/toastSlice.js";
+import { addPrice } from "../Features/Ticket/priceSlice.js";
+import { ToastContainer, toast } from "react-toastify";
 
 const PriceBreakout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const { seats } = useSelector((state) => state.seats);
   const { seatIds } = useSelector((state) => state.selectedSeats);
+  const { busId } = useSelector((state) => state.busId);
+  const { busList } = useSelector((state) => state.bus);
 
-  const selectedSeats = seats.filter(s =>
-    seatIds.includes(s._id)
+  const bus = useMemo(
+    () => busList.find((b) => b._id === busId),
+    [busList, busId]
   );
 
-  const seatNumber = selectedSeats.map(s => s.seatNumber);
+  const distance = bus?.distance || 0;
 
-  const seatPrice = selectedSeats.reduce(
-    (sum, s) => sum + Number(s.basePrice),
-    0
+  const selectedSeats = useMemo(
+    () => seats.filter((s) => seatIds.includes(s._id)),
+    [seats, seatIds]
   );
 
-  const convinenceFee = 25;
+  const selectedSeatNumbers = selectedSeats.map((s) => s.seatNumber);
+
+  const seatPrice = useMemo(
+    () =>
+      selectedSeats.reduce(
+        (sum, s) => sum + Number(s.basePrice || 0),
+        0
+      ),
+    [selectedSeats]
+  );
+
+  const convenienceFee = 25;
   const serviceCharge = 40;
-
-  const ticketPrice = Math.ceil(seatPrice + convinenceFee + serviceCharge + distance * 15);
+  const distanceCharge = Math.ceil(distance * 15);
+  const ticketPrice = useMemo(
+    () =>
+      Math.ceil(seatPrice + convenienceFee + serviceCharge + distanceCharge),
+    [seatPrice, distanceCharge]
+  );
 
   if (seatIds.length === 0) return null;
 
   const handleLockSeats = async () => {
-    try{
+    try {
       setLoading(true);
       dispatch(addPrice(ticketPrice));
-      const res = await api.post('/lockSeats',{seatIds});
-      console.log('Response from backend', res.message);
-      navigate('/passengerInfo');
-    }
-    catch(error){
-      toast.error('Something went wrong')
-    }
-    finally{
+      await api.post("/lockSeats", { seatIds });
+      dispatch(resetToast());
+      dispatch(setToast({ message: "Seats locked! Complete your booking.", success: true }));
+      navigate("/passengerInfo");
+    } catch {
+      dispatch(resetToast());
+      dispatch(setToast({ message: "Something went wrong while locking seats", success: false }));
+      toast.error("Something went wrong");
+    } finally {
       setLoading(false);
     }
-  }
+  };
+
+  const FareRow = ({ label, value, icon, isTotal = false }) => (
+    <div
+      className={`flex items-center justify-between ${
+        isTotal ? "text-lg font-bold text-[#111827]" : "text-sm"
+      }`}
+    >
+      <span className="flex items-center gap-2">
+        <FontAwesomeIcon
+          icon={icon}
+          className={isTotal ? "text-[#2563EB]" : "text-[#9CA3AF]"}
+        />
+        {label}
+      </span>
+      <span className={isTotal ? "text-[#2563EB]" : "text-[#4B5563]"}>
+        ₹{value.toLocaleString()}
+      </span>
+    </div>
+  );
 
   return (
     <>
-    <ToastContainer />
-      {/* ================= DESKTOP ================= */}
+      <ToastContainer />
+
+      {/* ===================== DESKTOP ===================== */}
       <div className="hidden lg:block">
-        <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-4">
-          <h3 className="font-semibold mb-4">Booking Summary</h3>
-          <div className="flex flex-col gap-3 mb-9">
-            <div>
-              <p>Seat Legend</p>
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-6">
+          {/* Bus Info Header */}
+          {bus && (
+            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-slate-100">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                <FontAwesomeIcon
+                  icon={faBus}
+                  className="text-[#2563EB] text-lg"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-[#111827] text-base truncate">
+                  {bus.busName}
+                </h3>
+                <div className="flex items-center gap-1 mt-0.5">
+                  <FontAwesomeIcon icon={faStar} className="text-xs text-yellow-400" />
+                  <span className="text-xs text-[#4B5563]">
+                    {bus.averageRating?.toFixed(1) || "N/A"}
+                  </span>
+                  <span className="text-xs text-[#9CA3AF]">•</span>
+                  <span className="text-xs text-[#4B5563] truncate">
+                    {bus.busNumber}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className='flex flex-row gap-2'>
-                <p className="bg-blue-600 w-8 h-3 rounded-xs mt-1"></p>
-                <p>Male</p>
-              </div>
-              <div className='flex flex-row gap-2'>
-                <p className="bg-pink-500 w-8 h-3 rounded-xs mt-1"></p>
-                <p>Female</p>
-              </div>
-              <div className='flex flex-row gap-2'>
-                <p className="bg-gray-400 w-8 h-3 rounded-xs mt-1"></p>
-                <p>Booked</p>
-              </div>
-              <div className='flex flex-row gap-2'>
-                <p className="bg-green-600 w-8 h-3 rounded-xs mt-1"></p>
-                <p>Available</p>
-              </div>
+          )}
+
+          {/* Selected Seats */}
+          <div className="mb-4">
+            <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider mb-2">
+              Selected Seats
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {selectedSeatNumbers.map((sn, idx) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-700 rounded-lg text-xs font-medium"
+                >
+                  {sn}
+                </span>
+              ))}
             </div>
           </div>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between gap-10">
-              <span>Seats Selected</span>
-              <span className="font-semibold text-green-600">
-                {seatNumber + '  '}
+
+          {/* Fare Breakdown */}
+          <div className="mb-4">
+            <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider mb-2">
+              Fare Breakdown
+            </p>
+            <div className="space-y-2.5">
+              <FareRow
+                label="Base Fare"
+                value={seatPrice}
+                icon={faMoneyBillWave}
+              />
+              <FareRow
+                label="Convenience Fee"
+                value={convenienceFee}
+                icon={faReceipt}
+              />
+              <FareRow
+                label="Service Tax"
+                value={serviceCharge}
+                icon={faCreditCard}
+              />
+              <FareRow
+                label="Distance Charge"
+                value={distanceCharge}
+                icon={faRoute}
+              />
+              <div className="border-t border-slate-200 my-2" />
+              <FareRow
+                label="Total Amount"
+                value={ticketPrice}
+                icon={faCheckCircle}
+                isTotal
+              />
+            </div>
+          </div>
+
+          {/* Payment Info */}
+          <div className="mb-4 p-3 bg-slate-50 rounded-lg">
+            <div className="flex items-center gap-2 text-xs text-[#4B5563]">
+              <FontAwesomeIcon icon={faCheckCircle} className="text-green-500" />
+              <span>
+                {seatIds.length} berth{seatIds.length > 1 ? "s" : ""} selected
               </span>
             </div>
-
-            <div className="bg-gray-50 p-3 rounded-lg mt-3">
-              <div className="flex justify-between">
-                <span className="text-semibold">Base Fare</span>
-                <span>₹{seatPrice}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Service Tax</span>
-                <span>₹{serviceCharge}</span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span>Convenience Fee</span>
-                <span>₹{convinenceFee}</span>
-              </div>
-              <hr className="my-2" />
-              <div className="flex justify-between font-semibold">
-                <span>Total</span>
-                <span>₹{ticketPrice}</span>
-              </div>
-            </div>
-
-            <button
-              className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-semibold"
-              onClick={() => handleLockSeats()}>
-              Proceed to Payment
-            </button>
           </div>
+
+          {/* CTA Button */}
+          <button
+            onClick={handleLockSeats}
+            disabled={loading}
+            className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
+              loading
+                ? "bg-slate-300 cursor-not-allowed text-slate-500"
+                : "bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-white hover:shadow-[0_8px_25px_rgba(37,99,235,0.4)] hover:scale-[1.02]"
+            }`}
+          >
+            {loading ? (
+              "Processing..."
+            ) : (
+              <>
+                Proceed to Payment
+                <FontAwesomeIcon icon={faCreditCard} className="text-xs" />
+              </>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* ================= MOBILE ================= */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
+      {/* ===================== MOBILE ===================== */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
         {/* Expandable Sheet */}
-        {open && (
-          <div className="bg-white border-t rounded-t-2xl p-4 shadow-lg">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="font-semibold">Fare Breakdown</h3>
-              <button
-                onClick={() => setOpen(false)}
-                className="text-sm text-gray-500"
-              >
-                Close
-              </button>
+        <div
+          className={`
+            bg-white border-t-2 border-blue-500
+            transition-all duration-300
+            ${open ? "max-h-80 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}
+            overflow-hidden
+          `}
+        >
+          <div className="px-4 py-3 space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-slate-500">Seats</span>
+              <span className="font-medium text-[#111827]">{seatIds.length}</span>
             </div>
-
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span>Seats</span>
-                <span>{seatIds.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Base Fare</span>
-                <span>₹{basePrice}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Service Tax</span>
-                <span>₹{serviceCharge}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Convenience Fee</span>
-                <span>₹{convenienceFee}</span>
-              </div>
-              <hr />
-              <div className="flex justify-between font-semibold">
-                <span>Total</span>
-                <span>₹{ticketPrice}</span>
-              </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Base Fare</span>
+              <span>₹{seatPrice}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Service Tax</span>
+              <span>₹{serviceCharge}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Convenience Fee</span>
+              <span>₹{convenienceFee}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Distance Charge</span>
+              <span>₹{distanceCharge}</span>
+            </div>
+            <hr className="my-2 border-slate-200" />
+            <div className="flex justify-between font-semibold">
+              <span className="text-[#111827]">Total</span>
+              <span className="text-[#2563EB]">₹{ticketPrice.toLocaleString()}</span>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Bottom Bar */}
-        <div className="bg-white border-t flex items-center justify-between p-4">
-          <div onClick={() => setOpen(true)} className="cursor-pointer">
-            <p className="text-xs text-gray-500">Total Fare</p>
-            <p className="font-semibold">₹{ticketPrice}</p>
+        <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-slate-100">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOpen(!open)}
+              className="text-slate-400 hover:text-[#2563EB] transition-colors"
+            >
+              <FontAwesomeIcon
+                icon={open ? faChevronUp : faChevronDown}
+                className="text-xs"
+              />
+            </button>
+            <div>
+              <p className="text-xs text-slate-500">Total Fare</p>
+              <p className="font-semibold text-lg text-[#111827]">
+                ₹{ticketPrice.toLocaleString()}
+              </p>
+            </div>
           </div>
 
           <button
-            className="bg-red-500 text-white px-6 py-2 rounded-lg font-semibold"
-            onClick={() => handleLockSeats()}>
-            Pay
+            className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+              loading
+                ? "bg-slate-300 cursor-not-allowed text-slate-500"
+                : "bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-white hover:shadow-[0_4px_14px_rgba(37,99,235,0.4)] active:scale-95"
+            }`}
+            onClick={handleLockSeats}
+            disabled={loading}
+          >
+            {loading ? "Processing..." : "Pay"}
           </button>
         </div>
       </div>

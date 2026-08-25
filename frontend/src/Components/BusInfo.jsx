@@ -3,25 +3,40 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faBus, faWifi, faPlug, faSnowflake, faTv, faWater, faChair } from '@fortawesome/free-solid-svg-icons';
 import { setBusId, resetBusId } from '../Features/Bus/busIdSlice';
+import api from '../Api/axios.api';
+import { setToast, resetToast } from '../Features/Error/toastSlice.js';
+import { addSeats, clearSeats } from '../Features/Seats/seatSlice.js'
+import SeatSelection from './SeatSelection';
 
 const BusInfo = () => {
   const dispatch = useDispatch();
   const { boarding, destination } = useSelector((state) => state.search);
-  const { busId } = useSelector((state) => state.busId);
   const { busList } = useSelector((state) => state.bus);
   const [openBusId, setOpenBusId] = useState(null);
 
-  const handleToggleSeats = (busId) => {
-    console.log('Bus id is', busId);
-    setOpenBusId((prev) => {
-      if (prev === busId) {
-        dispatch(resetBusId());
-        return null;
-      } else {
-        dispatch(setBusId(busId));
-        return busId;
+  const handleToggleSeats = async (busId) => {
+    try {
+      if (openBusId !== busId) {
+        const response = await api.get('/filtered/fetchSeats', {
+          params: { busId }
+        })
+        dispatch(clearSeats());
+        dispatch(addSeats(response.data.data));
       }
-    });
+
+      setOpenBusId((prev) => {
+        if (prev === busId) {
+          dispatch(resetBusId());
+          return null;
+        } else {
+          dispatch(setBusId(busId));
+          return busId;
+        }
+      });
+    } catch (error) {
+      dispatch(resetToast());
+      dispatch(setToast({ message: "Failed to fetch seats for selected bus", success: false }))
+    }
   };
 
   const getAmenityIcon = (amenity) => {
@@ -238,11 +253,11 @@ const BusInfo = () => {
                   </p>
                   <p className="text-xs text-[#4B5563] font-medium truncate">{boarding}</p>
                   <p className="text-xs text-[#4B5563] font-medium truncate">{new Date(bus.departureDateTime).toLocaleString("en-IN", {
-                      timeZone: "Asia/Kolkata",
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}</p>
+                    timeZone: "Asia/Kolkata",
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}</p>
                 </div>
 
                 <div className="flex flex-col items-center px-2">
@@ -260,11 +275,11 @@ const BusInfo = () => {
                   </p>
                   <p className="text-xs text-[#4B5563] font-medium truncate">{destination}</p>
                   <p className="text-xs text-[#4B5563] font-medium truncate">{new Date(bus.arrivalDateTime).toLocaleString("en-IN", {
-                      timeZone: "Asia/Kolkata",
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}</p>
+                    timeZone: "Asia/Kolkata",
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}</p>
                 </div>
               </div>
 
@@ -306,6 +321,13 @@ const BusInfo = () => {
                 </button>
               </div>
             </div>
+
+            {/* Expanded Seat Selection */}
+            {isOpen && (
+              <div className="p-4 md:p-6">
+                <SeatSelection />
+              </div>
+            )}
           </div>
         );
       })}
