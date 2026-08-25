@@ -4,15 +4,21 @@ import ApiResponse from "../utils/ApiResponse.js";
 import { Seats } from "../models/seats.models.js";
 
 const fetchSeats = asyncHandler(async (req, res) => {
-    const { busId } = req.query;
-    
-    if (!busId) {
-        throw new ApiError(400, "busId query param is required");
+    try {
+        const { busId } = req.query;
+        if (!busId) {
+            throw new ApiError(400, "busId query param is required");
+        }
+        const seats = await Seats.find({ bus: busId });
+        if (seats.length >= 1) {
+            return res.status(200).json(new ApiResponse(200, seats, "Seats fetched successfully"));
+        }
+        if (seats.length == 0) {
+            return res.status(200).json(new ApiResponse(200, "No seats found for the selected bus"));
+        }
+    } catch (error) {
+        return res.status(500).json(new ApiError(500, "Something went wrong"));
     }
-
-    const seats = await Seats.find({ busId: busId });
-
-    return res.status(200).json(new ApiResponse(200, seats, "Seats fetched successfully"));
 });
 
 export default fetchSeats;

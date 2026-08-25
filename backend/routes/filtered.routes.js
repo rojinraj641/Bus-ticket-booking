@@ -7,7 +7,7 @@ import fetchSeats from "../controllers/fetchSeat.controllers.js";
 const router = express.Router();
 router.get("/suggestions", getRouteSuggestions);
 router.get("/", filteredResult);
-router.post("/fetchSeats", fetchSeats);
+router.get("/fetchSeats", fetchSeats);
 router.post("/lockSeats", locked);
 
 export default router;
