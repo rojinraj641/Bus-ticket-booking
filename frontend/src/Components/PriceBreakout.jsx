@@ -45,7 +45,7 @@ const PriceBreakout = () => {
   const serviceCharge = 40;
   const ticketPrice = useMemo(
     () =>
-      Math.ceil((seatPrice*selectedSeats.length) + convenienceFee + serviceCharge ),
+      Math.ceil((seatPrice * selectedSeats.length) + convenienceFee + serviceCharge),
     [seatPrice, selectedSeats]
   );
 
@@ -54,10 +54,12 @@ const PriceBreakout = () => {
   const handleLockSeats = async () => {
     try {
       setLoading(true);
-      await api.post("/lockSeats", { seatIds });
-      dispatch(resetToast());
-      dispatch(setToast({ message: "Seats locked! Complete your booking.", success: true }));
-      navigate("/passengerInfo");
+      const res = await api.post("/lockSeats", { seatIds });
+      if (res) {
+        dispatch(resetToast());
+        dispatch(setToast({ message: "Seats locked! Complete your booking.", success: true }));
+        navigate("/passengerInfo");
+      }
     } catch {
       dispatch(resetToast());
       dispatch(setToast({ message: "Something went wrong while locking seats", success: false }));
@@ -69,9 +71,8 @@ const PriceBreakout = () => {
 
   const FareRow = ({ label, value, icon, isTotal = false }) => (
     <div
-      className={`flex items-center justify-between ${
-        isTotal ? "text-lg font-bold text-[#111827]" : "text-sm"
-      }`}
+      className={`flex items-center justify-between ${isTotal ? "text-lg font-bold text-[#111827]" : "text-sm"
+        }`}
     >
       <span className="flex items-center gap-2">
         <FontAwesomeIcon
@@ -180,11 +181,10 @@ const PriceBreakout = () => {
           <button
             onClick={handleLockSeats}
             disabled={loading}
-            className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
-              loading
+            className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${loading
                 ? "bg-slate-300 cursor-not-allowed text-slate-500"
                 : "bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-white hover:shadow-[0_8px_25px_rgba(37,99,235,0.4)] hover:scale-[1.02]"
-            }`}
+              }`}
           >
             {loading ? (
               "Processing..."
@@ -255,11 +255,10 @@ const PriceBreakout = () => {
           </div>
 
           <button
-            className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
-              loading
+            className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${loading
                 ? "bg-slate-300 cursor-not-allowed text-slate-500"
                 : "bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-white hover:shadow-[0_4px_14px_rgba(37,99,235,0.4)] active:scale-95"
-            }`}
+              }`}
             onClick={handleLockSeats}
             disabled={loading}
           >

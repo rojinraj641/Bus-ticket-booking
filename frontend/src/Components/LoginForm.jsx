@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { TextField, Button, Alert, InputAdornment, IconButton, Divider } from '@mui/material';
 import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import api from "../Api/axios.api.js";
 import { GoogleLogin } from '@react-oauth/google';
 import { login as loginAction, setUser } from '../Features/User/authSlice';
 import { closeAuthModal, setAuthMode } from '../Features/User/uiSlice';
+import { setToast } from '../Features/Error/toastSlice.js';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,6 @@ const LoginForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState('');
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -39,55 +39,48 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setServerError('');
     if (!validate()) return;
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
-        formData
+      const res = await api.post('/login',
+        {
+          email: formData.email,
+          password: formData.password
+        }
       );
       dispatch(loginAction(res.data.token));
       dispatch(setUser(res.data.user));
       dispatch(closeAuthModal());
     } catch (err) {
-      setServerError(
-        err.response?.data?.message || 'Login failed. Please check your credentials.'
-      );
+      dispatch(setToast({message: err.response?.data?.message || 'Login failed. Please check your credentials.', success: false}))
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-    setServerError('');
     setGoogleLoading(true);
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/google`,
+      const res = await api.post('/google',
         { token: credentialResponse.credential }
       );
       dispatch(loginAction(res.data.token));
       dispatch(setUser(res.data.user));
       dispatch(closeAuthModal());
     } catch (err) {
-      setServerError(
-        err.response?.data?.message || 'Google login failed. Please try again.'
-      );
+      dispatch(setToast({message: err.response?.data?.message || 'Google login failed. Please try again.', success: false}));
     } finally {
       setGoogleLoading(false);
     }
   };
 
   const handleGoogleError = () => {
-    setServerError('Google login failed. Please try again.');
+    dispatch(setToast({message: 'Google login failed. Please try again.', success: false}))
   };
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2">
-      {serverError && <Alert className="mb-4" severity="error">{serverError}</Alert>}
-
       <TextField
         label="Email"
         name="email"

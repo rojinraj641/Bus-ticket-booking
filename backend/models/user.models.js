@@ -3,12 +3,6 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const userSchema = new mongoose.Schema(
   {
-    phone: {
-      type: String,
-      required: true,
-      unique: true,
-      index: true
-    },
     name: {
       type: String,
       required: true,
@@ -23,7 +17,13 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: {
       type: String,
+      required: true,
       select: false,
+    },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
     },
     wallet: {
       type: mongoose.Schema.Types.ObjectId,

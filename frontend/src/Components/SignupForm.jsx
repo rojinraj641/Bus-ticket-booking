@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { TextField, Button, Alert, InputAdornment, IconButton, Divider } from '@mui/material';
 import { Visibility, VisibilityOff, Email, Lock, Person } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import { login as loginAction, setUser } from '../Features/User/authSlice';
 import { closeAuthModal, setAuthMode } from '../Features/User/uiSlice';
+import { setToast, resetToast } from '../Features/Error/toastSlice';
+import api from "../Api/axios.api.js";
 
 const SignupForm = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,6 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState('');
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -62,59 +62,57 @@ const SignupForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setServerError('');
     if (!validate()) return;
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/register`,
+      const res = await api.post('/signup',
         {
           name: formData.name,
           email: formData.email,
           password: formData.password,
         }
       );
-      dispatch(loginAction(res.data.token));
-      dispatch(setUser(res.data.user));
-      dispatch(closeAuthModal());
+      if (res) {
+        dispatch(loginAction(res.data.token));
+        dispatch(setUser(res.data.user));
+        dispatch(closeAuthModal());
+        dispatch(setToast({ message: res.data.message, success: true }))
+      }
     } catch (err) {
-      setServerError(
-        err.response?.data?.message || 'Signup failed. Please try again.'
-      );
+      dispatch(setToast({ message: "Signup failed. Please try again", success: false }))
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-    setServerError('');
     setGoogleLoading(true);
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/google`,
+      const res = await api.post('/google',
         { token: credentialResponse.credential }
       );
-      dispatch(loginAction(res.data.token));
-      dispatch(setUser(res.data.user));
-      dispatch(closeAuthModal());
+      console.log('Response from google Auth', res.data);
+      if (res.status == 200) {
+        dispatch(loginAction(res.data.token));
+        dispatch(setUser(res.data.user));
+        dispatch(closeAuthModal());
+        dispatch(setToast({ message: res.data.message, success: true }))
+      }
     } catch (err) {
-      setServerError(
-        err.response?.data?.message || 'Google signup failed. Please try again.'
-      );
+      dispatch(setToast({ message: 'Google signup failed. Please try again.', success: false }));
     } finally {
       setGoogleLoading(false);
     }
   };
 
   const handleGoogleError = () => {
-    setServerError('Google signup failed. Please try again.');
+    dispatch(resetToast());
+    dispatch(setToast({ message: 'Google signup failed. Please try again.', success: false }));
   };
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-1">
-      {serverError && <Alert className="mb-4" severity="error">{serverError}</Alert>}
-
       <TextField
         label="Full Name"
         name="name"

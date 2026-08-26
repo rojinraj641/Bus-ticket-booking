@@ -22,7 +22,9 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 //router import 
-import userRouter from "./routes/user.routes.js";
+import signupRouter from "./routes/signup.routes.js";
+import loginRouter from "./routes/login.routes.js";
+import googleLoginRouter from "./routes/googleLogin.routes.js";
 import homeRouter from "./routes/home.routes.js";
 import filterRouter from "./routes/filtered.routes.js";
 import lockSeatsRouter from "./routes/lockSeats.routes.js";
@@ -31,7 +33,9 @@ import paymentRouter from './routes/payment.routes.js';
 import logoutRouter from "./routes/logout.routes.js";
 
 //router declaration
-app.use("/api/v1/user", userRouter);
+app.use("/api/v1", signupRouter);
+app.use("/api/v1", loginRouter);
+app.use("/api/v1", googleLoginRouter);
 app.use("/api/v1", homeRouter);
 app.use("/api/v1/filtered", filterRouter);
 app.use("/api/v1/lockSeats",lockSeatsRouter)

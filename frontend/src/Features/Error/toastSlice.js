@@ -8,6 +8,7 @@ const toastSlice = createSlice({
     },
     reducers: {
         setToast: (state, action) => {
+            state.message = '';
             const {message, success} = action.payload;
             state.message = message;
             state.success = success;
