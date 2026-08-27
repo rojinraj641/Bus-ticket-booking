@@ -73,14 +73,16 @@ const SignupForm = () => {
           password: formData.password,
         }
       );
-      if (res) {
+      console.log('Response from the backend', res.data);
+      if (res.data) {
         dispatch(loginAction(res.data.token));
         dispatch(setUser(res.data.user));
         dispatch(closeAuthModal());
-        dispatch(setToast({ message: res.data.message, success: true }))
+        dispatch(setToast({ message: res.data.message || "User registered successfully", success: true }))
       }
     } catch (err) {
-      dispatch(setToast({ message: "Signup failed. Please try again", success: false }))
+      console.log(err.response);
+      dispatch(setToast({ message: err.response.data.data || "Signup failed. Please try again", success: false }))
     } finally {
       setLoading(false);
     }
@@ -97,10 +99,10 @@ const SignupForm = () => {
         dispatch(loginAction(res.data.token));
         dispatch(setUser(res.data.user));
         dispatch(closeAuthModal());
-        dispatch(setToast({ message: res.data.message, success: true }))
+        dispatch(setToast({ message: res.data.message || "Google signup successfull", success: true }))
       }
     } catch (err) {
-      dispatch(setToast({ message: 'Google signup failed. Please try again.', success: false }));
+      dispatch(setToast({ message: err.response.data.data || 'Google signup failed. Please try again.', success: false }));
     } finally {
       setGoogleLoading(false);
     }
@@ -108,7 +110,7 @@ const SignupForm = () => {
 
   const handleGoogleError = () => {
     dispatch(resetToast());
-    dispatch(setToast({ message: 'Google signup failed. Please try again.', success: false }));
+    dispatch(setToast({ message: err.response.data.data || 'Google signup failed. Please try again.', success: false }));
   };
 
   return (

@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import startUnlockSeatsCron from "./cron/unlockSeats.cron.js";
+//import startUnlockSeatsCron from "./cron/unlockSeats.cron.js";
 import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -33,8 +33,8 @@ import paymentRouter from './routes/payment.routes.js';
 import logoutRouter from "./routes/logout.routes.js";
 
 //router declaration
-app.use("/api/v1", signupRouter);
-app.use("/api/v1", loginRouter);
+app.use("/api/v1/signup", signupRouter);
+app.use("/api/v1/login", loginRouter);
 app.use("/api/v1", googleLoginRouter);
 app.use("/api/v1", homeRouter);
 app.use("/api/v1/filtered", filterRouter);

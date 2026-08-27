@@ -16,7 +16,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   // TODO: adjust to match your actual redux state shape (e.g. state.auth.user.name)
-  const name = useSelector((state) => state.auth?.user?.name);
+  const name = useSelector((state) => state.auth?.user);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const handleLogoutToggle = () => setOpenLogout((prev) => !prev);
