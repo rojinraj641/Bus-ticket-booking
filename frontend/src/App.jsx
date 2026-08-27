@@ -6,13 +6,21 @@ import FilteredResult from "./pages/FilteredResult";
 import Payment from "./Pages/Payment";
 import PassengerDetails from "./Pages/PassengerDetails";
 import TrackTicket from "./Pages/TrackTicket";
+import ProtectedRoute from './Components/ProtectedRoute';
 import './App.css';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { toast, ToastContainer} from "react-toastify"
 import { useEffect } from "react";
+import { refreshSession } from "./Features/User/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
   const { message, success } = useSelector((state)=>state.toast);
+
+  useEffect(()=>{
+    dispatch(refreshSession());
+  }, [dispatch]);
+
   useEffect(()=>{
     if(success && message){
       toast.success(message);
@@ -27,12 +35,12 @@ function App() {
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Home/>} />
-        <Route path='/my-booking' element={<MyBooking/>}/>
-        <Route path='/wallet' element={<Wallet/>}/>
-        <Route path='/track-ticket' element={<TrackTicket/>}/>
+        <Route path='/my-booking' element={<ProtectedRoute><MyBooking/></ProtectedRoute>}/>
+        <Route path='/wallet' element={<ProtectedRoute><Wallet/></ProtectedRoute>}/>
+        <Route path='/track-ticket' element={<ProtectedRoute><TrackTicket/></ProtectedRoute>}/>
         <Route path='/filtered' element={<FilteredResult/>}/>
-        <Route path='/passengerInfo' element={<PassengerDetails/>}/>
-        <Route path="/payment" element={<Payment/>}/>
+        <Route path='/passengerInfo' element={<ProtectedRoute><PassengerDetails/></ProtectedRoute>}/>
+        <Route path="/payment" element={<ProtectedRoute><Payment/></ProtectedRoute>}/>
       </Routes>
     </Router>
   )

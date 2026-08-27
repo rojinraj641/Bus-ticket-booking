@@ -75,8 +75,8 @@ const SignupForm = () => {
       );
       console.log('Response from the backend', res.data);
       if (res.data) {
-        dispatch(loginAction(res.data.token));
-        dispatch(setUser(res.data.user));
+        dispatch(loginAction(res.data.data.accessToken));
+        dispatch(setUser(res.data.data.user.name));
         dispatch(closeAuthModal());
         dispatch(setToast({ message: res.data.message || "User registered successfully", success: true }))
       }
@@ -96,8 +96,8 @@ const SignupForm = () => {
       );
       console.log('Response from google Auth', res.data);
       if (res.status == 200) {
-        dispatch(loginAction(res.data.token));
-        dispatch(setUser(res.data.user));
+        dispatch(loginAction(res.data.data.accessToken));
+        dispatch(setUser(res.data.data.user));
         dispatch(closeAuthModal());
         dispatch(setToast({ message: res.data.message || "Google signup successfull", success: true }))
       }

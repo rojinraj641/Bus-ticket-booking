@@ -6,11 +6,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 const auth = asyncHandler(async (req, res, next) => {
   let token;
 
-  if (req.cookies?.token) {
-    token = req.cookies.token;
-  }
-
-  if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+  if (req.headers.authorization?.startsWith("Bearer ")) {
     token = req.headers.authorization.split(" ")[1];
   }
 
@@ -19,9 +15,9 @@ const auth = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(decoded.userId).select("-passwordHash");
 
     if (!user) {
       throw new ApiError(404, "User not found");

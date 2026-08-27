@@ -10,13 +10,19 @@ const signup = asyncHandler(async (req, res) => {
     try {
         const { name, email, password } = req.body;
         if (!name || !email || !password) {
-            return res.status(400).json(new ApiResponse(400, "Name, email and password required"));
+            throw new ApiError(
+                400,
+                "Name, email and password required"
+            );
         }
 
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-            return res.status(409).json(new ApiResponse(409, "User already existed"));
+           throw new ApiError(
+                400,
+                "User already existed"
+            );
         }
 
         // Hash password
@@ -28,18 +34,15 @@ const signup = asyncHandler(async (req, res) => {
             email,
             passwordHash: hashedPassword,
         });
-        console.log('User created', user);
         // Remove password from response
         const userObj = user.toObject();
         delete userObj.passwordHash;
 
         // Generate access token
         const accessToken = generateAccessToken(user._id);
-        console.log('Access token is', accessToken);
 
         // Generate refresh token
         const refreshToken = generateRefreshToken(user._id);
-        console.log('Refresh token is', refreshToken);
 
         // Store refresh token in HttpOnly cookie
         res.cookie("refreshToken", refreshToken, {

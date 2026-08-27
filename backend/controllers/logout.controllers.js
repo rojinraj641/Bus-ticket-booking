@@ -4,10 +4,10 @@ import ApiError from "../utils/ApiError.js";
 
 const logout = asyncHandler(async (req, res) => {
     try {
-        res.clearCookie("token", {
+        res.clearCookie("refreshToken", {
             httpOnly: true,
-            secure: false, // true in production
-            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
         });
         res.status(200).json(new ApiResponse(200, 'User logged out successfully'))
     }

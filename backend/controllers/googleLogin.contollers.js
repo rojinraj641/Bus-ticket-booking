@@ -1,9 +1,10 @@
 import { OAuth2Client } from "google-auth-library";
-import jwt from "jsonwebtoken";
 import { User } from "../models/user.models.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
+import generateAccessToken from "../utils/generateAccessToken.js";
+import generateRefreshToken from "../utils/generateRefreshToken.js";
 
 const googleClient = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID
@@ -47,26 +48,10 @@ const googleLogin = asyncHandler(async (req, res) => {
     }
 
     // 5. Create YOUR application's access token
-    const accessToken = jwt.sign(
-      {
-        userId: user._id,
-      },
-      process.env.ACCESS_TOKEN_SECRET,
-      {
-        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-      }
-    );
+    const accessToken = generateAccessToken(user._id);
 
     // 6. Create YOUR application's refresh token
-    const refreshToken = jwt.sign(
-      {
-        userId: user._id,
-      },
-      process.env.REFRESH_TOKEN_SECRET,
-      {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-      }
-    );
+    const refreshToken = generateRefreshToken(user._id);
 
     // 7. Store refresh token in HttpOnly cookie
     res.cookie("refreshToken", refreshToken, {
@@ -77,7 +62,7 @@ const googleLogin = asyncHandler(async (req, res) => {
     });
 
     // 8. Send access token to React
-    return res.status(200).json(new ApiResponse(200, {token: accessToken, user}, "Google login successful"))
+    return res.status(200).json(new ApiResponse(200, {user, accessToken}, "Google login successful"))
 
   } catch (error) {
     console.error("Google authentication error:", error);

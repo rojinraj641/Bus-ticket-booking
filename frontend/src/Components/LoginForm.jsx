@@ -4,7 +4,7 @@ import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import api from "../Api/axios.api.js";
 import { GoogleLogin } from '@react-oauth/google';
-import { login as loginAction, setUser } from '../Features/User/authSlice';
+import { login, setUser } from '../Features/User/authSlice';
 import { closeAuthModal, setAuthMode } from '../Features/User/uiSlice';
 import { setToast } from '../Features/Error/toastSlice.js';
 
@@ -49,8 +49,8 @@ const LoginForm = () => {
           password: formData.password
         }
       );
-      dispatch(loginAction(res.data.token));
-      dispatch(setUser(res.data.user));
+      dispatch(login(res.data.data.accessToken));
+      dispatch(setUser(res.data.data.user.name));
       dispatch(closeAuthModal());
     } catch (err) {
       dispatch(setToast({message: err.response?.data?.message || 'Login failed. Please check your credentials.', success: false}))
@@ -65,8 +65,8 @@ const LoginForm = () => {
       const res = await api.post('/google',
         { token: credentialResponse.credential }
       );
-      dispatch(loginAction(res.data.token));
-      dispatch(setUser(res.data.user));
+      dispatch(login(res.data.data.accessToken));
+      dispatch(setUser(res.data.data.user));
       dispatch(closeAuthModal());
     } catch (err) {
       dispatch(setToast({message: err.response?.data?.message || 'Google login failed. Please try again.', success: false}));

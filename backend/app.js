@@ -24,6 +24,7 @@ app.use(cookieParser());
 //router import 
 import signupRouter from "./routes/signup.routes.js";
 import loginRouter from "./routes/login.routes.js";
+import authRouter from "./routes/auth.routes.js";
 import googleLoginRouter from "./routes/googleLogin.routes.js";
 import homeRouter from "./routes/home.routes.js";
 import filterRouter from "./routes/filtered.routes.js";
@@ -35,6 +36,7 @@ import logoutRouter from "./routes/logout.routes.js";
 //router declaration
 app.use("/api/v1/signup", signupRouter);
 app.use("/api/v1/login", loginRouter);
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1", googleLoginRouter);
 app.use("/api/v1", homeRouter);
 app.use("/api/v1/filtered", filterRouter);
