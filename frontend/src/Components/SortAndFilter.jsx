@@ -83,8 +83,8 @@ const SortAndFilter = ({ collapsed = false, onToggleCollapse }) => {
   }
 
   return (
-    <div className="flex h-full flex-col bg-gradient-to-b from-white via-slate-50 to-white p-4 md:p-5">
-      <div className="flex-1 space-y-5 overflow-y-auto pr-1">
+    <div className="flex h-full  min-h-0 flex-col bg-gradient-to-b from-white via-slate-50 to-white p-4 md:p-5">
+      <div className="flex-1 min-h-0 space-y-5 overflow-y-auto pr-1">
         {FILTER_GROUPS.map((group) => (
           <div key={group.type} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
             <div className="mb-3 flex items-center gap-2">
