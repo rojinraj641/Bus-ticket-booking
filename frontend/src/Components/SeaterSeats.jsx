@@ -111,7 +111,7 @@ const SeaterSeats = () => {
 
   const getSeatVariant = (seat) => {
     if (seat.status === "Booked") return "booked";
-    if (seat.status === "Locked" && seat.lockExpiresAt > Date.now()) return "locked";
+    if (seat.status === "Locked") return "locked";
     if (isSelected(seat)) return "selected";
     return "available";
   };
