@@ -5,16 +5,17 @@ const startUnlockSeatsCron = () => {
   cron.schedule("*/1 * * * *", async () => {
     try {
       const now = new Date();
-
+      console.log('running');
       const result = await Seats.updateMany(
         {
-          timeToLock: { $lt: now },
-          lockedBy: { $ne: null }
+          status: "Locked",
+          lockExpiresAt: { $lt: now },
         },
         {
           $set: {
+            status: "Available",
             lockedBy: null,
-            timeToLock: null
+            lockExpiresAt: null
           }
         }
       );

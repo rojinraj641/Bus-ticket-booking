@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-//import startUnlockSeatsCron from "./cron/unlockSeats.cron.js";
+import startUnlockSeatsCron from "./cron/unlockSeats.cron.js";
 import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
 
 //CRON
-// startUnlockSeatsCron();
+startUnlockSeatsCron();
 
 //Application level middlewares
 app.use(cors({
