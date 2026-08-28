@@ -24,6 +24,7 @@ const PriceBreakout = () => {
 
   const { seats } = useSelector((state) => state.seats);
   const { seatIds } = useSelector((state) => state.selectedSeats);
+  const { user } = useSelector((state) => state.auth);
   const { busId } = useSelector((state) => state.busId);
   const { busList } = useSelector((state) => state.bus);
   const { price } = useSelector((state) => state.price);
@@ -53,8 +54,9 @@ const PriceBreakout = () => {
 
   const handleLockSeats = async () => {
     try {
+      console.log('User data are', user);
       setLoading(true);
-      const res = await api.post("/lockSeats", { seatIds });
+      const res = await api.post("/lockSeats", { seatIds, userId: user._id });
       if (res) {
         dispatch(resetToast());
         dispatch(setToast({ message: "Seats locked! Complete your booking.", success: true }));

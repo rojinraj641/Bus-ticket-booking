@@ -5,11 +5,12 @@ import { Seats } from "../models/seats.models.js";
 
 const lockSeats = asyncHandler(async(req,res)=>{
     try{
-        const {seatIds} = req.body;
+        const {seatIds, userId} = req.body;
         const result = await Seats.updateMany(
             {_id: {$in: seatIds},status: "Available",lockedBy: null},
             {$set: {
                 status: "Locked",
+                lockedBy: userId,
                 lockExpiresAt: new Date(Date.now() + 15*60*1000)
             }}
         )

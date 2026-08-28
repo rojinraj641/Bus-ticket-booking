@@ -1,12 +1,13 @@
 import Select from "react-dropdown-select";
 import { useState } from "react";
-import {upsertPassenger} from "../Features/Passengers/passengerSlice.js"
+import { upsertPassenger } from "../Features/Passengers/passengerSlice.js"
 import { useDispatch } from "react-redux";
-import { Toaster, toast} from 'sonner';
+import { setToast } from "../Features/Error/toastSlice.js";
 import { State } from "country-state-city"
+import { User, Hash, Users, MapPin, Save } from "lucide-react"
 
-const PassengerInfo = ({ index, seatNumber, seatId}) => {
-  const states =  State.getStatesOfCountry("IN");
+const PassengerInfo = ({ index, seatNumber, seatId }) => {
+  const states = State.getStatesOfCountry("IN");
   const stateOptions = states.map((s) => ({
     label: s.name,
     value: s.name
@@ -17,116 +18,152 @@ const PassengerInfo = ({ index, seatNumber, seatId}) => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const dispatch = useDispatch();
-  
-  const handleSave = (seatId) => {
-    try{
-      dispatch(upsertPassenger({seatId, name, age, gender, place}))
-      toast.success('Passenger added successfully')
+
+  const handleAgeChange = (e) => {
+    const value = e.target.value;
+    if (value === "") {
+      setAge("");
+      return;
     }
-    catch(error){
-      console.log(error)
+
+    const num = Number(value);
+    if (Number.isNaN(num)) return;
+
+    const clamped = Math.min(100, Math.max(1, num));
+    setAge(clamped);
+  };
+
+  const handleAgeBlur = () => {
+    if (age === "") return; // let your form validation handle empty required fields
+    const num = Number(age);
+    const clamped = Math.min(100, Math.max(1, isNaN(num) ? 1 : num));
+    setAge(clamped);
+  };
+
+  const handleSave = (seatId) => {
+    try {
+      dispatch(upsertPassenger({ seatId, name, age, gender, place }))
+      dispatch(setToast({ message: "Passenger added successfully", success: true }));
+    } catch (error) {
+      dispatch(setToast({ message: error.message, success: false }));
     }
   };
 
-
   const isValid = name && age && gender && place;
 
-  return (
-    <div className="w-full mx-auto border rounded-xl p-6 mt-6 bg-white shadow-md">
-      <Toaster richColors/>
-      <h2 className="font-semibold text-xl text-gray-800 mb-4">
-        Passenger {index + 1}{" "}
-        <span className="text-sm text-gray-500">| Seat {seatNumber}</span>
-      </h2>
+  const genderOptions = ["Male", "Female", "Other"];
 
-      <div className="space-y-6">
-        {/* Name & Age */}
-        <div className="flex flex-col sm:flex-row gap-5">
-          <div className="flex flex-col w-full sm:w-2/3">
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Name
+  return (
+    <div className="w-full mx-auto bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+            <User className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-lg text-white">
+              Passenger {index + 1}
+            </h2>
+            <p className="text-xs text-blue-100">Enter your details below</p>
+          </div>
+        </div>
+        <div className="px-3 py-1.5 rounded-lg bg-white/20 backdrop-blur-sm">
+          <span className="text-sm font-bold text-white">Seat {seatNumber}</span>
+        </div>
+      </div>
+
+      <div className="p-6 space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="sm:col-span-2">
+            <label htmlFor="name" className="flex items-center gap-1.5 text-sm font-medium text-slate-700 mb-2">
+              <User className="w-4 h-4 text-[#2563EB]" />
+              Full Name
             </label>
             <input
               id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-2 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               placeholder="Enter full name"
             />
           </div>
 
-          <div className="flex flex-col w-full sm:w-1/3">
-            <label htmlFor="age" className="text-sm font-medium text-gray-700">
+          <div>
+            <label htmlFor="age" className="flex items-center gap-1.5 text-sm font-medium text-slate-700 mb-2">
+              <Hash className="w-4 h-4 text-[#2563EB]" />
               Age
             </label>
             <input
               id="age"
               type="number"
               value={age}
-              onChange={(e) => setAge(e.target.value)}
-              className="mt-2 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter age"
+              onChange={(e) => handleAgeChange(e.target.value)}
+              onBlur={handleAgeBlur}
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              placeholder="Age"
             />
           </div>
         </div>
 
-        {/* Gender */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="flex items-center gap-1.5 text-sm font-medium text-slate-700 mb-3">
+            <Users className="w-4 h-4 text-[#2563EB]" />
             Gender
           </label>
-          <div className="flex flex-wrap gap-6">
-            {["Male", "Female", "Other"].map((g) => (
-              <label
+          <div className="flex flex-wrap gap-3">
+            {genderOptions.map((g) => (
+              <button
                 key={g}
-                className="flex items-center gap-2 text-gray-700 cursor-pointer"
+                type="button"
+                onClick={() => setGender(g)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${gender === g
+                  ? "border-[#2563EB] bg-blue-50 text-[#2563EB] shadow-sm"
+                  : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                  }`}
               >
-                <input
-                  type="radio"
-                  name={`gender-${index}`}
-                  value={g}
-                  checked={gender === g}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="accent-blue-600"
-                />
+                <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${gender === g ? "border-[#2563EB]" : "border-slate-300"
+                  }`}>
+                  {gender === g && (
+                    <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
+                  )}
+                </span>
                 {g}
-              </label>
+              </button>
             ))}
           </div>
         </div>
 
-        {/* State */}
-        <div className="w-full sm:w-2/3">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div>
+          <label className="flex items-center gap-1.5 text-sm font-medium text-slate-700 mb-2">
+            <MapPin className="w-4 h-4 text-[#2563EB]" />
             State
           </label>
           <Select
             options={stateOptions}
-             labelField="label"
-             valueField="value"
+            labelField="label"
+            valueField="value"
             values={place ? [place] : []}
             onChange={(selected) => setPlace(selected[0])}
-            className="border border-gray-300 rounded-md shadow-sm"
+            className="border border-slate-200 rounded-xl shadow-sm bg-white"
             dropdownHandle={true}
             searchable={true}
             placeholder="Select state"
           />
         </div>
-      </div>
 
-      {/* Save Button */}
-      <button
-        onClick={()=>handleSave(seatId)}
-        disabled={!isValid}
-        className={`mt-4 px-4 py-2 rounded-md text-white ${
-          isValid
-            ? "bg-blue-600 hover:bg-blue-700"
-            : "bg-gray-400 cursor-not-allowed"
-        }`}
-      >
-        Save
-      </button>
+        <button
+          onClick={() => handleSave(seatId)}
+          disabled={!isValid}
+          className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white font-semibold text-sm transition-all duration-200 ${isValid
+            ? "bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] hover:shadow-[0_8px_25px_rgba(37,99,235,0.35)] hover:scale-[1.01]"
+            : "bg-slate-300 cursor-not-allowed"
+            }`}
+        >
+          <Save className="w-4 h-4" />
+          Save Passenger
+        </button>
+      </div>
     </div>
   );
 };

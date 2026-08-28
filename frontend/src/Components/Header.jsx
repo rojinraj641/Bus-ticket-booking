@@ -33,18 +33,24 @@ const Header = () => {
     return () => clearTimeout(timeoutId);
   }, [boarding, destination, date, departureTime, arrivalTime, amenities, busType]);
 
+  //Debounce function to fetch suggestions for boarding points
   useEffect(() => {
     if (!boarding || boarding.trim().length < 2) {
       setBoardingSuggestions([]);
       return;
     }
-
-    const timeoutId = setTimeout(async () => {
+    let timeoutId = setTimeout(async () => {
       try {
         const res = await api.get('/filtered/suggestions', {
           params: { q: boarding, type: 'boarding' },
         });
-        setBoardingSuggestions(res?.data?.data?.suggestions || []);
+        const results = res?.data?.data?.suggestions || [];
+        // Don't show dropdown if the input already exactly matches a suggestion
+        if (results.length === 1 && results[0] === boarding) {
+          setBoardingSuggestions([]);
+        } else {
+          setBoardingSuggestions(results);
+        }
       } catch (error) {
         setBoardingSuggestions([]);
       }
@@ -53,25 +59,30 @@ const Header = () => {
     return () => clearTimeout(timeoutId);
   }, [boarding]);
 
+  //Debounce function to fetch suggestions for destination points
   useEffect(() => {
     if (!destination || destination.trim().length < 2) {
       setDestinationSuggestions([]);
       return;
     }
-
-    const timeoutId = setTimeout(async () => {
+    let timeoutId = setTimeout(async () => {
       try {
         const res = await api.get('/filtered/suggestions', {
           params: { q: destination, type: 'destination' },
         });
-        setDestinationSuggestions(res?.data?.data?.suggestions || []);
+        const results = res?.data?.data?.suggestions || [];
+        if (results.length === 1 && results[0] === destination) {
+          setDestinationSuggestions([]);
+        } else {
+          setDestinationSuggestions(results);
+        }
       } catch (error) {
         setDestinationSuggestions([]);
       }
     }, 250);
 
     return () => clearTimeout(timeoutId);
-  }, [destination]);
+  }, [destination])
 
   useEffect(() => {
     const handleClickOutside = (event) => {

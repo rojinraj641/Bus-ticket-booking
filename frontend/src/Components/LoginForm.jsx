@@ -50,7 +50,7 @@ const LoginForm = () => {
         }
       );
       dispatch(login(res.data.data.accessToken));
-      dispatch(setUser(res.data.data.user.name));
+      dispatch(setUser(res.data.data.user));
       dispatch(closeAuthModal());
     } catch (err) {
       dispatch(setToast({message: err.response?.data?.message || 'Login failed. Please check your credentials.', success: false}))

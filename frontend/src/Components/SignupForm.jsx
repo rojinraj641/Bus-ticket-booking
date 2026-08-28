@@ -76,7 +76,7 @@ const SignupForm = () => {
       console.log('Response from the backend', res.data);
       if (res.data) {
         dispatch(loginAction(res.data.data.accessToken));
-        dispatch(setUser(res.data.data.user.name));
+        dispatch(setUser(res.data.data.user));
         dispatch(closeAuthModal());
         dispatch(setToast({ message: res.data.message || "User registered successfully", success: true }))
       }
