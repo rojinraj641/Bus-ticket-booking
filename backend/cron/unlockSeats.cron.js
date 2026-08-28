@@ -5,7 +5,6 @@ const startUnlockSeatsCron = () => {
   cron.schedule("*/1 * * * *", async () => {
     try {
       const now = new Date();
-      console.log('running');
       const result = await Seats.updateMany(
         {
           status: "Locked",

@@ -12,6 +12,7 @@ const PassengerInfo = ({ index, seatNumber, seatId }) => {
     label: s.name,
     value: s.name
   }));
+  const [saved, setSaved] = useState(false);
 
   const [place, setPlace] = useState(null);
   const [name, setName] = useState("");
@@ -19,8 +20,7 @@ const PassengerInfo = ({ index, seatNumber, seatId }) => {
   const [gender, setGender] = useState("");
   const dispatch = useDispatch();
 
-  const handleAgeChange = (e) => {
-    const value = e.target.value;
+  const handleAgeChange = (value) => {
     if (value === "") {
       setAge("");
       return;
@@ -44,6 +44,7 @@ const PassengerInfo = ({ index, seatNumber, seatId }) => {
     try {
       dispatch(upsertPassenger({ seatId, name, age, gender, place }))
       dispatch(setToast({ message: "Passenger added successfully", success: true }));
+      setSaved(true);
     } catch (error) {
       dispatch(setToast({ message: error.message, success: false }));
     }
@@ -83,7 +84,10 @@ const PassengerInfo = ({ index, seatNumber, seatId }) => {
               id="name"
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                setSaved(false)
+              }}
               className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               placeholder="Enter full name"
             />
@@ -98,7 +102,12 @@ const PassengerInfo = ({ index, seatNumber, seatId }) => {
               id="age"
               type="number"
               value={age}
-              onChange={(e) => handleAgeChange(e.target.value)}
+              min={1}
+              max={100}
+              onChange={(e) => {
+                handleAgeChange(e.target.value);
+                setSaved(false)
+              }}
               onBlur={handleAgeBlur}
               className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               placeholder="Age"
@@ -116,7 +125,10 @@ const PassengerInfo = ({ index, seatNumber, seatId }) => {
               <button
                 key={g}
                 type="button"
-                onClick={() => setGender(g)}
+                onClick={() => {
+                  setGender(g);
+                  setSaved(false)
+                }}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${gender === g
                   ? "border-[#2563EB] bg-blue-50 text-[#2563EB] shadow-sm"
                   : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
@@ -144,7 +156,10 @@ const PassengerInfo = ({ index, seatNumber, seatId }) => {
             labelField="label"
             valueField="value"
             values={place ? [place] : []}
-            onChange={(selected) => setPlace(selected[0])}
+            onChange={(selected) => {
+              setPlace(selected[0]);
+              setSaved(false)
+            }}
             className="border border-slate-200 rounded-xl shadow-sm bg-white"
             dropdownHandle={true}
             searchable={true}
@@ -161,7 +176,7 @@ const PassengerInfo = ({ index, seatNumber, seatId }) => {
             }`}
         >
           <Save className="w-4 h-4" />
-          Save Passenger
+          {saved?"Saved":"Save Passenger"}
         </button>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import Navbar from "../Components/Navbar";
 import PassengerInfo from "../Components/PassengerInfo";
 import Footer from "../Components/Footer";
-import BusLoader from "../Components/BusLoader";
 import { useState, useMemo } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from "react-router-dom";
@@ -41,9 +40,10 @@ const PassengerDetails = () => {
 
   const convenienceFee = 25;
   const serviceCharge = 40;
+  const cancellationCharge = 100;
   const totalAmount = useMemo(
-    () => Math.ceil((price * selectedSeats.length) + convenienceFee + serviceCharge),
-    [price, selectedSeats.length]
+    () => Math.ceil((price * selectedSeats.length) + convenienceFee + serviceCharge + (cancellation?cancellationCharge:0)),
+    [price, selectedSeats.length, cancellation]
   );
 
   const goToStep = (step) => {
@@ -76,9 +76,6 @@ const PassengerDetails = () => {
   return (
     <div className="bg-slate-50 min-h-screen flex flex-col">
       <Navbar />
-
-      {loading && <BusLoader />}
-
       <main className="flex-grow w-full px-4 sm:px-6 lg:px-8 py-6 mx-auto max-w-7xl">
         {/* Step Indicator */}
         <div className="mb-8">
@@ -200,7 +197,7 @@ const PassengerDetails = () => {
                   <input type="radio" name="cancellation" checked={cancellation === true} onChange={() => setCancellation(true)} className="sr-only" />
                   <div>
                     <span className="text-sm font-medium text-slate-700">Add Free Cancellation</span>
-                    <p className="text-xs text-slate-500 mt-0.5">Pay ₹100 extra for hassle-free cancellation</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Pay ₹{cancellationCharge} extra for hassle-free cancellation</p>
                   </div>
                 </label>
 
