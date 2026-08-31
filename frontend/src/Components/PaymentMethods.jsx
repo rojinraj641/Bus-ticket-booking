@@ -5,7 +5,7 @@ function PaymentMethods({ selectedMethod, onMethodChange, onProceedToPay }) {
     { id: 'credit-card', label: 'Credit Card', icon: CreditCard, desc: 'Visa, Mastercard, Amex' },
     { id: 'debit-card', label: 'Debit Card', icon: CreditCard, desc: 'All major banks' },
     { id: 'upi', label: 'UPI', icon: Smartphone, desc: 'GPay, PhonePe, Paytm' },
-    { id: 'wallet', label: 'Wallet', icon: Wallet, desc: 'Paytm, PhonePe wallet' },
+    //{ id: 'wallet', label: 'Wallet', icon: Wallet, desc: 'Paytm, PhonePe wallet' },
   ];
 
   return (

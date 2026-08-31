@@ -6,6 +6,7 @@ import BookingDetails from '../Components/BookingDetails';
 import { ArrowRight, Clock, ShieldCheck, TimerOff, CreditCard, Lock } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import api from '../Api/axios.api.js';
 
 const SessionExpiredRedirect = () => {
   const navigate = useNavigate();
@@ -43,12 +44,21 @@ const SessionExpiredRedirect = () => {
 };
 
 const Payment = () => {
+  const CONVENIENCE_FEE = 25;
+  const SERVICE_TAX = 40;
+  const CANCELLATION_PRICE = 100;
+
   const [timeLeft, setTimeLeft] = useState(600);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [isSessionExpired, setIsSessionExpired] = useState(false);
   const boarding = useSelector((state) => state.search.boarding);
   const destination = useSelector((state) => state.search.destination);
   const seatLockTime = useSelector((state) => state.seatLockTime);
+  const cancellation = useSelector((state) => state.cancellation);
+  const { price } = useSelector((state) => state.price);
+  const user = useSelector((state) => state.auth.user);
+
+  const totalPrice = ((price) + (CONVENIENCE_FEE) + (SERVICE_TAX) + (cancellation ? CANCELLATION_PRICE : 0))
 
   useEffect(() => {
     if (!seatLockTime) return;
@@ -71,12 +81,64 @@ const Payment = () => {
   const minutes = Math.floor(timeLeft / 1000 / 60);
   const seconds = Math.floor((timeLeft / 1000) % 60);
 
-  const handleProceedToPay = () => {
-    if (!selectedPaymentMethod) {
-      alert('Please select a payment method');
-      return;
+  const openRazorpayCheckout = (orderId, amount, currency) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: amount,
+      currency: currency,
+      name: "BookMyTrip",
+      description: "Bus Ticket Booking",
+      order_id: orderId,
+      handler: async function(response) {
+        try {
+          // console.log("Payment completed");
+          // console.log(response);
+          const res = await api.post("/payment/verify", {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          });
+
+          if (res.data.success) {
+            console.log("Payment verified successfully");
+
+            // Navigate to ticket/booking confirmation page
+          }
+
+        } catch (error) {
+          console.error("Payment verification failed:", error);
+        }
+      },
+      prefill: {
+        name: user?.name,
+        email: user?.email,
+        // contact: user?.phone,
+      },
+      theme: {
+        color: "#2563EB",
+      },
+    };
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+  };
+
+  const handleProceedToPay = async () => {
+    try {
+      const response = await api.post(
+        "/payment/create-order",
+        {
+          amount: totalPrice * 100,
+        }
+      );
+      const { orderId, amount, currency } = response.data.data;
+      openRazorpayCheckout(
+        orderId,
+        amount,
+        currency
+      );
+    } catch (error) {
+      console.error("Payment order creation failed:", error);
     }
-    alert(`Proceeding to pay with ${selectedPaymentMethod}`);
   };
 
   if (isSessionExpired) {
@@ -111,8 +173,8 @@ const Payment = () => {
 
               <div
                 className={`flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-bold shadow-lg backdrop-blur-sm transition-all duration-300 ${isUrgent
-                    ? "bg-red-500/90 text-white shadow-red-500/30 animate-pulse"
-                    : "bg-white/10 text-white border border-white/15 shadow-blue-900/20"
+                  ? "bg-red-500/90 text-white shadow-red-500/30 animate-pulse"
+                  : "bg-white/10 text-white border border-white/15 shadow-blue-900/20"
                   }`}
               >
                 <Clock className="w-4 h-4 shrink-0" />
@@ -139,11 +201,14 @@ const Payment = () => {
                 selectedMethod={selectedPaymentMethod}
                 onMethodChange={setSelectedPaymentMethod}
                 onProceedToPay={handleProceedToPay}
+                totalPrice={totalPrice}
               />
             </div>
 
             <div className="w-full lg:w-7/12 xl:w-7/12">
-              <BookingDetails />
+              <BookingDetails
+                totalPrice={totalPrice}
+              />
             </div>
           </div>
         </main>

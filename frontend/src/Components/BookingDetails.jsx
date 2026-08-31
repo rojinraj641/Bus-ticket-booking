@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Bus, IndianRupee, User, Clock, MapPin, Tag, PartyPopper, Users, ShieldCheck } from "lucide-react";
 import { useState } from 'react';
 
-const BookingDetails = () => {
+const BookingDetails = ({totalPrice}) => {
   const CONVENIENCE_FEE = 25;
   const SERVICE_TAX = 40;
   const CANCELLATION_PRICE = 100;
@@ -176,7 +176,7 @@ const BookingDetails = () => {
             <div className="flex justify-between items-center pt-4 mt-2 border-t-2 border-dashed border-slate-200">
               <span className="text-base font-bold text-[#111827]">Total Amount</span>
               <span className="text-xl font-bold text-[#2563EB]">
-                ₹{(price) + (CONVENIENCE_FEE) + (SERVICE_TAX) + (cancellation ? CANCELLATION_PRICE : 0)}
+                ₹{totalPrice}
               </span>
             </div>
           </div>
