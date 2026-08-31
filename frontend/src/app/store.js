@@ -7,6 +7,7 @@ import filterReducer from '../Features/Search/filterSlice.js';
 import passengerReducer from '../Features/Passengers/passengerSlice.js';
 import contactReducer from "../Features/Ticket/contactSlice.js";
 import busIdReducer from '../Features/Bus/busIdSlice.js';
+import seatLockTimeReducer from '../Features/Seats/seatLockTime.js';
 import priceReducer from '../Features/Ticket/priceSlice.js';
 import cancellationReducer from '../Features/Bus/cancellationSlice.js';
 import travelTimeReducer from '../Features/Bus/travelTimeSlice.js';
@@ -25,6 +26,7 @@ const store = configureStore({
         filters: filterReducer,
         passengers: passengerReducer,
         busId: busIdReducer,
+        seatLockTime: seatLockTimeReducer,
         price: priceReducer,
         contact: contactReducer,
         cancellation: cancellationReducer,

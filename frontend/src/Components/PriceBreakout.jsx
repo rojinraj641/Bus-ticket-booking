@@ -15,6 +15,7 @@ import {
 import api from "../Api/axios.api";
 import { setToast, resetToast } from "../Features/Error/toastSlice.js";
 import { toast } from "react-toastify";
+import { setLockTime } from "../Features/Seats/seatLockTime.js";
 
 const PriceBreakout = () => {
   const dispatch = useDispatch();
@@ -60,6 +61,7 @@ const PriceBreakout = () => {
       if (res) {
         dispatch(resetToast());
         dispatch(setToast({ message: "Seats locked! Complete your booking.", success: true }));
+        dispatch(setLockTime());
         navigate("/passengerInfo");
       }
     } catch {
