@@ -62,7 +62,7 @@ const googleLogin = asyncHandler(async (req, res) => {
     });
 
     // 8. Send access token to React
-    return res.status(200).json(new ApiResponse(200, {user, accessToken}, "Google login successful"))
+    return res.status(200).json(new ApiResponse(200, {user, accessToken}, "User logged in successfully"))
 
   } catch (error) {
     console.error("Google authentication error:", error);

@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import loadingReducer from '../Features/Navigation/loadingSlice.js';
+import loadingReducer from '../Features/Loading/loadingSlice.js';
 import searchReducer from '../Features/Search/searchSlice.js';
 import busReducer from '../Features/Bus/busSlice.js';
 import seatsReducer from '../Features/Seats/seatSlice.js';

@@ -19,10 +19,7 @@ const signup = asyncHandler(async (req, res) => {
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-           throw new ApiError(
-                400,
-                "User already existed"
-            );
+          return res.status(400).json(new ApiError(400, "User already exists. Please log in instead."));
         }
 
         // Hash password

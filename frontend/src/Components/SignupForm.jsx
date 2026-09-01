@@ -5,8 +5,10 @@ import { useDispatch } from 'react-redux';
 import { GoogleLogin } from '@react-oauth/google';
 import { login as loginAction, setUser } from '../Features/User/authSlice';
 import { closeAuthModal, setAuthMode } from '../Features/User/uiSlice';
-import { setToast, resetToast } from '../Features/Error/toastSlice';
+import { setToast } from '../Features/Error/toastSlice';
 import api from "../Api/axios.api.js";
+import { useSelector } from 'react-redux';
+import { setLoading } from '../Features/Loading/loadingSlice';
 
 const SignupForm = () => {
   const dispatch = useDispatch();
@@ -19,9 +21,9 @@ const SignupForm = () => {
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false);
+  const { isLoading } = useSelector((state) => state.loading);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,8 +65,7 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-
-    setLoading(true);
+    dispatch(setLoading(true));
     try {
       const res = await api.post('/signup',
         {
@@ -81,36 +82,44 @@ const SignupForm = () => {
         dispatch(setToast({ message: res.data.message || "User registered successfully", success: true }))
       }
     } catch (err) {
-      console.log(err.response);
-      dispatch(setToast({ message: err.response.data.data || "Signup failed. Please try again", success: false }))
+      if(err.response?.status === 400){
+        dispatch(setToast({ message: "User already exists. Please log in instead.", success: false }))
+        dispatch(setAuthMode('login'));
+      }else{
+        dispatch(setToast({ message: err.response?.data?.message || "Signup failed. Please try again", success: false }))
+      }
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     setGoogleLoading(true);
     try {
-      const res = await api.post('/google',
+      const res = await api.post('/google/signup',
         { token: credentialResponse.credential }
       );
       console.log('Response from google Auth', res.data);
-      if (res.status == 200) {
-        dispatch(loginAction(res.data.data.accessToken));
-        dispatch(setUser(res.data.data.user));
-        dispatch(closeAuthModal());
-        dispatch(setToast({ message: res.data.message || "Google signup successfull", success: true }))
+      dispatch(loginAction(res.data.data.accessToken));
+      dispatch(setUser(res.data.data.user));
+      dispatch(closeAuthModal());
+      if(res.status === 200){
+        dispatch(setToast({ message: res.data.message || "Google signup successful", success: true }))
       }
     } catch (err) {
-      dispatch(setToast({ message: err.response.data.data || 'Google signup failed. Please try again.', success: false }));
+      if(err.response?.status === 400){
+        dispatch(setToast({ message: "User already exists. Please log in instead.", success: false }))
+        dispatch(setAuthMode('login'));
+      } else {
+        dispatch(setToast({ message: err.response?.data?.message || 'Google signup failed. Please try again.', success: false }));
+      }
     } finally {
       setGoogleLoading(false);
     }
   };
 
   const handleGoogleError = () => {
-    dispatch(resetToast());
-    dispatch(setToast({ message: err.response.data.data || 'Google signup failed. Please try again.', success: false }));
+    dispatch(setToast({ message: 'Google signup failed. Please try again.', success: false }));
   };
 
   return (
@@ -215,7 +224,7 @@ const SignupForm = () => {
       <Button
         type="submit"
         variant="contained"
-        disabled={loading}
+        disabled={isLoading}
         fullWidth
         sx={{
           bgcolor: '#2563E8',
@@ -225,7 +234,7 @@ const SignupForm = () => {
           '&:hover': { bgcolor: '#1D4ED8' },
         }}
       >
-        {loading ? 'Creating account...' : 'Sign Up'}
+        {isLoading ? 'Creating account...' : 'Sign Up'}
       </Button>
 
       <Divider sx={{ my: 1 }}>

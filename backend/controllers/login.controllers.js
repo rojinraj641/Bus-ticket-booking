@@ -22,10 +22,7 @@ const login = asyncHandler(async (req, res) => {
         const user = await User.findOne({ email }).select("+passwordHash");
 
         if (!user) {
-            throw new ApiError(
-                404,
-                "User not found. Please signup"
-            );
+            return res.status(404).json(new ApiResponse(404, "User not found"));
         }
 
         // Compare entered password with stored hash
@@ -35,10 +32,7 @@ const login = asyncHandler(async (req, res) => {
         );
 
         if (!isPasswordCorrect) {
-            throw new ApiError(
-                401,
-                "Invalid email or password"
-            );
+            return res.status(401).json(new ApiResponse(401, "Invalid email or password"));
         }
 
         // Generate access token

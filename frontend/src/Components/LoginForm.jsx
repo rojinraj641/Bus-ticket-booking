@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { TextField, Button, Alert, InputAdornment, IconButton, Divider } from '@mui/material';
 import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import api from "../Api/axios.api.js";
 import { GoogleLogin } from '@react-oauth/google';
 import { login, setUser } from '../Features/User/authSlice';
 import { closeAuthModal, setAuthMode } from '../Features/User/uiSlice';
 import { setToast } from '../Features/Error/toastSlice.js';
+import { setLoading } from '../Features/Loading/loadingSlice.js';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -14,8 +15,8 @@ const LoginForm = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const { isLoading } = useSelector((state) => state.loading);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,8 +41,7 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-
-    setLoading(true);
+    dispatch(setLoading(true));
     try {
       const res = await api.post('/login',
         {
@@ -52,22 +52,31 @@ const LoginForm = () => {
       dispatch(login(res.data.data.accessToken));
       dispatch(setUser(res.data.data.user));
       dispatch(closeAuthModal());
+      dispatch(setToast({ message: res.data.message || 'Logged in successfully!', success: true }));
     } catch (err) {
-      dispatch(setToast({message: err.response?.data?.message || 'Login failed. Please check your credentials.', success: false}))
+      if(err.response?.status === 404){
+        dispatch(setToast({ message: "User not found. Please signup instead.", success: false }));
+        dispatch(setAuthMode('signup'));
+      }else if(err.response?.status === 401){
+        dispatch(setToast({ message: "Invalid email or password. Please try again.", success: false }));
+      }else{
+        dispatch(setToast({message: err.response?.data?.message || 'Login failed. Please check your credentials.', success: false}))
+      }
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     setGoogleLoading(true);
     try {
-      const res = await api.post('/google',
+      const res = await api.post('/google/login',
         { token: credentialResponse.credential }
       );
       dispatch(login(res.data.data.accessToken));
       dispatch(setUser(res.data.data.user));
       dispatch(closeAuthModal());
+      dispatch(setToast({message: res.data.message || 'Logged in successfully!', success: true}));
     } catch (err) {
       dispatch(setToast({message: err.response?.data?.message || 'Google login failed. Please try again.', success: false}));
     } finally {
@@ -143,7 +152,7 @@ const LoginForm = () => {
       <Button
         type="submit"
         variant="contained"
-        disabled={loading}
+        disabled={isLoading}
         fullWidth
         sx={{
           bgcolor: '#2563E8',
@@ -153,7 +162,7 @@ const LoginForm = () => {
           '&:hover': { bgcolor: '#1D4ED8' },
         }}
       >
-        {loading ? 'Logging in...' : 'Log In'}
+        {isLoading ? 'Logging in...' : 'Log In'}
       </Button>
 
       <Divider sx={{ my: 1 }}>

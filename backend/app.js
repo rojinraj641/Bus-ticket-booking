@@ -25,7 +25,7 @@ app.use(cookieParser());
 import signupRouter from "./routes/signup.routes.js";
 import loginRouter from "./routes/login.routes.js";
 import authRouter from "./routes/auth.routes.js";
-import googleLoginRouter from "./routes/googleLogin.routes.js";
+import googleLoginRouter from "./routes/googleAuth.routes.js";
 import homeRouter from "./routes/home.routes.js";
 import filterRouter from "./routes/filtered.routes.js";
 import lockSeatsRouter from "./routes/lockSeats.routes.js";
@@ -37,7 +37,7 @@ import logoutRouter from "./routes/logout.routes.js";
 app.use("/api/v1/signup", signupRouter);
 app.use("/api/v1/login", loginRouter);
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1", googleLoginRouter);
+app.use("/api/v1/google", googleLoginRouter);
 app.use("/api/v1", homeRouter);
 app.use("/api/v1/filtered", filterRouter);
 app.use("/api/v1/lockSeats",lockSeatsRouter)
