@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import loadingReducer from '../Features/Navigation/loadingSlice.js';
 import searchReducer from '../Features/Search/searchSlice.js';
 import busReducer from '../Features/Bus/busSlice.js';
 import seatsReducer from '../Features/Seats/seatSlice.js';
@@ -19,6 +20,7 @@ import toastReducer from '../Features/Error/toastSlice.js'
 
 const store = configureStore({
     reducer:{
+        loading: loadingReducer,
         search: searchReducer,
         bus: busReducer,
         seats: seatsReducer,

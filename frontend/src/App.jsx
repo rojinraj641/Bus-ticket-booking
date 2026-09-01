@@ -1,4 +1,5 @@
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import './App.css';
 import Home from "./Pages/Home";
 import MyBooking from './Pages/MyBooking'
 import Wallet from './Pages/Wallet'
@@ -7,15 +8,16 @@ import Payment from "./Pages/Payment";
 import PassengerDetails from "./Pages/PassengerDetails";
 import TrackTicket from "./Pages/TrackTicket";
 import ProtectedRoute from './Components/ProtectedRoute';
-import './App.css';
 import { useSelector, useDispatch } from "react-redux";
 import { toast, ToastContainer} from "react-toastify"
 import { useEffect } from "react";
 import { refreshSession } from "./Features/User/authSlice";
+import BusLoader from "./Components/BusLoader";
 
 function App() {
   const dispatch = useDispatch();
   const { message, success } = useSelector((state)=>state.toast);
+  const { isLoading } = useSelector((state)=>state.loading);
 
   useEffect(()=>{
     dispatch(refreshSession());
@@ -32,6 +34,7 @@ function App() {
 
   return (
     <Router>
+      {isLoading && <BusLoader />}
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Home/>} />
